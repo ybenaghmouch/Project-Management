@@ -1,4 +1,4 @@
-package com.dxc.solution_intelligente.model;
+package com.dxc.solution_intelligente.service.model;
 
 import jakarta.persistence.*;
 import lombok.Data;

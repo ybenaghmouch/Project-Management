@@ -1,4 +1,4 @@
-package com.dxc.solution_intelligente.model;
+package com.dxc.solution_intelligente.service.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.PrimaryKeyJoinColumn;
@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @PrimaryKeyJoinColumn(name ="id")
-public class ChefProjet extends User{
+public class Manager extends User{
 }

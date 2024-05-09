@@ -1,4 +1,4 @@
-package com.dxc.solution_intelligente.model;
+package com.dxc.solution_intelligente.service.model;
 
 import jakarta.persistence.Entity;
 import lombok.Data;
@@ -8,4 +8,5 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Admin extends User {
+
 }
