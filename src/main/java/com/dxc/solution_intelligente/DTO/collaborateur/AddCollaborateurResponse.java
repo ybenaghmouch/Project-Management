@@ -15,5 +15,7 @@ public class AddCollaborateurResponse {
     private String Civility;
     private String Speciality;
     private boolean Status;
+    private int soldeConge;
+
     private String message;
 }

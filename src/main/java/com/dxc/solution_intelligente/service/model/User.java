@@ -20,6 +20,7 @@ public class User {
     protected boolean Force_change_password;
     protected String Civility;
     protected String Speciality;
+
     protected boolean Status;
 
 

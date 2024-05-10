@@ -6,14 +6,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CollaborateurDTO {
 
-    protected Long id;
-    protected String FirstName;
-    protected String LastName;
-    protected String Username;
-    protected String Email;
-    protected String Password;
-    protected boolean Force_change_password;
-    protected String Civility;
-    protected String Speciality;
-    protected boolean Status;
+    private Long id;
+    private String FirstName;
+    private String LastName;
+    private String Username;
+    private String Email;
+    private String Password;
+    private boolean Force_change_password;
+    private String Civility;
+    private String Speciality;
+    private boolean Status;
+    private int soldeConge;
+
 }

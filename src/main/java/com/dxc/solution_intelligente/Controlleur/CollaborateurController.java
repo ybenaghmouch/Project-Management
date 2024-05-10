@@ -1,6 +1,7 @@
 package com.dxc.solution_intelligente.Controlleur;
 
 import com.dxc.solution_intelligente.DTO.collaborateur.*;
+import com.dxc.solution_intelligente.service.Exception.BusinessException;
 import com.dxc.solution_intelligente.service.ICollaborateurService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -23,8 +24,20 @@ public class CollaborateurController {
     }
 
     @PostMapping()
-    public ResponseEntity<AddCollaborateurResponse> createCollaborateur(@RequestBody AddCollaborateurRequest dto){
+    public ResponseEntity<?> createCollaborateur(@RequestBody AddCollaborateurRequest dto){
+        try{
         return new ResponseEntity<>(collaborateurService.createCollaborateur(dto), HttpStatus.CREATED);
+        } catch (BusinessException e) {
+            // Log de l'erreur si nécessaire
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
+        } catch (Exception e) {
+            // Gestion des autres exceptions inattendues
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur interne du serveur.");
+        }
     }
 
     @PutMapping("/{username}")

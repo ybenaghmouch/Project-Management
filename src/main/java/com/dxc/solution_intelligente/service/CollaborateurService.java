@@ -36,13 +36,16 @@ public class CollaborateurService implements ICollaborateurService{
     public AddCollaborateurResponse createCollaborateur(AddCollaborateurRequest addCollaborateurRequest) {
         Collaborateur bo = modelMapper.map(addCollaborateurRequest, Collaborateur.class);
         String username = bo.getUsername();
+        System.out.println("password 1= "+ addCollaborateurRequest.toString());
         bo.setPassword(passwordEncoder.encode(bo.getPassword()));
+        //System.out.println("password 2= "+ bo.getPassword());
         collaborateurRepository.findByUsername(username).ifPresent(a ->{
-                    throw new BusinessException(String.format("Collaborateur avec le meme username [%s] existe", username));
+            throw new BusinessException(String.format("Collaborateur avec le meme username [%s] existe", username));
+
                 }
         );
         AddCollaborateurResponse response = modelMapper.map(collaborateurRepository.save(bo), AddCollaborateurResponse.class);
-        response.setMessage(String.format("Collaborateur : [ Nom = %s, Prenom = %s, Username = %s, Email = %s, Mot de passe = %s,civilité = %s] cree avec succees",  response.getFirstName(), response.getLastName(), response.getUsername(), response.getEmail(), response.getCivility()));
+        response.setMessage(String.format("Collaborateur : [Nom = %s, Prenom = %s, Username = %s, Email = %s, Civility = %s, Specilite = %s]", response.getFirstName(), response.getLastName(), response.getUsername(), response.getEmail(), response.getCivility(), response.getSpeciality()));
         return response;
     }
 
@@ -50,12 +53,12 @@ public class CollaborateurService implements ICollaborateurService{
     public UpdateCollaborateurResponse updateCollaborateur(String username, UpdateCollaborateurRequest updateCollaborateurRequest) {
         Collaborateur collaborateurToPersist = modelMapper.map(updateCollaborateurRequest, Collaborateur.class);
         Collaborateur collaborateurFound = collaborateurRepository.findAll().stream().filter(bo -> bo.getUsername().equals(username)).findFirst().orElseThrow(
-                () -> new BusinessException(String.format("Aucun Collaborateur avec le matricule [%s] deja existe!", username))
+                () -> new BusinessException(String.format("Collaborateur avec le username [%s] deja existe!", username))
         );
         collaborateurToPersist.setId(collaborateurFound.getId());
         collaborateurToPersist.setUsername(username);
         UpdateCollaborateurResponse updateCollaborateurResponse = modelMapper.map(collaborateurRepository.save(collaborateurToPersist), UpdateCollaborateurResponse.class);
-        updateCollaborateurResponse.setMessage(String.format("Collaborateur avec matricule [%s] a ete modifie avec succes !", username));
+        updateCollaborateurResponse.setMessage(String.format("Collaborateur avec username [%s] a ete modifie avec succes !", username));
         return updateCollaborateurResponse;
     }
 }

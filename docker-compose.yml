@@ -20,7 +20,8 @@ services:
     restart: unless-stopped
     environment:
       PMA_HOST: mysql
-      PMA_USER: root
+      PMA_USER:
+
       PMA_PASSWORD: Admin@.Admin
     ports:
       - "8081:80"
