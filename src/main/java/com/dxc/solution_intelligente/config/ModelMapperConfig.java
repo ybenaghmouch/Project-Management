@@ -22,11 +22,15 @@ public class ModelMapperConfig {
     @Bean
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
+
+
         modelMapper.getConfiguration()
                 .setMatchingStrategy(MatchingStrategies.LOOSE)
                 .setFieldMatchingEnabled(true)
                 .setSkipNullEnabled(true)
-                .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE);
+
+                .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE)
+                .setMatchingStrategy(MatchingStrategies.STRICT);
 
         // Convertisseurs existants pour les dates
         Converter<Date, String> dateToStringConverter = new AbstractConverter<>() {
