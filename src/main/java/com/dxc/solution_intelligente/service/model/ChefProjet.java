@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @PrimaryKeyJoinColumn(name ="id")
-public class ChefProjet extends User{
+public class ChefProjet extends Collaborateur{
 }

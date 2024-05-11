@@ -12,6 +12,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long id;
+<<<<<<< HEAD
     protected String FirstName;
     protected String LastName;
     protected String username;
@@ -24,5 +25,16 @@ public class User {
     protected boolean Status;
 
 
+=======
+    protected String firstName;
+    protected String lastName;
+    protected String username;
+    protected String email;
+    protected String password;
+    protected boolean force_change_password;
+    protected String civility;
+    protected String speciality;
+    protected boolean status;
+>>>>>>> mehdi
 
 }
