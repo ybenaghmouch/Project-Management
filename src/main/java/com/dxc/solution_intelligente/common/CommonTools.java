@@ -12,7 +12,7 @@ import java.util.Date;
 @Data
 public class CommonTools {
 
-    @Value("${graphql.date.format}")
+    @Value("${rest.date.format}")
     private String dateFormat;
 
     public String dateToString(Date date) {

@@ -1,2 +1,19 @@
-package com.dxc.solution_intelligente.DTO.Admin;public class AdminDTO {
+package com.dxc.solution_intelligente.DTO.Admin;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+public class AdminDTO {
+    private Long id;
+    private String firstName;
+    private String lastName;
+    private String username;
+    private String email;
+    private String password;
+    private boolean force_change_password;
+    private String civility;
+    private String speciality;
+    private boolean status;
 }

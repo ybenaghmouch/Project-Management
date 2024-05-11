@@ -26,6 +26,7 @@ public class ModelMapperConfig {
                 .setMatchingStrategy(MatchingStrategies.LOOSE)
                 .setFieldMatchingEnabled(true)
                 .setSkipNullEnabled(true)
+                .setMatchingStrategy(MatchingStrategies.STRICT)
                 .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE);
 
         // Convertisseurs existants pour les dates

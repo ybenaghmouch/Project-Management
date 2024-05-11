@@ -1,11 +1,11 @@
-package com.dxc.solution_intelligente.DTO.Admin;
+package com.dxc.solution_intelligente.DTO.Manager;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class UpdateAdminResponse {
+public class UpdateManagerResponse {
     private String message;
     private String firstName;
     private String lastName;
