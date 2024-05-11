@@ -11,7 +11,7 @@ public class CollaborateurDTO {
     private String LastName;
     private String Username;
     private String Email;
-    private String Password;
+    //private String Password;
     private boolean Force_change_password;
     private String Civility;
     private String Speciality;

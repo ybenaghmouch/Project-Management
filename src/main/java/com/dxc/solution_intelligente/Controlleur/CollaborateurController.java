@@ -3,6 +3,7 @@ package com.dxc.solution_intelligente.Controlleur;
 import com.dxc.solution_intelligente.DTO.collaborateur.*;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
 import com.dxc.solution_intelligente.service.ICollaborateurService;
+import com.dxc.solution_intelligente.service.model.Collaborateur;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -44,5 +45,13 @@ public class CollaborateurController {
     public ResponseEntity<UpdateCollaborateurResponse> updateCollaborateur(@PathVariable String username, @RequestBody UpdateCollaborateurRequest dto){
         return new ResponseEntity<>(collaborateurService.updateCollaborateur(username, dto), HttpStatus.OK);
     }
+
+
+    @GetMapping("/search")
+    public List<CollaborateurDTO> searchCollaborateurByUsername(@RequestParam String username) {
+        return collaborateurService.findByUsernameContaining(username);
+    }
+
+
     
 }

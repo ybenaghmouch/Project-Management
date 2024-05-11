@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,4 +62,15 @@ public class CollaborateurService implements ICollaborateurService{
         updateCollaborateurResponse.setMessage(String.format("Collaborateur avec username [%s] a ete modifie avec succes !", username));
         return updateCollaborateurResponse;
     }
+
+    @Override
+    public List<CollaborateurDTO> findByUsernameContaining(String searchTerm) {
+        return collaborateurRepository.findByUsernameContainingIgnoreCase(searchTerm.toLowerCase()).stream().
+                map(collaborateur -> modelMapper.map(collaborateur, CollaborateurDTO.class)).
+                collect(Collectors.toList());
+    }
+
+
+
+
 }

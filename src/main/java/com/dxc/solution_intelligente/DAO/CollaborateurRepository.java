@@ -10,7 +10,9 @@ import java.util.Optional;
 @Repository
 public interface CollaborateurRepository extends JpaRepository<Collaborateur,Long> {
 
-  //  List<Collaborateur> findByFirstNameIgnoreCaseContainingOrLastNameIgnoreCaseContainingOrUsernameIgnoreCaseContaining(String keyword);
+
     Optional<Collaborateur> findByUsername(String username);
+    List<Collaborateur> findByUsernameContainingIgnoreCase(String username);
+
 
 }
