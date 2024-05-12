@@ -1,0 +1,68 @@
+package com.dxc.solution_intelligente.service;
+
+import com.dxc.solution_intelligente.DAO.EquipeRepository;
+import com.dxc.solution_intelligente.DTO.Equipe.*;
+import com.dxc.solution_intelligente.service.Exception.BusinessException;
+import com.dxc.solution_intelligente.service.model.Equipe;
+import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+@Service
+@Transactional
+@AllArgsConstructor
+public class EquipeService implements IEquipeService{
+    private final EquipeRepository equipeRepository;
+    private final ModelMapper modelMapper;
+    private PasswordEncoder passwordEncoder;
+
+
+
+
+    @Override
+    public List<EquipeDTO> getAllEquipes() {
+        return equipeRepository.findAll().stream().
+                map(equipe -> modelMapper.map(equipe, EquipeDTO.class)).
+                collect(Collectors.toList());
+    }
+
+    @Override
+    public AddEquipeResponse createEquipe(AddEquipeRequest addEquipeRequest) {
+        Equipe bo = modelMapper.map(addEquipeRequest, Equipe.class);
+        String name = bo.getNom();
+        System.out.println("password 1= "+ addEquipeRequest.toString());
+        //System.out.println("password 2= "+ bo.getPassword());
+        equipeRepository.findByNom(name).ifPresent(a ->{
+                    throw new BusinessException(String.format("Equipe avec le meme name [%s] existe", name));
+
+                }
+        );
+        AddEquipeResponse response = modelMapper.map(equipeRepository.save(bo), AddEquipeResponse.class);
+        //response.setMessage(String.format("Equipe : [Nom = %s, Prenom = %s, Nom = %s, Email = %s, Civility = %s, Specilite = %s]", response.getNom(), response.getCollaborateurs().toString(), response.getManager().toString(), response.getChefprojet().toString()));
+        return response;
+    }
+
+    @Override
+    public UpdateEquipeResponse updateEquipe(String name, UpdateEquipeRequest updateEquipeRequest) {
+        Equipe equipeToPersist = modelMapper.map(updateEquipeRequest, Equipe.class);
+        Equipe equipeFound = equipeRepository.findAll().stream().filter(bo -> bo.getNom().equals(name)).findFirst().orElseThrow(
+                () -> new BusinessException(String.format("Equipe avec le name [%s] deja existe!", name))
+        );
+        equipeToPersist.setId(equipeFound.getId());
+        equipeToPersist.setNom(name);
+        UpdateEquipeResponse updateEquipeResponse = modelMapper.map(equipeRepository.save(equipeToPersist), UpdateEquipeResponse.class);
+        updateEquipeResponse.setMessage(String.format("Equipe avec name [%s] a ete modifie avec succes !", name));
+        return updateEquipeResponse;
+    }
+
+    @Override
+    public List<EquipeDTO> findByNomContaining(String searchTerm) {
+        return equipeRepository.findByNomContainingIgnoreCase(searchTerm.toLowerCase()).stream().
+                map(equipe -> modelMapper.map(equipe, EquipeDTO.class)).
+                collect(Collectors.toList());
+    }
+}

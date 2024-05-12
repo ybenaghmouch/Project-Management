@@ -1,4 +1,4 @@
-package com.dxc.solution_intelligente.DTO.collaborateur;
+package com.dxc.solution_intelligente.DTO.Collaborateur;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

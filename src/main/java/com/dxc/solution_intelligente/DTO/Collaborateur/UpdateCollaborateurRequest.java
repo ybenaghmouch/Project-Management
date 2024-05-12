@@ -1,19 +1,18 @@
-package com.dxc.solution_intelligente.DTO.collaborateur;
-
+package com.dxc.solution_intelligente.DTO.Collaborateur;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class AddCollaborateurRequest {
+public class UpdateCollaborateurRequest {
     private String FirstName;
     private String LastName;
     private String Username;
     private String Email;
     private String Password;
-    private boolean Force_change_password=true;
     private String Civility;
     private String Speciality;
-    private int soldeConge=30;
-    private boolean Status=true;
+    private boolean Status;
+    private int soldeConge;
+
 }

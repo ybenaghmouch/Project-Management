@@ -1,10 +1,12 @@
-package com.dxc.solution_intelligente.DTO.collaborateur;
+package com.dxc.solution_intelligente.DTO.Collaborateur;
+
 import lombok.Data;
+
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class UpdateCollaborateurResponse {
+public class AddCollaborateurResponse {
     private String FirstName;
     private String LastName;
     private String Username;
@@ -12,8 +14,7 @@ public class UpdateCollaborateurResponse {
     private String Civility;
     private String Speciality;
     private boolean Status;
-    private String message;
     private int soldeConge;
 
+    private String message;
 }
-

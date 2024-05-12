@@ -1,11 +1,9 @@
 package com.dxc.solution_intelligente.Controlleur;
 
-import com.dxc.solution_intelligente.DTO.collaborateur.*;
+import com.dxc.solution_intelligente.DTO.Collaborateur.*;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
 import com.dxc.solution_intelligente.service.ICollaborateurService;
-import com.dxc.solution_intelligente.service.model.Collaborateur;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,7 +1,7 @@
 package com.dxc.solution_intelligente.service;
 
 import com.dxc.solution_intelligente.DAO.CollaborateurRepository;
-import com.dxc.solution_intelligente.DTO.collaborateur.*;
+import com.dxc.solution_intelligente.DTO.Collaborateur.*;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
 import com.dxc.solution_intelligente.service.model.Collaborateur;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

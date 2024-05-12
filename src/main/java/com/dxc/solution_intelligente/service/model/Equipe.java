@@ -13,7 +13,7 @@ public class Equipe {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String Nom;
+    private String nom;
     @ManyToOne
     private ChefProjet Chefprojet;
     @ManyToMany

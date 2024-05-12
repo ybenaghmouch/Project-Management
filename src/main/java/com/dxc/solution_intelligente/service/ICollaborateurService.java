@@ -1,10 +1,8 @@
 package com.dxc.solution_intelligente.service;
 
-import com.dxc.solution_intelligente.DTO.collaborateur.*;
-import com.dxc.solution_intelligente.service.model.Collaborateur;
+import com.dxc.solution_intelligente.DTO.Collaborateur.*;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ICollaborateurService {
     List<CollaborateurDTO> getAllCollaborateurs();
