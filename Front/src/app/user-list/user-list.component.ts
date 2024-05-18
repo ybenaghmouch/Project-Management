@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { UserModalComponent } from '../user-modal/user-modal.component';
+import { FormsModule } from '@angular/forms';
+
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
 
@@ -11,7 +13,7 @@ const FILTER_PAG_REGEX = /[^0-9]/g;
   standalone: true,
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css'],
-  imports: [CommonModule,NgbPaginationModule,UserModalComponent]
+  imports: [CommonModule,NgbPaginationModule,UserModalComponent,FormsModule]
 })
 export class UserListComponent implements AfterViewInit {
   users = [
