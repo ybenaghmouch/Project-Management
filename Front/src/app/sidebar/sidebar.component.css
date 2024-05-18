@@ -1,0 +1,70 @@
+.sidebar {
+  background-color: #fff;
+  height: 100vh;
+  border-right: 1px solid #ddd; /* Light border to separate from main content */
+  padding: 20px;
+  overflow-y: auto; /* Ensure sidebar can scroll if content overflows */
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+.sidebar .category {
+  color: #6c757d;
+  margin-left: 1rem;
+  font-size: 0.9rem;
+}
+
+.sidebar .nav-link {
+  font-size: 16px;
+  padding: 10px 15px;
+  color: #333;
+  text-decoration: none;
+}
+
+.sidebar .nav-link:hover {
+  text-decoration: underline;
+  color: #6f42c1; /* Purple hover color */
+}
+
+.sidebar .badge {
+  font-size: 12px;
+  background-color: #6f42c1; /* Purple background for badge */
+}
+
+.sidebar .btn-light {
+  color: #6f42c1; /* Purple text color for button */
+}
+
+.sidebar .btn-light:hover {
+  background-color: #e2e6ea; /* Light hover effect for button */
+}
+.nav-link.active {
+  background-color: #9B7EC0FF;
+  color: #ffffff;
+}
+
+
+/* Styles for mobile devices */
+@media (max-width: 576px) {
+  .sidebar {
+    padding: 10px;
+    height: auto;
+  }
+
+  .sidebar .category {
+    margin-left: 0;
+    font-size: 0.8rem;
+  }
+
+  .sidebar .nav-link {
+    font-size: 14px;
+    padding: 5px 10px;
+  }
+
+  .sidebar .badge {
+    font-size: 10px;
+  }
+
+  .sidebar .btn-light {
+    font-size: 13px;
+  }
+}
