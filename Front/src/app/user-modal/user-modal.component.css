@@ -1,0 +1,40 @@
+.modal-header {
+    border-bottom: none;
+  }
+  
+  .modal-title {
+    font-weight: bold;
+  }
+  
+  .modal-footer {
+    border-top: none;
+  }
+  
+  .form-label {
+    font-weight: bold;
+  }
+  
+  .form-control,
+  .form-select {
+    background-color: #f7f8fa;
+    border: none;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.25rem;
+  }
+  
+  .form-control:focus,
+  .form-select:focus {
+    box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+    border-color: #6f42c1;
+  }
+  
+  .btn-primary {
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+  }
+  
+  .btn-primary:hover {
+    background-color: #563d7c;
+    border-color: #563d7c;
+  }
+  
