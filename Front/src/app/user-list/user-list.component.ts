@@ -1,7 +1,8 @@
 
 import { CommonModule } from '@angular/common';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit , OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserModalComponent } from '../user-modal/user-modal.component';
 import { FormsModule } from '@angular/forms';
 
@@ -16,9 +17,10 @@ const FILTER_PAG_REGEX = /[^0-9]/g;
   imports: [CommonModule,NgbPaginationModule,UserModalComponent,FormsModule]
 })
 export class UserListComponent implements AfterViewInit {
+  isVisible: boolean = false;
   users = [
-    { id:2, name: 'Elizabeth Lopez', username: 'elizabethtlopez', email: 'elopez@yahoo.com', role: 'Admin', status: 'Active' }
-    // Add more users here
+    { id:2, firstName: 'Elizabeth',lastName: 'Lopez', username: 'elizabethtlopez', email: 'elopez@yahoo.com', role: 'Admin', status: true }
+    // Add more users 
   ];
 
   editUser(user: any) {
@@ -31,7 +33,8 @@ export class UserListComponent implements AfterViewInit {
     console.log('Delete user:', user);
   }
 
-  page = 4;
+  page = 1;
+  private isSubscribed: boolean = false;
 
 	getPageSymbol(current: number) {
 		return ['A', 'B', 'C', 'D', 'E', 'F', 'G'][current - 1];
@@ -50,11 +53,17 @@ export class UserListComponent implements AfterViewInit {
 
 
 
-  constructor() {}
+  constructor(private modalService: NgbModal) {}
+
 
   ngAfterViewInit() {
-    // This ensures that the userModal is initialized after the view is initialized
-    if (!this.userModal) {
+    if (this.userModal && !this.isSubscribed) {
+      this.userModal.userAdded.subscribe((newUser: any) => {
+        this.users.push(newUser);
+        console.log("fff"+newUser);
+      });
+      this.isSubscribed = true;
+    } else if (!this.userModal) {
       console.error('UserModalComponent is not initialized');
     }
   }
@@ -62,7 +71,15 @@ export class UserListComponent implements AfterViewInit {
   openCreateUserModal() {
     if (this.userModal) {
       this.userModal.isEditMode = false;
+      this.userModal.user = null;
       this.userModal.openModal();
+      
+      /*this.userModal.userAdded.subscribe((newUser: any) => {
+        this.users.push(newUser);
+        console.log(this.users);
+        
+      });*/
+      
     } else {
       console.error('UserModalComponent is not initialized');
     }
@@ -71,7 +88,8 @@ export class UserListComponent implements AfterViewInit {
   openEditUserModal(user: any) {
     if (this.userModal) {
       this.userModal.isEditMode = true;
-      // Optionally pass user data to the modal for editing
+      this.userModal.user = user;
+      
       this.userModal.openModal();
     } else {
       console.error('UserModalComponent is not initialized');

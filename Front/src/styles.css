@@ -15,7 +15,7 @@ body, html {
 .bg-primary {
   background-color: #6f42c1 !important; /* Purple background */
 }
-.form-check-input:focus,
+
 .form-control:focus {
   outline: none;
   box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25); /* Purple focus shadow */
@@ -72,22 +72,12 @@ body, html {
     border-color: #563d7c;
   }
 
-  
 
-  .form-check-input:checked {
-    background-color: #6f42c1; /* Purple color for active */
-    border-color: #6f42c1;
-  }
-  
-  .form-check-input:not(:checked) {
-    background-color: #6c757d; /* Grey color for inactive */
-    border-color: #6c757d;
-  }
-  
-  .form-check-input {
-    cursor: pointer;
-  }
   
   .form-check-label {
     margin-left: 10px;
+  }
+
+  .form-control::placeholder {
+    color: #6c757d;
   }
