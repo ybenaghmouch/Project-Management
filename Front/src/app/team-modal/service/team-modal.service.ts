@@ -9,10 +9,13 @@ export class TeamModalService {
 
   constructor(private http: HttpClient) { }
 
-  postTeams(formData: any): Observable<any> {
-    return this.http.post<any>(`/api/user`,formData);
+  postTeam(formData: any): Observable<any> {
+    return this.http.post<any>(`/api/team`,formData);
   }
-  putTeams(formData: any,username: string,role: string): Observable<any> {
+  putTeam(formData: any,username: string): Observable<any> {
     return this.http.put<any>(`/api/team/${username}`,formData);
+  }
+  getUsers(type: string = "user"): Observable<any[]> {
+    return this.http.get<any[]>(`/api/user`);
   }
 }

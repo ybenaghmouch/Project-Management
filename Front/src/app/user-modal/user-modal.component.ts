@@ -26,7 +26,7 @@ export class UserModalComponent  {
     this.form = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      username: ['', Validators.required],
+      username: [ '', Validators.required ],
       password: ['', Validators.required],
       email: ['', Validators.required],
       speciality: ['', Validators.required],
@@ -39,8 +39,10 @@ export class UserModalComponent  {
 
   openModal() {
     if (this.user) {
+      
       this.form.patchValue(this.user);
     }
+    
     const modalElement = this.userModal.nativeElement;
     const modalInstance = new bootstrap.Modal(modalElement);
     modalInstance.show();

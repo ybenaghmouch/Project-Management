@@ -24,7 +24,7 @@ export class UserListComponent implements AfterViewInit,OnInit {
   users = [
     { id:0, firstName: 'Elizabeth',lastName: 'Lopez', username: 'elizabethtlopez', email: 'elopez@yahoo.com', role: 'Admin', status: true, civility: 'Mme.'
       
-     },{id:1, firstName: 'mehdi',lastName: 'mehdi', username: 'mehdi', email: 'mehdi@yahoo.com', role: 'Admin', status: true,civility: 'Mr.'}
+     },{id:1, firstName: 'mehdi',lastName: 'mehdi', username: 'mehdi', email: 'mehdi@yahoo.com', role: 'Admin', status: true, civility: 'Mr.'}
     // Add more users 
   ];
   searchForm: FormGroup;
