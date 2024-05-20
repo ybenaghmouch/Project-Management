@@ -1,6 +1,7 @@
 package com.dxc.solution_intelligente.service;
 
 import com.dxc.solution_intelligente.DAO.ManagerRepository;
+import com.dxc.solution_intelligente.DTO.Collaborateur.CollaborateurDTO;
 import com.dxc.solution_intelligente.DTO.Manager.*;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
 import com.dxc.solution_intelligente.service.model.Manager;
@@ -51,4 +52,13 @@ public class ManagerService implements IManagerService{
         updateManagerResponse.setMessage(String.format("Manager avec le nom d'utilisateur %s modifié avec succes", username));
         return updateManagerResponse;
     }
+
+    @Override
+    public List<ManagerDTO> findByUsernameContaining(String searchTerm) {
+        return managerRepository.findByUsernameContainingIgnoreCase(searchTerm.toLowerCase()).stream()
+                .map(manager -> modelMapper.map(manager, ManagerDTO.class))
+                .collect(Collectors.toList());
+    }
+
+
 }

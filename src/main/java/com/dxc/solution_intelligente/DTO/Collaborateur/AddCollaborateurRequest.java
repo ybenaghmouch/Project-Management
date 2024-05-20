@@ -14,6 +14,6 @@ public class AddCollaborateurRequest {
     private boolean Force_change_password=true;
     private String Civility;
     private String Speciality;
-    private int soldeConge=30;
     private boolean Status=true;
+    private int soldeConge=30;
 }
