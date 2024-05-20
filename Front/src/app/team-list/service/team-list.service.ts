@@ -10,10 +10,10 @@ export class TeamListService {
 
   constructor(private http: HttpClient) { }
 
-  getUsers(): Observable<any[]> {
+  getTeams(): Observable<any[]> {
     return this.http.get<any[]>(`/api/team`);
   }
-  searchUsers(name: string): Observable<any[]> {
+  searchTeams(name: string): Observable<any[]> {
     
     return this.http.get<any[]>(`/api/team/search?nom=${name}`);
   }
