@@ -4,8 +4,10 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { Component, ViewChild, AfterViewInit , OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserModalComponent } from '../user-modal/user-modal.component';
-import { FormsModule } from '@angular/forms';
-
+import { ReactiveFormsModule,FormsModule,FormGroup,FormBuilder } from '@angular/forms';
+import { UserListService } from './service/user-list.service';
+import { HttpClientModule } from '@angular/common/http';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
 
@@ -14,14 +16,18 @@ const FILTER_PAG_REGEX = /[^0-9]/g;
   standalone: true,
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css'],
-  imports: [CommonModule,NgbPaginationModule,UserModalComponent,FormsModule]
+  imports: [CommonModule,NgbPaginationModule,UserModalComponent,FormsModule,HttpClientModule,ReactiveFormsModule],
+  providers: [UserListService]
 })
-export class UserListComponent implements AfterViewInit {
+export class UserListComponent implements AfterViewInit,OnInit {
   isVisible: boolean = false;
   users = [
-    { id:2, firstName: 'Elizabeth',lastName: 'Lopez', username: 'elizabethtlopez', email: 'elopez@yahoo.com', role: 'Admin', status: true }
+    { id:0, firstName: 'Elizabeth',lastName: 'Lopez', username: 'elizabethtlopez', email: 'elopez@yahoo.com', role: 'Admin', status: true, civility: 'Mme.'
+      
+     },{id:1, firstName: 'mehdi',lastName: 'mehdi', username: 'mehdi', email: 'mehdi@yahoo.com', role: 'Admin', status: true, civility: 'Mr.'}
     // Add more users 
   ];
+  searchForm: FormGroup;
 
   editUser(user: any) {
     // Handle edit user action
@@ -53,21 +59,65 @@ export class UserListComponent implements AfterViewInit {
 
 
 
-  constructor(private modalService: NgbModal) {}
+  constructor(private modalService: NgbModal,private userListService :UserListService,private fb: FormBuilder) {
+    this.searchForm = this.fb.group({
+    username: ['']
+  });
+}
 
+ngOnInit(): void {
+  this.loadUsers();
 
+  this.searchForm.get('username')!.valueChanges
+    .pipe(
+      debounceTime(300), // Wait for 300ms pause in events
+      distinctUntilChanged() // Only emit if value is different from previous value
+    )
+    .subscribe(value => {
+      this.searchUsers(value);
+    });
+}
   ngAfterViewInit() {
-    if (this.userModal && !this.isSubscribed) {
+    if (this.userModal) {
       this.userModal.userAdded.subscribe((newUser: any) => {
-        this.users.push(newUser);
-        console.log("fff"+newUser);
+        if (this.userModal.isEditMode) {
+          const index = this.users.findIndex(user => user.username === newUser.username);
+          if (index !== -1) {
+            this.users[index] = newUser;
+          }
+        } else {
+          //newUser.id = this.users.length + 1; // Assign a new ID or handle ID generation differently
+          this.users.push(newUser);
+        }
       });
-      this.isSubscribed = true;
-    } else if (!this.userModal) {
+    } else {
       console.error('UserModalComponent is not initialized');
     }
   }
-
+  loadUsers() {
+    this.userListService.getUsers().subscribe(
+      (data: any[]) => {
+        this.users = data;
+      },
+      error => {
+        console.error('Error fetching users', error);
+      }
+    );
+  }
+  searchUsers(username: string) {
+    if (username.trim()) {
+      this.userListService.searchUsers(username).subscribe(
+        (data: any[]) => {
+          this.users = data;
+        },
+        error => {
+          console.error('Error searching users', error);
+        }
+      );
+    } else {
+      this.loadUsers(); // If search input is cleared, load all users
+    }
+  }
   openCreateUserModal() {
     if (this.userModal) {
       this.userModal.isEditMode = false;

@@ -1,0 +1,50 @@
+<div class="modal fade" id="teamModal" tabindex="-1" aria-labelledby="teamModalLabel" aria-hidden="true" #teamModal>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="teamModalLabel">{{ isEditMode ? 'Edit Team' : 'Create Team' }}</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="form" (ngSubmit)="submitForm()">
+          <div class="mb-3">
+            <label for="nom" class="form-label">Team Name</label>
+            <input type="text" class="form-control" id="nom" formControlName="nom" placeholder="Input text">
+          </div>
+          <div class="mb-3">
+            <label for="chefprojet" class="form-label">Project Leader</label>
+            <ng-select  class="form-control" [items]="users"
+                       bindLabel="username"
+                       bindValue="id"
+                       formControlName="chefprojet"
+                       [searchable]="true">
+            </ng-select>
+          </div>
+          <div class="mb-3">
+            <label for="manager" class="form-label">Manager</label>
+            <ng-select  class="form-control" [items]="users"
+                       bindLabel="username"
+                       bindValue="id"
+                       formControlName="manager"
+                       [searchable]="true">
+            </ng-select>
+          </div>
+          <div class="mb-3">
+            <label for="collaborateurs" class="form-label">Collaborators</label>
+            <ng-select  class="form-control"[items]="users"
+                       bindLabel="username"
+                       bindValue="id"
+                       formControlName="collaborateurs"
+                       [multiple]="true"
+                       [searchable]="true">
+            </ng-select>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary">{{ isEditMode ? 'Save' : 'Add' }}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

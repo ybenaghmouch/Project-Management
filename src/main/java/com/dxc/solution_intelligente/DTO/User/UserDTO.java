@@ -2,6 +2,7 @@ package com.dxc.solution_intelligente.DTO.User;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DialectOverride;
 
 @Data
 @NoArgsConstructor
@@ -15,5 +16,7 @@ public class UserDTO {
     protected String civility;
     protected String speciality;
     protected boolean status;
+    private String Role;
+
 
 }
