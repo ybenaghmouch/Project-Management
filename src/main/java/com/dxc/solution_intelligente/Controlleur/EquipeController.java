@@ -42,8 +42,20 @@ public class EquipeController {
     }
 
     @PutMapping("/{nom}")
-    public ResponseEntity<UpdateEquipeResponse> updateEquipe(@PathVariable String nom, @RequestBody UpdateEquipeRequest dto){
+    public ResponseEntity<?> updateEquipe(@PathVariable String nom, @RequestBody UpdateEquipeRequest dto){
+        try{
         return new ResponseEntity<>(equipeService.updateEquipe(nom, dto), HttpStatus.OK);
+        } catch (BusinessException e) {
+            // Log de l'erreur si nécessaire
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
+        } catch (Exception e) {
+            // Gestion des autres exceptions inattendues
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur interne du serveur."+e.getMessage());
+        }
     }
 
 

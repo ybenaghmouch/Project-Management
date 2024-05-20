@@ -1,48 +1,71 @@
-import { Component, ElementRef, ViewChild, Input, EventEmitter, Output  } from '@angular/core';
+import { Component, ElementRef, ViewChild, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TeamModalService } from './service/team-modal.service';
+import { UserListService } from '../user-list/service/user-list.service';
+import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
+import { NgbModalModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgSelectModule } from '@ng-select/ng-select';
+
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-team-modal',
   standalone: true,
-  imports: [NgIf, NgFor, FormsModule, ReactiveFormsModule],
+  imports: [NgIf, NgFor, ReactiveFormsModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    NgbModalModule,
+    NgbPaginationModule,
+    NgSelectModule],
   providers: [TeamModalService],
   templateUrl: './team-modal.component.html',
-  styleUrl: './team-modal.component.css'
+  styleUrls: ['./team-modal.component.css']
 })
-export class TeamModalComponent {
+export class TeamModalComponent implements OnInit {
   form: FormGroup;
-  
-  @Output() teamAdded = new EventEmitter<any>();
+  users: any[] = [];
 
+  @Output() teamAdded = new EventEmitter<any>();
   @ViewChild('teamModal') teamModal!: ElementRef;
-  @Input() isEditMode: boolean =false;
+  @Input() isEditMode: boolean = false;
   @Input() team: any;
 
-  constructor(private formBuilder: FormBuilder,private teamModalService:TeamModalService) {
+  constructor(private formBuilder: FormBuilder, private teamModalService: TeamModalService, private userService: TeamModalService) {
     this.form = this.formBuilder.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      username: ['', Validators.required],
-      password: ['', Validators.required],
-      email: ['', Validators.required],
-      speciality: ['', Validators.required],
-      civility: ['', Validators.required],
-      status: [true],
-      role: ['', Validators.required]
+      nom: ['', Validators.required],
+      chefprojet: [null, Validators.required],
+      manager: [null, Validators.required],
+      collaborateurs: [[], Validators.required]
     });
   }
 
+  ngOnInit(): void {
+    this.loadUsers();
+  }
+
+  loadUsers() {
+    this.userService.getUsers().subscribe(users => {
+      this.users = users;
+    });
+
+  }
 
   openModal() {
     if (this.team) {
-      this.form.patchValue(this.team);
+      this.form.patchValue({
+        nom: this.team.nom,
+        chefprojet: this.team.chefprojet.id,
+        manager: this.team.manager.id,
+        collaborateurs: this.team.collaborateurs.map((collaborator: any) => collaborator.id)
+      });
+    } else {
+      this.form.reset();
     }
-    
+
     const modalElement = this.teamModal.nativeElement;
-    console.log("blablba");
     const modalInstance = new bootstrap.Modal(modalElement);
     modalInstance.show();
   }
@@ -55,42 +78,26 @@ export class TeamModalComponent {
   }
 
   submitForm() {
-
-    if (this.team){
-      const formData = this.form.value;
-      this.teamModalService.putTeams(formData,formData.username,formData.role.toLowerCase()).subscribe(
-        (data: any) => {
-          this.team = data;
-        },
-        error => {
-          console.error('Error fetching users', error);
-        }
-      );
-      this.teamAdded.emit({ ...this.form.value, username: this.team.username });
-      
-    }else{
     if (this.form.valid) {
-      
       const formData = this.form.value;
-      this.teamModalService.postTeams(formData).subscribe(
-        (data: any) => {
-          this.team = data;
-        },
-        error => {
-          console.error('Error fetching users', error);
-        }
-      );
-      
-      
-      
-      
-      this.teamAdded.emit(formData);
-      
-    }
-    
-  }
-  this.form.reset();
-  this.closeModal();
-  }
+      const teamData = {
+        nom: formData.nom,
+        chefprojet: { id: formData.chefprojet },
+        manager: { id: formData.manager },
+        collaborateurs: formData.collaborateurs.map((id: number) => ({ id }))
+      };
 
+      if (this.isEditMode) {
+        this.teamModalService.putTeam(teamData,teamData.nom).subscribe((response: any) => {
+          this.teamAdded.emit(response);
+          this.closeModal();
+        });
+      } else {
+        this.teamModalService.postTeam(teamData).subscribe((response: any) => {
+          this.teamAdded.emit(response);
+          this.closeModal();
+        });
+      }
+    }
+  }
 }
