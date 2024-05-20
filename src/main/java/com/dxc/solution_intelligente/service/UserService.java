@@ -35,9 +35,13 @@ public class UserService implements IUserService {
 
     @Override
     public List<UserDTO> getAllUsers() {
-        return userRepository.findAll().stream().
-                map(bo -> modelMapper.map(bo, UserDTO.class)).
-                collect(Collectors.toList());
+        return userRepository.findAll().stream()
+                .map(bo -> {
+                    UserDTO dto = modelMapper.map(bo, UserDTO.class);
+                    dto.setRole(bo.getRole());  // Set the dtype field manually
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 
     @Override

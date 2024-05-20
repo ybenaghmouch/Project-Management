@@ -1,8 +1,8 @@
-<div class="container mt-4">
+<div class="container mt-4" [formGroup]="searchForm">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h2>Users</h2>
     <div class="d-flex align-items-center">
-      <input type="text" class="form-control search-input me-2" placeholder="Search">
+      <input type="text" class="form-control search-input me-2" placeholder="Search" formControlName="username">
       <button class="btn btn-primary add-user-btn ms-4" (click)="openCreateUserModal()">+ Add user</button>
     </div>
   </div>
@@ -19,7 +19,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let user of users">
-        <td>{{ user.firstName }} {{ user.lastName }}</td>
+        <td>{{ user.civility }} {{ user.firstName }} {{ user.lastName }}</td>
         <td>{{ user.username }}</td>
         <td>{{ user.email }}</td>
         <td>{{ user.role }}</td>

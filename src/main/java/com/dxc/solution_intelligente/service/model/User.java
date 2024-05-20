@@ -21,6 +21,11 @@ public class User {
     protected String Civility;
     protected String Speciality;
     protected boolean Status;
+    @Transient  // This annotation means the field is not persisted in the database.
+    public String getRole() {
+        // This method relies on the class name. You can also directly return a custom string or similar.
+        return this.getClass().getSimpleName();
+    }
 
 
 }
