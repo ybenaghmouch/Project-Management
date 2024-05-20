@@ -1,5 +1,6 @@
 package com.dxc.solution_intelligente.Controlleur;
 
+import com.dxc.solution_intelligente.DTO.Manager.ManagerDTO;
 import com.dxc.solution_intelligente.DTO.Manager.*;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
 import com.dxc.solution_intelligente.service.IManagerService;
@@ -42,5 +43,10 @@ public class ManagerController {
     @PutMapping("/{username}")
     public ResponseEntity<UpdateManagerResponse> updateManager(@PathVariable String username, @RequestBody UpdateManagerRequest dto){
         return new ResponseEntity<>(managerService.updateManager(username, dto), HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public List<ManagerDTO> searchManagerByUsername(@RequestParam String username) {
+        return managerService.findByUsernameContaining(username);
     }
 }
