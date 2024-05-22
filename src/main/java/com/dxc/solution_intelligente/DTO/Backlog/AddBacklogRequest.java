@@ -1,2 +1,12 @@
-package com.dxc.solution_intelligente.DTO.Backlog;public class AddBacklogRequest {
+package com.dxc.solution_intelligente.DTO.Backlog;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+public class AddBacklogRequest {
+    private String titre;
+    private String description;
+    private String Status;
 }
