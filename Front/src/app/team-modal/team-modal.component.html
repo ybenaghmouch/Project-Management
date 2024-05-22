@@ -6,6 +6,16 @@
         <button type="button" class="btn-close" (click)="closeModal()"></button>
       </div>
       <div class="modal-body">
+        <div>
+          <h3>Tags</h3>
+          <tag-input [ngModel]="[]"
+                     [placeholder]="'Enter a new repo'"
+                     [onTextChangeDebounce]="500"
+                     [secondaryPlaceholder]="'Search in Github'"
+                     [onlyFromAutocomplete]="true">
+            <tag-input-dropdown [autocompleteObservable]="requestAutocompleteItems"></tag-input-dropdown>
+          </tag-input>
+        </div>
         <form [formGroup]="form" (ngSubmit)="submitForm()">
           <div class="mb-3">
             <label for="nom" class="form-label">Team Name</label>
@@ -13,7 +23,7 @@
           </div>
           <div class="mb-3">
             <label for="chefprojet" class="form-label">Project Leader</label>
-            <ng-select  class="form-control" [items]="users"
+            <ng-select class="form-control" [items]="users"
                        bindLabel="username"
                        bindValue="id"
                        formControlName="chefprojet"
@@ -22,7 +32,7 @@
           </div>
           <div class="mb-3">
             <label for="manager" class="form-label">Manager</label>
-            <ng-select  class="form-control" [items]="users"
+            <ng-select class="form-control" [items]="users"
                        bindLabel="username"
                        bindValue="id"
                        formControlName="manager"
@@ -31,7 +41,7 @@
           </div>
           <div class="mb-3">
             <label for="collaborateurs" class="form-label">Collaborators</label>
-            <ng-select  class="form-control"[items]="users"
+            <ng-select class="form-control" [items]="users"
                        bindLabel="username"
                        bindValue="id"
                        formControlName="collaborateurs"
@@ -39,6 +49,7 @@
                        [searchable]="true">
             </ng-select>
           </div>
+          
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
             <button type="submit" class="btn btn-primary">{{ isEditMode ? 'Save' : 'Add' }}</button>

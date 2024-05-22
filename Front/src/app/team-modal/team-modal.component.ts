@@ -1,12 +1,14 @@
-import { Component, ElementRef, ViewChild, Input, EventEmitter, Output, OnInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, Input, EventEmitter, Output, OnInit ,AfterViewInit} from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TeamModalService } from './service/team-modal.service';
-import { UserListService } from '../user-list/service/user-list.service';
-import { BrowserModule } from '@angular/platform-browser';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModalModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { map, filter } from 'rxjs/operators';
+import { TagInputModule } from 'ngx-chips';
 
 declare var bootstrap: any;
 
@@ -19,21 +21,21 @@ declare var bootstrap: any;
     HttpClientModule,
     NgbModalModule,
     NgbPaginationModule,
-    NgSelectModule],
+    NgSelectModule,TagInputModule],
   providers: [TeamModalService],
   templateUrl: './team-modal.component.html',
   styleUrls: ['./team-modal.component.css']
 })
-export class TeamModalComponent implements OnInit {
+export class TeamModalComponent implements OnInit  {
   form: FormGroup;
   users: any[] = [];
-
+  items = ['Javascript', 'Typescript'];
   @Output() teamAdded = new EventEmitter<any>();
-  @ViewChild('teamModal') teamModal!: ElementRef;
+  @ViewChild('teamModal', { static: false }) teamModal!: ElementRef;
   @Input() isEditMode: boolean = false;
   @Input() team: any;
 
-  constructor(private formBuilder: FormBuilder, private teamModalService: TeamModalService, private userService: TeamModalService) {
+  constructor(private formBuilder: FormBuilder, private teamModalService: TeamModalService, private userService: TeamModalService,private http: HttpClient) {
     this.form = this.formBuilder.group({
       nom: ['', Validators.required],
       chefprojet: [null, Validators.required],
@@ -41,7 +43,7 @@ export class TeamModalComponent implements OnInit {
       collaborateurs: [[], Validators.required]
     });
   }
-
+ 
   ngOnInit(): void {
     this.loadUsers();
   }
@@ -52,6 +54,13 @@ export class TeamModalComponent implements OnInit {
     });
 
   }
+
+  requestAutocompleteItems = (text: string): Observable<any> => {
+    const url = `https://api.github.com/search/repositories?q=${text}&per_page=2`;
+    return this.http.get<any>(url).pipe(
+      map(data => data.items.map((item: any) => item.full_name))
+    );
+  };
 
   openModal() {
     if (this.team) {
@@ -100,4 +109,5 @@ export class TeamModalComponent implements OnInit {
       }
     }
   }
+  
 }

@@ -81,3 +81,24 @@ body, html {
   .form-control::placeholder {
     color: #6c757d;
   }
+
+
+/* styles.css */
+.modal-content {
+  overflow: visible !important; /* Ensure modal content allows overflow */
+}
+
+/* styles.css */
+.modal-content {
+  overflow: visible !important; /* Ensure modal content allows overflow */
+}
+
+::ng-deep .ng-dropdown-panel {
+  z-index: 1060 !important; /* Ensure it's higher than the Bootstrap modal */
+  position: absolute !important; /* Use absolute positioning */
+  width: 100% !important; /* Adjust width to fit within modal */
+  top: 50px !important; /* Adjust top to ensure it's within modal */
+}
+
+
+  

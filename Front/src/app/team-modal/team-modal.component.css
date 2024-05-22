@@ -40,3 +40,26 @@
 .form-check-input {
   cursor: pointer;
 }
+
+
+
+
+
+.form-select {
+  /*padding: 10px;*/
+  font-size: 1rem;
+  color: rgb(17, 16, 17);
+  background-color: #f7f8fa;
+  border: none;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
+  width: 200px;
+  }
+  ::ng-deep .ng-dropdown-panel {
+    z-index: 1060 !important;
+    position: fixed !important;
+    top: 20% !important; /* Adjust this value to ensure the dropdown stays within the modal */
+    left: 50% !important;
+    transform: translateX(-50%);
+  }
+  
