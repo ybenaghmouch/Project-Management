@@ -55,13 +55,13 @@
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: rgb(144, 76, 144);
+  background: #9B7EC0FF;
   border-radius: 5px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: purple;
+  background: #6f42c1;
 }
 
 
