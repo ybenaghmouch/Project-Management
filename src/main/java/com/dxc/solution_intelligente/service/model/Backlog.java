@@ -17,6 +17,6 @@ public class Backlog {
     private String titre;
     private String description;
     private String Status;
-    /*@OneToMany
-    private List<UserStory> userStories;*/
+    @OneToMany
+    private List<UserStory> userStories;
 }

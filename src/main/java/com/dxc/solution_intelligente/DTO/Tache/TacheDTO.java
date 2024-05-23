@@ -13,7 +13,7 @@ public class TacheDTO {
     private String Code;
     private String Titre;
     private String Description;
-    private int Priorité;
+    private int Priority;
     private Collaborateur Responsable;
     private String Statut;
 }

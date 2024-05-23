@@ -16,7 +16,7 @@ public class Tache {
     private String code;
     private String titre;
     private String Description;
-    private int Priorité;
+    private int Priority;
     @ManyToOne
     private Collaborateur Responsable;
     private String Statut;

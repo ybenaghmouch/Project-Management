@@ -13,7 +13,7 @@ public class AddTacheRequest {
     private String code;
     private String Titre;
     private String Description;
-    private int Priorité;
+    private int Priority;
     private Collaborateur Responsable=null;
     private String Statut;
 
