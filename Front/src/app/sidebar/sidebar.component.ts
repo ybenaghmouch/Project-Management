@@ -19,7 +19,7 @@ export class SidebarComponent {
     { label: 'Settings', icon: 'bi bi-gear' ,link:'#'},
     { label: 'Manage Users', icon: 'bi bi-people' ,link:'/users'},
     { label: 'Manage Teams', icon: 'bi bi-person-plus',link:'/teams' },
-    { label: 'Manage Projects', icon: 'bi bi-briefcase' ,link:'#'},
+    { label: 'Manage Projects', icon: 'bi bi-briefcase' ,link:'/projects'},
     { label: 'Manage Leaves', icon: 'bi bi-airplane' ,link:'#'}
   ];
   selectedItem: number = -1;
