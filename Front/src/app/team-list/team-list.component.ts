@@ -67,7 +67,7 @@ export class TeamListComponent implements AfterViewInit,OnInit{
         "password": "string"
       }
     }
-    // Add more teams 
+    // Add more teams
   ];
   searchForm: FormGroup;
 
@@ -161,16 +161,16 @@ ngOnInit(): void {
     }
   }
   openCreateTeamModal() {
-    
+
     if (this.teamModal) {
-      
+
       this.teamModal.isEditMode = false;
       this.teamModal.team = null;
       console.log("test1");
       this.teamModal.openModal();
-      
-      
-      
+
+
+
     } else {
       console.error('TeamModalComponent is not initialized');
       console.log("test2");
@@ -181,7 +181,7 @@ ngOnInit(): void {
     if (this.teamModal) {
       this.teamModal.isEditMode = true;
       this.teamModal.team = team;
-      
+
       this.teamModal.openModal();
     } else {
       console.error('TeamModalComponent is not initialized');

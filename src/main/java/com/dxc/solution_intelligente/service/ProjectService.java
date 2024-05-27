@@ -38,7 +38,7 @@ public class ProjectService implements IProjectService{
                     throw new BusinessException(String.format("Projet deja existe avec le nom [%s]", name));
                 });
         AddProjectResponse response = modelMapper.map(projectRepository.save(bo), AddProjectResponse.class);
-        response.setMessage(String.format("Projet : [Nom = %s, Description = %s, Date de debut = %s, Date de fin = %s, Duree = %S, Status = %s, Manager = %s, Backlog = %s]", response.getNom(), response.getDescription(), response.getDateDebut(), response.getDateFin(), response.getDuree(), response.getStatus(), response.getManager(), response.getManager()));
+        response.setMessage(String.format("Projet : [Nom = %s, Description = %s, Date de debut = %s, Date de fin = %s, Duree = %S, Status = %s, Manager = %s, Backlog = %s]", response.getNom(), response.getDescription(), response.getDateDebut(), response.getDateFin(), response.getDuree(), response.getStatus(), response.getManager().getUsername(), response.getBacklogs()));
         return response;
     }
 
