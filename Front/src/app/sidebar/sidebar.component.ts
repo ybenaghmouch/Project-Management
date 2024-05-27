@@ -12,8 +12,8 @@ import { RouterModule } from '@angular/router';
 })
 export class SidebarComponent {
   menuItems = [
-    { label: 'Board', icon: 'bi bi-clipboard2-data',link:'#' },
-    { label: 'Backlog', icon: 'bi bi-box-arrow-in-down' ,link:'#'},
+    { label: 'Board', icon: 'bi bi-clipboard2-data',link:'/backlog?backlogId=Testing' },
+    { label: 'Backlog', icon: 'bi bi-box-arrow-in-down' ,link:'/backlogs'},
     { label: 'Report', icon: 'bi bi-bar-chart',link:'#' },
     { label: 'Inbox', icon: 'bi bi-inbox' ,link:'#'},
     { label: 'Settings', icon: 'bi bi-gear' ,link:'#'},

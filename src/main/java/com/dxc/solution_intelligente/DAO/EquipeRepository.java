@@ -9,5 +9,8 @@ import java.util.Optional;
 @Repository
 public interface EquipeRepository extends JpaRepository<Equipe,Long> {
     Optional<Equipe> findByNom(String name);
+
     List<Equipe> findByNomContainingIgnoreCase(String name);
+
+
 }

@@ -56,7 +56,7 @@ public class BacklogService implements IBacklogService{
 
     @Override
     public List<BacklogDTO> findByTitre(String titre) {
-        return backlogRepository.findBacklogByTitre(titre.toLowerCase()).stream()
+        return backlogRepository.findByTitreContainingIgnoreCase(titre.toLowerCase()).stream()
                 .map(backlog -> modelMapper.map(backlog, BacklogDTO.class)).collect(Collectors.toList());
     }
 

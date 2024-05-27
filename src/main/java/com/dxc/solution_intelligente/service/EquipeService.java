@@ -1,9 +1,13 @@
 package com.dxc.solution_intelligente.service;
 
+import com.dxc.solution_intelligente.DAO.ChefProjetRepository;
 import com.dxc.solution_intelligente.DAO.EquipeRepository;
+import com.dxc.solution_intelligente.DAO.ManagerRepository;
 import com.dxc.solution_intelligente.DTO.Equipe.*;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
+import com.dxc.solution_intelligente.service.model.ChefProjet;
 import com.dxc.solution_intelligente.service.model.Equipe;
+import com.dxc.solution_intelligente.service.model.Manager;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +25,9 @@ public class EquipeService implements IEquipeService{
     private PasswordEncoder passwordEncoder;
 
 
+    private ManagerRepository managerRepository;
+
+    private ChefProjetRepository chefProjetRepository;
 
 
     @Override
@@ -42,7 +49,15 @@ public class EquipeService implements IEquipeService{
                 }
         );
         AddEquipeResponse response = modelMapper.map(equipeRepository.save(bo), AddEquipeResponse.class);
-        //response.setMessage(String.format("Equipe : [Nom = %s, Prenom = %s, Nom = %s, Email = %s, Civility = %s, Specilite = %s]", response.getNom(), response.getCollaborateurs().toString(), response.getManager().toString(), response.getChefprojet().toString()));
+        System.out.println("gggg"+equipeRepository.save(bo) );
+        response.setMessage(String.format("Equipe : [Nom = %s]", response.getNom() ));
+
+        ChefProjet chefProjet = chefProjetRepository.findById(response.getChefprojet().getId())
+                .orElseThrow(() -> new BusinessException("ChefProjet not found"));
+        Manager manager = managerRepository.findById(response.getManager().getId())
+                .orElseThrow(() -> new BusinessException("Manager not found"));
+        response.setManager(manager);
+        response.setChefprojet(chefProjet);
         return response;
     }
 

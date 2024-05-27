@@ -19,5 +19,5 @@ public class AddProjectRequest {
     private int duree;
     private String status;
     private Manager manager;
-    private List<Backlog> backlogs;
+    private List<Backlog> backlogs=null;
 }
