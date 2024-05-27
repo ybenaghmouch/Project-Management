@@ -18,7 +18,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let user of users">
-          <td>{{ user.titre }}</td>
+          <td><a [routerLink]="['/backlog']" [queryParams]="{ backlogId: user.titre }">{{ user.titre }}</a></td>
           <td>{{ user.description }}</td>
           <td>{{ user.status }}</td>
           

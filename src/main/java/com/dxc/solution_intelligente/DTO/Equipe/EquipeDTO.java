@@ -1,5 +1,8 @@
 package com.dxc.solution_intelligente.DTO.Equipe;
 
+import com.dxc.solution_intelligente.DTO.Collaborateur.CollaborateurDTO;
+import com.dxc.solution_intelligente.DTO.Manager.ManagerDTO;
+import com.dxc.solution_intelligente.DTO.chefProjet.ChefProjetDTO;
 import com.dxc.solution_intelligente.service.model.ChefProjet;
 import com.dxc.solution_intelligente.service.model.Collaborateur;
 import com.dxc.solution_intelligente.service.model.Manager;

@@ -7,12 +7,13 @@ import { ReactiveFormsModule,FormsModule,FormGroup,FormBuilder } from '@angular/
 import { BackListService } from './service/back-list.service';
 import { HttpClientModule } from '@angular/common/http';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { RouterModule } from '@angular/router';
 const FILTER_PAG_REGEX = /[^0-9]/g;
 
 @Component({
   selector: 'app-backlog-list',
   standalone: true,
-  imports: [CommonModule,NgbPaginationModule,BacklogModalComponent,FormsModule,HttpClientModule,ReactiveFormsModule],
+  imports: [CommonModule,NgbPaginationModule,BacklogModalComponent,FormsModule,HttpClientModule,ReactiveFormsModule,RouterModule],
   providers: [BackListService],
   templateUrl: './backlog-list.component.html',
   styleUrl: './backlog-list.component.css'

@@ -31,6 +31,7 @@
                   <div class="accordion-body">
                     <ul>
                       <li *ngFor="let feature of userStory.features | filterByStatut:'started'">
+                        <hr>
                         <div>
                           <button class="btn btn-link" type="button" data-bs-toggle="collapse"
                             [attr.data-bs-target]="'#feature' + feature.id" aria-expanded="false"
@@ -45,6 +46,7 @@
                             <button class="btn btn-danger">Delete</button>
                           </div>
                         </div>
+                        <hr>
                       </li>
                     </ul>
                     <button class="btn btn-primary">Add</button>
@@ -63,6 +65,7 @@
                   <div class="accordion-body">
                     <ul>
                       <li *ngFor="let feature of userStory.features | filterByStatut:'pending'">
+                        <hr>
                         <div>
                           <button class="btn btn-link" type="button" data-bs-toggle="collapse"
                             [attr.data-bs-target]="'#feature' + feature.id" aria-expanded="false"
@@ -77,7 +80,9 @@
                             <button class="btn btn-danger">Delete</button>
                           </div>
                         </div>
+                        <hr>
                       </li>
+                      
                     </ul>
                     <button class="btn btn-primary">Add</button>
                   </div>
@@ -94,7 +99,7 @@
                 <div id="doneFeatures{{ userStory.id }}" class="accordion-collapse collapse show">
                   <div class="accordion-body">
                     <ul>
-                      <li *ngFor="let feature of userStory.features | filterByStatut:'done'">
+                      <li *ngFor="let feature of userStory.features | filterByStatut:'done'"><hr>
                         <div>
                           <button class="btn btn-link" type="button" data-bs-toggle="collapse"
                             [attr.data-bs-target]="'#feature' + feature.id" aria-expanded="false"
@@ -108,7 +113,7 @@
                             <button class="btn btn-secondary">Edit</button>
                             <button class="btn btn-danger">Delete</button>
                           </div>
-                        </div>
+                        </div><hr>
                       </li>
                     </ul>
                     <button class="btn btn-primary">Add</button>
@@ -148,7 +153,7 @@
                 <div id="startedFeatures{{ userStory.id }}" class="accordion-collapse collapse show">
                   <div class="accordion-body">
                     <ul>
-                      <li *ngFor="let feature of userStory.features | filterByStatut:'started'">
+                      <li *ngFor="let feature of userStory.features | filterByStatut:'started'"><hr>
                         <div>
                           <button class="btn btn-link" type="button" data-bs-toggle="collapse"
                             [attr.data-bs-target]="'#feature' + feature.id" aria-expanded="false"
@@ -162,7 +167,7 @@
                             <button class="btn btn-secondary">Edit</button>
                             <button class="btn btn-danger">Delete</button>
                           </div>
-                        </div>
+                        </div><hr>
                       </li>
                     </ul>
                     <button class="btn btn-primary">Add</button>
@@ -180,7 +185,7 @@
                 <div id="pendingFeatures{{ userStory.id }}" class="accordion-collapse collapse show">
                   <div class="accordion-body">
                     <ul>
-                      <li *ngFor="let feature of userStory.features | filterByStatut:'pending'">
+                      <li *ngFor="let feature of userStory.features | filterByStatut:'pending'"><hr>
                         <div>
                           <button class="btn btn-link" type="button" data-bs-toggle="collapse"
                             [attr.data-bs-target]="'#feature' + feature.id" aria-expanded="false"
@@ -194,7 +199,7 @@
                             <button class="btn btn-secondary">Edit</button>
                             <button class="btn btn-danger">Delete</button>
                           </div>
-                        </div>
+                        </div><hr>
                       </li>
                     </ul>
                     <button class="btn btn-primary">Add</button>
@@ -212,7 +217,8 @@
                 <div id="doneFeatures{{ userStory.id }}" class="accordion-collapse collapse show">
                   <div class="accordion-body">
                     <ul>
-                      <li *ngFor="let feature of userStory.features | filterByStatut:'done'">
+                      <li *ngFor="let feature of userStory.features | filterByStatut:'done'"><hr>
+                        <hr>
                         <div>
                           <button class="btn btn-link" type="button" data-bs-toggle="collapse"
                             [attr.data-bs-target]="'#feature' + feature.id" aria-expanded="false"
@@ -227,6 +233,7 @@
                             <button class="btn btn-danger">Delete</button>
                           </div>
                         </div>
+                        <hr>
                       </li>
                     </ul>
                     <button class="btn btn-primary">Add</button>
@@ -266,7 +273,7 @@
                 <div id="startedFeatures{{ userStory.id }}" class="accordion-collapse collapse show">
                   <div class="accordion-body">
                     <ul>
-                      <li *ngFor="let feature of userStory.features | filterByStatut:'started'">
+                      <li *ngFor="let feature of userStory.features | filterByStatut:'started'"><hr>
                         <div>
                           <button class="btn btn-link" type="button" data-bs-toggle="collapse"
                             [attr.data-bs-target]="'#feature' + feature.id" aria-expanded="false"
@@ -280,7 +287,7 @@
                             <button class="btn btn-secondary">Edit</button>
                             <button class="btn btn-danger">Delete</button>
                           </div>
-                        </div>
+                        </div><hr>
                       </li>
                     </ul>
                     <button class="btn btn-primary">Add</button>
@@ -298,7 +305,7 @@
                 <div id="pendingFeatures{{ userStory.id }}" class="accordion-collapse collapse show">
                   <div class="accordion-body">
                     <ul>
-                      <li *ngFor="let feature of userStory.features | filterByStatut:'pending'">
+                      <li *ngFor="let feature of userStory.features | filterByStatut:'pending'"><hr>
                         <div>
                           <button class="btn btn-link" type="button" data-bs-toggle="collapse"
                             [attr.data-bs-target]="'#feature' + feature.id" aria-expanded="false"
@@ -312,7 +319,7 @@
                             <button class="btn btn-secondary">Edit</button>
                             <button class="btn btn-danger">Delete</button>
                           </div>
-                        </div>
+                        </div><hr>
                       </li>
                     </ul>
                     <button class="btn btn-primary">Add</button>
@@ -330,7 +337,7 @@
                 <div id="doneFeatures{{ userStory.id }}" class="accordion-collapse collapse show">
                   <div class="accordion-body">
                     <ul>
-                      <li *ngFor="let feature of userStory.features | filterByStatut:'done'">
+                      <li *ngFor="let feature of userStory.features | filterByStatut:'done'"><hr>
                         <div>
                           <button class="btn btn-link" type="button" data-bs-toggle="collapse"
                             [attr.data-bs-target]="'#feature' + feature.id" aria-expanded="false"
@@ -344,7 +351,7 @@
                             <button class="btn btn-secondary">Edit</button>
                             <button class="btn btn-danger">Delete</button>
                           </div>
-                        </div>
+                        </div><hr>
                       </li>
                     </ul>
                     <button class="btn btn-primary">Add</button>

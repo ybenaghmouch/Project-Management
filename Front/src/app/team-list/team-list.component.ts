@@ -7,12 +7,13 @@ import { ReactiveFormsModule,FormsModule,FormGroup,FormBuilder } from '@angular/
 import { TeamListService } from './service/team-list.service';
 import { HttpClientModule } from '@angular/common/http';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { RouterModule } from '@angular/router';
 const FILTER_PAG_REGEX = /[^0-9]/g;
 
 @Component({
   selector: 'app-team-list',
   standalone: true,
-  imports: [CommonModule,NgbPaginationModule,TeamModalComponent,FormsModule,HttpClientModule,ReactiveFormsModule],
+  imports: [CommonModule,NgbPaginationModule,TeamModalComponent,FormsModule,HttpClientModule,ReactiveFormsModule,RouterModule],
   providers: [TeamListService],
   templateUrl: './team-list.component.html',
   styleUrl: './team-list.component.css'
