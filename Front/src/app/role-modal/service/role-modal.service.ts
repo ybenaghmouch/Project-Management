@@ -5,16 +5,15 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class ProjectModalService {
+export class RoleModalService {
 
   constructor(private http: HttpClient) { }
 
-
-  postProject(formData: any): Observable<any> {
-    return this.http.post<any>(`/api/project`,formData);
+  postRole(formData: any): Observable<any> {
+    return this.http.post<any>(`/api/role`,formData);
   }
-  putProject(formData: any,name: string): Observable<any> {
-    return this.http.put<any>(`/api/project/${name}`,formData);
+  putRole(formData: any,username: string): Observable<any> {
+    return this.http.put<any>(`/api/role/${username}`,formData);
   }
   getUsers(type: string = "user"): Observable<any[]> {
     return this.http.get<any[]>(`/api/user`);

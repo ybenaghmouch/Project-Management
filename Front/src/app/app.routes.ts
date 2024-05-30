@@ -4,13 +4,17 @@ import { UserListComponent } from './user-list/user-list.component';
 import { TeamListComponent } from './team-list/team-list.component';
 import { BacklogListComponent } from './backlog-list/backlog-list.component';
 import { BacklogComponent } from './backlog/backlog.component';
-import { CommonModule } from '@angular/common'; // Import CommonModule
+import { CommonModule } from '@angular/common';
+import { ProjectListComponent } from './project-list/project-list.component';
+import { RoleListComponent } from './role-list/role-list.component';
 
 export const routes: Routes = [
     { path: 'users', component: UserListComponent },
     { path: 'backlogs', component: BacklogListComponent },
     { path: 'backlog', component: BacklogComponent },
-    { path: 'teams', component: TeamListComponent }
+    { path: 'projects', component: ProjectListComponent },
+    { path: 'teams', component: TeamListComponent },
+    { path: 'roles', component: RoleListComponent }
 ];
 
 @NgModule({

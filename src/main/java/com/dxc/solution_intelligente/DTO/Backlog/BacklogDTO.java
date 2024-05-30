@@ -13,4 +13,5 @@ public class BacklogDTO {
     private String titre;
     private String description;
     private String Status;
-    private List<UserStory> userStories;}
+    private List<UserStory> userStories;
+}

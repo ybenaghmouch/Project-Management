@@ -43,7 +43,7 @@ export class TeamModalComponent implements OnInit  {
       collaborateurs: [[], Validators.required]
     });
   }
- 
+
   ngOnInit(): void {
     this.loadUsers();
   }
@@ -55,12 +55,7 @@ export class TeamModalComponent implements OnInit  {
 
   }
 
-  requestAutocompleteItems = (text: string): Observable<any> => {
-    const url = `https://api.github.com/search/repositories?q=${text}&per_page=2`;
-    return this.http.get<any>(url).pipe(
-      map(data => data.items.map((item: any) => item.full_name))
-    );
-  };
+
 
   openModal() {
     if (this.team) {
@@ -109,5 +104,5 @@ export class TeamModalComponent implements OnInit  {
       }
     }
   }
-  
+
 }

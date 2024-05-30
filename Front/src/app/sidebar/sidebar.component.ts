@@ -20,7 +20,8 @@ export class SidebarComponent {
     { label: 'Manage Users', icon: 'bi bi-people' ,link:'/users'},
     { label: 'Manage Teams', icon: 'bi bi-person-plus',link:'/teams' },
     { label: 'Manage Projects', icon: 'bi bi-briefcase' ,link:'/projects'},
-    { label: 'Manage Leaves', icon: 'bi bi-airplane' ,link:'#'}
+    { label: 'Manage Leaves', icon: 'bi bi-airplane' ,link:'#'},
+    { label: 'Manage Roles', icon: 'bi bi-people-fill' ,link:'/roles'}
   ];
   selectedItem: number = -1;
 

@@ -1,0 +1,42 @@
+<div class="modal fade" id="roleModal" tabindex="-1" aria-labelledby="roleModalLabel" aria-hidden="true" #roleModal>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="roleModalLabel">{{ isEditMode ? 'Edit Role' : 'Create Role' }}</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="form" (ngSubmit)="submitForm()">
+          <div class="mb-3">
+            <label for="authority" class="form-label">Role Name</label>
+            <input type="text" class="form-control" id="authority" formControlName="authority" placeholder="Role">
+          </div>
+          <!-- Permissions for each module -->
+          <div class="mb-3" *ngFor="let module of modules">
+            <div class="d-flex align-items-center">
+              <label class="form-label me-3" style="width: 100px;">{{ module.name }}</label>
+              <div class="d-flex flex-grow-1">
+                <label class="form-check-label me-2">
+                  <input type="checkbox" formControlName="read_{{module.key}}"> Read
+                </label>
+                <label class="form-check-label me-2">
+                  <input type="checkbox" formControlName="write_{{module.key}}"> Write
+                </label>
+                <label class="form-check-label me-2">
+                  <input type="checkbox" formControlName="edit_{{module.key}}"> Edit
+                </label>
+                <label class="form-check-label me-2">
+                  <input type="checkbox" formControlName="delete_{{module.key}}"> Delete
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary">{{ isEditMode ? 'Save' : 'Add' }}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
