@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 public class EquipeService implements IEquipeService{
     private final EquipeRepository equipeRepository;
     private final ModelMapper modelMapper;
-    private PasswordEncoder passwordEncoder;
 
 
     private ManagerRepository managerRepository;

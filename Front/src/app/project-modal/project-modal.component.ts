@@ -1,6 +1,6 @@
-import { Component , ElementRef, ViewChild, Input, EventEmitter, Output, OnInit ,AfterViewInit, inject} from '@angular/core';
+import { Component, ElementRef, ViewChild, Input, EventEmitter, Output, OnInit, AfterViewInit, inject } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { ProjectModalService } from './service/project-modal.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -22,63 +22,17 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-project-modal',
   standalone: true,
-  imports: [NgIf, NgFor, ReactiveFormsModule,FormsModule,
+  imports: [NgIf, NgFor, ReactiveFormsModule, FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
     NgbModalModule,
     NgbPaginationModule,
-    NgSelectModule,TagInputModule, NgbDatepickerModule, NgbAlertModule, JsonPipe],
-    providers: [ProjectModalService, DatePipe],
+    NgSelectModule, TagInputModule, NgbDatepickerModule, NgbAlertModule, JsonPipe],
+  providers: [ProjectModalService, DatePipe],
   templateUrl: './project-modal.component.html',
   styleUrl: './project-modal.component.css'
 })
-export class ProjectModalComponent implements OnInit{
-
-  formattedDateDebut: string = '';
-
-  calendar = inject(NgbCalendar);
-	//formatter = inject(NgbDateParserFormatter);
-
-	hoveredDate: NgbDate | null = null;
-	fromDate: NgbDate | null = this.calendar.getToday();
-	toDate: NgbDate | null = this.calendar.getNext(this.calendar.getToday(), 'd', 10);
-
-	onDateSelection(date: NgbDate) {
-		if (!this.fromDate && !this.toDate) {
-			this.fromDate = date;
-		} else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
-			this.toDate = date;
-		} else {
-			this.toDate = null;
-			this.fromDate = date;
-		}
-	}
-
-	isHovered(date: NgbDate) {
-		return (
-			this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate)
-		);
-	}
-
-	isInside(date: NgbDate) {
-		return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
-	}
-
-	isRange(date: NgbDate) {
-		return (
-			date.equals(this.fromDate) ||
-			(this.toDate && date.equals(this.toDate)) ||
-			this.isInside(date) ||
-			this.isHovered(date)
-		);
-	}
-
-	validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
-		const parsed = this.formatter.parse(input);
-		return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
-	}
-
-
+export class ProjectModalComponent implements OnInit {
 
   form: FormGroup;
   users: any[] = [];
@@ -89,7 +43,7 @@ export class ProjectModalComponent implements OnInit{
   @Input() project: any;
 
 
-  constructor(private cdr: ChangeDetectorRef, private formatter: NgbDateParserFormatter,private formBuilder: FormBuilder, private projectModalService: ProjectModalService, private userService: ProjectModalService,private http: HttpClient, private datePipe: DatePipe) {
+  constructor(private cdr: ChangeDetectorRef, private formatter: NgbDateParserFormatter, private formBuilder: FormBuilder, private projectModalService: ProjectModalService, private userService: ProjectModalService, private http: HttpClient, private datePipe: DatePipe) {
     this.form = this.formBuilder.group({
       nom: ['', Validators.required],
       description: ['', Validators.required],
@@ -97,22 +51,11 @@ export class ProjectModalComponent implements OnInit{
       dateFin: ['', Validators.required],
       duration: ['', Validators.required],
       status: ['', Validators.required],
-      manager: [[], Validators.required],
-      backlogs: [[], Validators.required],
+      manager: [null, Validators.required],
+      //backlogs: [[], Validators.required],
     });
-    const dateDebutControl = this.form.get('dateDebut');
-    if (dateDebutControl) {
-      dateDebutControl.valueChanges.subscribe(date => {
-        this.formattedDateDebut = this.datePipe.transform(date, 'yyyy-MM-dd') ?? '';
-      });
-    } else {
-      // Optionally handle the case where the control doesn't exist
-      console.error('dateDebut control is not found in the form!');
-    }
 
   }
-
-
 
   ngOnInit(): void {
     this.loadUsers();
@@ -125,14 +68,13 @@ export class ProjectModalComponent implements OnInit{
   }
 
 
-
-
   private formatDate(dateStr: string): string {
     const date = new Date(dateStr);
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const day = date.getDate();
-    return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;}
+    return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+  }
   // transformDate(date: string | null): string | null {
   //   if (date === null) {
   //     return null;
@@ -143,9 +85,8 @@ export class ProjectModalComponent implements OnInit{
 
   openModal() {
     if (this.project) {
-      const managerIds = this.project.manager ? [this.project.manager.id] : [];
-      const DateDebut = this.formatDate(this.project.dateDebut);
-      const dateFin = this.formatDate(this.project.dateFin);
+       const DateDebut = this.formatDate(this.project.dateDebut);
+       const dateFin = this.formatDate(this.project.dateFin);
       this.form.patchValue({
         nom: this.project.nom,
         description: this.project.description,
@@ -153,10 +94,9 @@ export class ProjectModalComponent implements OnInit{
         dateFin: dateFin,
         duration: this.project.duree,
         status: this.project.status,
-        manager: managerIds,
-        backlogs: this.project.backlogs.map((backlog: any) => backlog.id)
+        manager: this.project.manager.id,
+        //backlogs: this.project.backlogs.map((backlog: any) => backlog.id)
       });
-      console.log("DateDebut : ", DateDebut);
 
     } else {
       this.form.reset();
@@ -177,19 +117,25 @@ export class ProjectModalComponent implements OnInit{
   submitForm() {
     if (this.form.valid) {
       const formData = this.form.value;
+      const DateDebut = this.formatDate(formData.dateDebut);
+      const DateFin = this.formatDate(formData.dateFin);
+
+      console.log("Formatted DateDebut:", DateDebut);
+      console.log("Formatted DateFin:", DateFin);
       const projectData = {
         nom: formData.nom,
         description: formData.description,
-        dateDebut: formData.dateDebut,
-        dateFin: formData.dateFin,
-        duration: formData.duration,
+        dateDebut: this.formatDate(formData.dateDebut),
+        dateFin: this.formatDate(formData.dateFin),
+        duree: formData.duration,
         status: formData.status,
         manager: { id: formData.manager },
-        backlogs: formData.backlogs.map((id: number) => ({ id }))
+        //backlogs: formData.backlogs.map((id: number) => ({ id }))
       };
+      console.log("Sending Project Data:", projectData);
 
       if (this.isEditMode) {
-        this.projectModalService.putProject(projectData,projectData.nom).subscribe((response: any) => {
+        this.projectModalService.putProject(projectData, projectData.nom).subscribe((response: any) => {
           this.projectAdded.emit(response);
           this.closeModal();
         });
@@ -201,6 +147,7 @@ export class ProjectModalComponent implements OnInit{
       }
     }
   }
+
 
 
 
