@@ -29,6 +29,11 @@ public class UserController {
         return userService.findByUsernameContaining(username);
     }
 
+    @GetMapping("/find")
+    public List<UserDTO> searchUserByUsername(@RequestParam String Role, @RequestParam String username) {
+        return userService.findRoleAndByUsernameContaining( Role, username);
+    }
+
     @PostMapping()
     public ResponseEntity<?> createUser(@RequestBody AddUserRequest dto) {
         try {

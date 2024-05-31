@@ -22,7 +22,7 @@ public class Project {
     private int duree;
     private String status;
     @ManyToOne
-    private Manager manager;
+    private User manager;
     @OneToMany
     private List<Backlog> backlogs;
 

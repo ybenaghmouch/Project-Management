@@ -1,8 +1,11 @@
 package com.dxc.solution_intelligente.DTO.User;
 
+import com.dxc.solution_intelligente.service.model.Role;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DialectOverride;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -16,7 +19,7 @@ public class UserDTO {
     protected String civility;
     protected String speciality;
     protected boolean status;
-    private String Role;
+    private List<Role> authorities;
 
 
 

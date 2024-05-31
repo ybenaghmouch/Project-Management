@@ -15,11 +15,11 @@ public class Equipe {
     private Long id;
     private String nom;
     @ManyToOne
-    private ChefProjet Chefprojet;
+    private User Chefprojet;
     @ManyToMany
-    private List<Collaborateur> Collaborateurs;
+    private List<User> Collaborateurs;
     @ManyToOne
-    private Manager Manager;
+    private User Manager;
 
 
 }

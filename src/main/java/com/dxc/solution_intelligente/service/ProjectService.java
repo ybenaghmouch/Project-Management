@@ -1,11 +1,9 @@
 package com.dxc.solution_intelligente.service;
 
-import com.dxc.solution_intelligente.DAO.ManagerRepository;
 import com.dxc.solution_intelligente.DAO.ProjectRepository;
-import com.dxc.solution_intelligente.DTO.Manager.*;
+
 import com.dxc.solution_intelligente.DTO.Project.*;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
-import com.dxc.solution_intelligente.service.model.Manager;
 import com.dxc.solution_intelligente.service.model.Project;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;

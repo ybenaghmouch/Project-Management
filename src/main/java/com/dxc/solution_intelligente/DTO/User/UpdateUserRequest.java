@@ -1,7 +1,10 @@
 package com.dxc.solution_intelligente.DTO.User;
 
+import com.dxc.solution_intelligente.service.model.Role;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -16,5 +19,5 @@ public class UpdateUserRequest {
     protected String Speciality;
     protected int soldeConge=30;
     protected boolean Status=true;
-    private String Role;
+    private List<Role> authorities;
 }

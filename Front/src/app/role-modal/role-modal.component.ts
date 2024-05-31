@@ -84,6 +84,7 @@ export class RoleModalComponent implements OnInit {
 
   openModal() {
     if (this.role) {
+      
       const authorities = this.role.authorities.map((auth: any) => auth.id);
       this.form.patchValue({
         authority: this.role.authority,
