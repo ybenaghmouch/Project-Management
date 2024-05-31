@@ -6,7 +6,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserModalComponent } from '../user-modal/user-modal.component';
 import { ReactiveFormsModule,FormsModule,FormGroup,FormBuilder } from '@angular/forms';
 import { UserListService } from './service/user-list.service';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient,HttpClientModule } from '@angular/common/http';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
@@ -22,9 +22,26 @@ const FILTER_PAG_REGEX = /[^0-9]/g;
 export class UserListComponent implements AfterViewInit,OnInit {
   isVisible: boolean = false;
   users = [
-    { id:0, firstName: 'Elizabeth',lastName: 'Lopez', username: 'elizabethtlopez', email: 'elopez@yahoo.com', role: 'Admin', status: true, civility: 'Mme.'
+    { id:0, firstName: 'Elizabeth',lastName: 'Lopez', username: 'elizabethtlopez', email: 'elopez@yahoo.com', authorities: [
+      {
+          "id": 21,
+          "authority": "user_read"
+      },
+      {
+          "id": 22,
+          "authority": "user_write"
+      },
+      {
+          "id": 23,
+          "authority": "user_edit"
+      },
+      {
+          "id": 24,
+          "authority": "user_delete"
+      }
+  ], status: true, civility: 'Mme.'
       
-     },{id:1, firstName: 'mehdi',lastName: 'mehdi', username: 'mehdi', email: 'mehdi@yahoo.com', role: 'Admin', status: true, civility: 'Mr.'}
+     }
     // Add more users 
   ];
   searchForm: FormGroup;
@@ -59,7 +76,7 @@ export class UserListComponent implements AfterViewInit,OnInit {
 
 
 
-  constructor(private modalService: NgbModal,private userListService :UserListService,private fb: FormBuilder) {
+  constructor(private modalService: NgbModal,private userListService :UserListService,private fb: FormBuilder,private http: HttpClient) {
     this.searchForm = this.fb.group({
     username: ['']
   });
@@ -94,6 +111,7 @@ ngOnInit(): void {
       console.error('UserModalComponent is not initialized');
     }
   }
+  displayAuthorities(authorities: any[]): string {     return authorities.map(auth => auth.authority).join(', '); }
   loadUsers() {
     this.userListService.getUsers().subscribe(
       (data: any[]) => {

@@ -12,8 +12,8 @@ export class UserModalService {
   postUsers(formData: any): Observable<any> {
     return this.http.post<any>(`/api/user`,formData);
   }
-  putUsers(formData: any,username: string,role: string): Observable<any> {
-    return this.http.put<any>(`/api/${role}/${username}`,formData);
+  putUsers(formData: any,username: string): Observable<any> {
+    return this.http.put<any>(`/api/user/${username}`,formData);
   }
 
 }

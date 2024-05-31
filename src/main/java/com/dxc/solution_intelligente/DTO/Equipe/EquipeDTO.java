@@ -1,11 +1,7 @@
 package com.dxc.solution_intelligente.DTO.Equipe;
 
-import com.dxc.solution_intelligente.DTO.Collaborateur.CollaborateurDTO;
-import com.dxc.solution_intelligente.DTO.Manager.ManagerDTO;
-import com.dxc.solution_intelligente.DTO.chefProjet.ChefProjetDTO;
-import com.dxc.solution_intelligente.service.model.ChefProjet;
-import com.dxc.solution_intelligente.service.model.Collaborateur;
-import com.dxc.solution_intelligente.service.model.Manager;
+
+import com.dxc.solution_intelligente.service.model.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,10 +12,10 @@ public class EquipeDTO {
     private Long id;
     private String Nom;
 
-    private ChefProjet Chefprojet;
+    private User Chefprojet;
 
-    private List<Collaborateur> Collaborateurs;
+    private List<User> Collaborateurs;
 
-    private Manager Manager;
+    private User Manager;
 
 }
