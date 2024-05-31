@@ -44,6 +44,7 @@ public class UserService implements IUserService {
                 .collect(Collectors.toList());
     }
 
+
     @Override
     public List<UserDTO> findByUsernameContaining(String searchTerm) {
         return userRepository.findByUsernameContainingIgnoreCase(searchTerm.toLowerCase()).stream().
