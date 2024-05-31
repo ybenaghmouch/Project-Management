@@ -1,6 +1,6 @@
 package com.dxc.solution_intelligente.DTO.Tache;
 
-import com.dxc.solution_intelligente.service.model.Collaborateur;
+import com.dxc.solution_intelligente.service.model.User;
 import jakarta.validation.constraints.Null;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +14,7 @@ public class AddTacheRequest {
     private String Titre;
     private String Description;
     private int Priority;
-    private Collaborateur Responsable=null;
+    private User Responsable=null;
     private String Statut;
 
     public AddTacheRequest() {

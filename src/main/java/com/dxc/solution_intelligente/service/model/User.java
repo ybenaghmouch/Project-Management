@@ -24,14 +24,10 @@ public class User {
     private String Civility;
     private String Speciality;
     private boolean Status;
-    //private int soldeConge;
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "USER_ROLE")
+    private int soldeConge;
+    @ManyToMany
     private List<Role> authorities;
-    @Transient
-    public String getRole() {
-        return this.getClass().getSimpleName();
-    }
+
 
 
 }

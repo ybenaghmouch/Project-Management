@@ -66,3 +66,52 @@
   background-color: #f6f6f6 !important;
   color: #6f42c1 !important;
 }
+
+::ng-deep .ng-select {
+  display: block;
+  width: 100%; /* Ensures the select takes full width of its container */
+}
+
+::ng-deep .ng-select .ng-select-container {
+  height: auto;
+  padding: 0.375rem 0.75rem;
+  background-color: #ffffff;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  line-height: 1.5; /* Matches default line-height for form controls */
+}
+
+::ng-deep .ng-select .ng-value-container {
+  display: flex;
+  flex-wrap: wrap; /* Allows multiple selected items to wrap */
+  align-items: center;
+}
+
+::ng-deep .ng-select .ng-value {
+  margin: 2px 5px 2px 0; /* Spacing between tags in multi-select */
+  background-color: #e9ecef; /* Light grey background for tags */
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+}
+
+::ng-deep .ng-select .ng-placeholder {
+  color: #6c757d; /* Placeholder color similar to that of default inputs */
+}
+
+::ng-deep .ng-select .ng-option {
+  padding: 0.5rem 1rem; /* Padding for dropdown options */
+  font-size: 1rem; /* Font size for options */
+}
+
+::ng-deep .ng-dropdown-panel {
+  background-color: #ffffff;
+  border: 1px solid #ced4da;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  z-index: 1060;
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  margin-top: 20%;
+  transform: translateX(-50%);
+}

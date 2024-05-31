@@ -1,17 +1,10 @@
 package com.dxc.solution_intelligente.service;
 
 import com.dxc.solution_intelligente.DAO.PermissionRepository;
-import com.dxc.solution_intelligente.DTO.Backlog.UpdateBacklogRequest;
-import com.dxc.solution_intelligente.DTO.Backlog.UpdateBacklogResponse;
-import com.dxc.solution_intelligente.DTO.Manager.*;
+
 import com.dxc.solution_intelligente.DTO.Permission.*;
-import com.dxc.solution_intelligente.DTO.Tache.UpdateTacheRequest;
-import com.dxc.solution_intelligente.DTO.Tache.UpdateTacheResponse;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
-import com.dxc.solution_intelligente.service.model.Backlog;
-import com.dxc.solution_intelligente.service.model.Manager;
 import com.dxc.solution_intelligente.service.model.Permission;
-import com.dxc.solution_intelligente.service.model.Tache;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;

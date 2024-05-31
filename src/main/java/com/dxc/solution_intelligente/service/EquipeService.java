@@ -1,16 +1,14 @@
 package com.dxc.solution_intelligente.service;
 
-import com.dxc.solution_intelligente.DAO.ChefProjetRepository;
 import com.dxc.solution_intelligente.DAO.EquipeRepository;
-import com.dxc.solution_intelligente.DAO.ManagerRepository;
+import com.dxc.solution_intelligente.DAO.UserRepository;
 import com.dxc.solution_intelligente.DTO.Equipe.*;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
-import com.dxc.solution_intelligente.service.model.ChefProjet;
 import com.dxc.solution_intelligente.service.model.Equipe;
-import com.dxc.solution_intelligente.service.model.Manager;
+import com.dxc.solution_intelligente.service.model.User;
 import lombok.AllArgsConstructor;
+import org.apache.catalina.Manager;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +22,9 @@ public class EquipeService implements IEquipeService{
     private final ModelMapper modelMapper;
 
 
-    private ManagerRepository managerRepository;
+    private UserRepository userRepository;
 
-    private ChefProjetRepository chefProjetRepository;
+
 
 
     @Override
@@ -51,9 +49,9 @@ public class EquipeService implements IEquipeService{
         System.out.println("gggg"+equipeRepository.save(bo) );
         response.setMessage(String.format("Equipe : [Nom = %s]", response.getNom() ));
 
-        ChefProjet chefProjet = chefProjetRepository.findById(response.getChefprojet().getId())
+        User chefProjet = userRepository.findById(response.getChefprojet().getId())
                 .orElseThrow(() -> new BusinessException("ChefProjet not found"));
-        Manager manager = managerRepository.findById(response.getManager().getId())
+        User manager = userRepository.findById(response.getManager().getId())
                 .orElseThrow(() -> new BusinessException("Manager not found"));
         response.setManager(manager);
         response.setChefprojet(chefProjet);
