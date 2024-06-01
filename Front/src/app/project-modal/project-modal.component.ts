@@ -36,7 +36,6 @@ export class ProjectModalComponent implements OnInit {
 
   form: FormGroup;
   users: any[] = [];
-  items = ['Javascript', 'Typescript'];
   @Output() projectAdded = new EventEmitter<any>();
   @ViewChild('projectModal', { static: false }) projectModal!: ElementRef;
   @Input() isEditMode: boolean = false;
@@ -59,6 +58,40 @@ export class ProjectModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadUsers();
+    this.subscribeToDateChanges();
+    if (this.project) {
+      this.form.patchValue(this.project);
+    }
+  }
+
+  subscribeToDateChanges() {
+    const startDateControl = this.form.get('dateDebut');
+    const endDateControl = this.form.get('dateFin');
+
+    if (startDateControl && endDateControl) {
+      startDateControl.valueChanges.subscribe(() => {
+        this.updateDuration();
+      });
+      endDateControl.valueChanges.subscribe(() => {
+        this.updateDuration();
+      });
+    }
+  }
+
+  updateDuration() {
+    const startDate = this.form.get('dateDebut')?.value;
+    const endDate = this.form.get('dateFin')?.value;
+    if (startDate && endDate) {
+      const duration = this.calculateDuration(startDate, endDate);
+      this.form.patchValue({ duration: duration });
+    }
+  }
+
+  calculateDuration(startDate: string, endDate: string): number {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const duration = (end.getTime() - start.getTime()) / (1000 * 3600 * 24); // Convert to days
+    return Math.max(0, duration); // Ensure non-negative duration
   }
 
   loadUsers() {
@@ -75,13 +108,6 @@ export class ProjectModalComponent implements OnInit {
     const day = date.getDate();
     return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
   }
-  // transformDate(date: string | null): string | null {
-  //   if (date === null) {
-  //     return null;
-  //   }
-  //   return this.datePipe.transform(date, 'yyyy-MM-dd');
-  // }
-
 
   openModal() {
     if (this.project) {
@@ -95,7 +121,6 @@ export class ProjectModalComponent implements OnInit {
         duration: this.project.duree,
         status: this.project.status,
         manager: this.project.manager.id,
-        //backlogs: this.project.backlogs.map((backlog: any) => backlog.id)
       });
 
     } else {
@@ -116,39 +141,43 @@ export class ProjectModalComponent implements OnInit {
 
   submitForm() {
     if (this.form.valid) {
-      const formData = this.form.value;
-      const DateDebut = this.formatDate(formData.dateDebut);
-      const DateFin = this.formatDate(formData.dateFin);
+        const formData = this.form.value;
+        const DateDebut = this.formatDate(formData.dateDebut);
+        const DateFin = this.formatDate(formData.dateFin);
 
-      console.log("Formatted DateDebut:", DateDebut);
-      console.log("Formatted DateFin:", DateFin);
-      const projectData = {
-        nom: formData.nom,
-        description: formData.description,
-        dateDebut: this.formatDate(formData.dateDebut),
-        dateFin: this.formatDate(formData.dateFin),
-        duree: formData.duration,
-        status: formData.status,
-        manager: { id: formData.manager },
-        //backlogs: formData.backlogs.map((id: number) => ({ id }))
-      };
-      console.log("Sending Project Data:", projectData);
+        console.log("Formatted DateDebut:", DateDebut);
+        console.log("Formatted DateFin:", DateFin);
 
-      if (this.isEditMode) {
-        this.projectModalService.putProject(projectData, projectData.nom).subscribe((response: any) => {
-          this.projectAdded.emit(response);
-          this.closeModal();
-        });
-      } else {
-        this.projectModalService.postProject(projectData).subscribe((response: any) => {
-          this.projectAdded.emit(response);
-          this.closeModal();
-        });
-      }
+        if (new Date(DateDebut) >= new Date(DateFin)) {
+            alert("La date de début doit être antérieure à la date de fin.");
+            return;
+        }
+
+        const projectData = {
+            nom: formData.nom,
+            description: formData.description,
+            dateDebut: DateDebut,
+            dateFin: DateFin,
+            duree: formData.duration,
+            status: formData.status,
+            manager: { id: formData.manager },
+        };
+        console.log("Sending Project Data:", projectData);
+
+        if (this.isEditMode) {
+            this.projectModalService.putProject(projectData, projectData.nom).subscribe((response: any) => {
+                this.projectAdded.emit(response);
+                this.closeModal();
+            });
+        } else {
+            this.projectModalService.postProject(projectData).subscribe((response: any) => {
+                this.projectAdded.emit(response);
+                this.closeModal();
+
+            });
+        }
     }
-  }
-
-
+}
 
 
 }

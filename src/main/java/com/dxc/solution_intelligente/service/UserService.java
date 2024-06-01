@@ -91,7 +91,7 @@ public class UserService implements IUserService {
 
         response.setMessage(String.format("User: [Nom = %s, Prenom = %s, Username = %s, Email = %s, Civility = %s, Speciality = %s, Role = %s]",
                 response.getFirstName(), response.getLastName(), response.getUsername(),
-                response.getEmail(), response.getCivility(), response.getSpeciality(), savedUser.getClass().getSimpleName()));
+                response.getEmail(), response.getCivility(), response.getSpeciality(), response.getAuthorities()));
 
         return response;
     }
