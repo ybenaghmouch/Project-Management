@@ -21,6 +21,7 @@ public class User {
     private String Email;
     private String Password;
     private boolean Force_change_password;
+    @Column(nullable = false)
     private String Civility;
     private String Speciality;
     private boolean Status;

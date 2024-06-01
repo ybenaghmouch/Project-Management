@@ -3,6 +3,7 @@ package com.dxc.solution_intelligente.service;
 import com.dxc.solution_intelligente.DAO.EquipeRepository;
 import com.dxc.solution_intelligente.DAO.UserRepository;
 import com.dxc.solution_intelligente.DTO.Equipe.*;
+import com.dxc.solution_intelligente.DTO.Project.ProjectDTO;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
 import com.dxc.solution_intelligente.service.model.Equipe;
 import com.dxc.solution_intelligente.service.model.User;
@@ -77,4 +78,10 @@ public class EquipeService implements IEquipeService{
                 map(equipe -> modelMapper.map(equipe, EquipeDTO.class)).
                 collect(Collectors.toList());
     }
+    @Override
+    public EquipeDTO findByNom(String searchTerm) {
+        return
+        modelMapper.map(equipeRepository.findByNom(searchTerm.toLowerCase()), EquipeDTO.class);
+    }
+
 }

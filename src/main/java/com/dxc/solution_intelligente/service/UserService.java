@@ -99,13 +99,31 @@ public class UserService implements IUserService {
 
     @Override
     public UpdateUserResponse updateUser(String username, UpdateUserRequest updateUserRequest) {
-        User userToPersist = modelMapper.map(updateUserRequest, User.class);
-        User userFound = userRepository.findAll().stream().filter(bo -> bo.getUsername().equals(username)).findFirst().orElseThrow(
-                () -> new BusinessException(String.format("User avec le username [%s] deja existe!", username))
-        );
-        userToPersist.setId(userFound.getId());
-        userToPersist.setUsername(username);
-        UpdateUserResponse updateUserResponse = modelMapper.map(userRepository.save(userToPersist), UpdateUserResponse.class);
+        User userFound = userRepository.findAll().stream()
+                .filter(bo -> bo.getUsername().equals(username))
+                .findFirst()
+                .orElseThrow(() -> new BusinessException(String.format("User avec le username [%s] n'existe pas!", username)));
+
+        // Use ModelMapper to map non-null properties from updateUserRequest to userFound
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setSkipNullEnabled(true);
+        modelMapper.map(updateUserRequest, userFound);
+        if (updateUserRequest.getPassword() != null) {
+            userFound.setPassword(passwordEncoder.encode(updateUserRequest.getPassword()));
+        }
+        // Authorities handling
+        if (updateUserRequest.getAuthorities() != null && !updateUserRequest.getAuthorities().isEmpty()) {
+            List<Role> authorities = updateUserRequest.getAuthorities().stream()
+                    .map(role -> roleRepository.findById(role.getId())
+                            .orElse(null))
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+            userFound.setAuthorities(authorities);
+        }
+
+        User savedUser = userRepository.save(userFound);
+
+        UpdateUserResponse updateUserResponse = modelMapper.map(savedUser, UpdateUserResponse.class);
         List<Role> authorities = updateUserResponse.getAuthorities();
         List<Role> completeAuthorities = authorities.stream()
                 .map(role -> roleRepository.findById(role.getId())
@@ -113,7 +131,8 @@ public class UserService implements IUserService {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
         updateUserResponse.setAuthorities(completeAuthorities);
-        updateUserResponse.setMessage(String.format("User avec username [%s] a ete modifie avec succes !", username));
+        updateUserResponse.setMessage(String.format("User avec username [%s] a été modifié avec succès !", username));
+
         return updateUserResponse;
     }
 }

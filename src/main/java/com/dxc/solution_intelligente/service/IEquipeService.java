@@ -9,4 +9,5 @@ public interface IEquipeService {
     AddEquipeResponse createEquipe(AddEquipeRequest addEquipeRequest);
     UpdateEquipeResponse updateEquipe(String username, UpdateEquipeRequest updateEquipeRequest);
     List<EquipeDTO> findByNomContaining(String searchTerm);
+    EquipeDTO findByNom(String searchTerm);
 }

@@ -60,7 +60,13 @@ public class EquipeController {
 
 
     @GetMapping("/search")
-    public List<EquipeDTO> searchEquipeByNom(@RequestParam String nom) {
+    public List<EquipeDTO> searchEquipesByNom(@RequestParam String nom) {
         return equipeService.findByNomContaining(nom);
     }
+
+    @GetMapping("/{nom}")
+    public EquipeDTO searchEquipeByNom(@PathVariable String nom) {
+        return equipeService.findByNom(nom);
+    }
+
 }
