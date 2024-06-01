@@ -24,9 +24,21 @@
           <td>{{ team.chefprojet.civility }} {{ team.chefprojet.firstName }} {{ team.chefprojet.lastName }}</td>
           <td>collab here</td>
           <td>projects here</td>
-          <td class="d-flex justify-content-center">
-            <button class="btn btn-outline-primary btn-sm edit-btn" (click)="openEditTeamModal(team)">Edit</button>
+          <td class="overflow-hidden">
+            <div ngbDropdown container="body">
+              <i class="bi bi-three-dots-vertical" ngbDropdownToggle></i>
+
+              <div ngbDropdownMenu>
+                <button ngbDropdownItem class="btn btn-outline-primary btn-sm edit-btn" (click)="openEditTeamModal(team)">Edit</button>
+                <button ngbDropdownItem class="btn btn-outline-primary btn-sm edit-btn" [routerLink]="['/team', team.nom]">List</button>
+                <div class="dropdown-divider"></div>
+                <button ngbDropdownItem class="btn btn-outline-primary btn-sm delete-btn">Delete</button>
+              </div>
+            </div>
+            
           </td>
+            
+          
         </tr>
       </tbody>
     </table>

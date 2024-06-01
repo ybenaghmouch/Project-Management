@@ -47,6 +47,10 @@
     color: #6f42c1;
     border-color: #6f42c1;
   }
+  .btn-outline-primary.delete-btn {
+    color: #d40505;
+    border-color: #ff0b0b;
+  }
   
   .btn-outline-primary.edit-btn:hover {
     color: #fff;

@@ -59,7 +59,7 @@ export class BacklogComponent implements OnInit {
     // Replace with your API endpoint
     this.http.get<any[]>(`/api/backlog/search?titre=${id}`).subscribe(data => {
       if (data.length > 0) {
-        this.backlog = data[0];
+        this.backlog = data[0]; //to change change path
       }
     });
   }

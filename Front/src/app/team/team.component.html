@@ -1,0 +1,63 @@
+<div *ngIf="team">
+  <div class="container">
+    <div class="row justify-content-center mt-4">
+      <div class="col-12 text-center">
+        <h2>{{ team.nom }}</h2>
+      </div>
+    </div>
+    
+    <div class="row justify-content-center mt-4">
+      <div class="col-md-6">
+        <div class="card team-member">
+          <div class="card-header">
+            <h5 class="card-title">Manager</h5>
+          </div>
+          <div class="card-body text-center">
+            <h5 class="card-title">{{ manager.civility }} {{ manager.firstName }} {{ manager.lastName }}</h5>
+            <p class="card-text">{{ manager.speciality }}</p>
+            <div class="card-icons">
+              <a [href]="'mailto:' + manager.email" class="icon"><i class="bi bi-envelope-at"></i></a>
+              <a href="#" class="icon"><i class="bi bi-chat-dots-fill"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row justify-content-center mt-4">
+      <div class="col-md-6">
+        <div class="card team-member">
+          <div class="card-header">
+            <h5 class="card-title">Project Leader</h5>
+          </div>
+          <div class="card-body text-center">
+            <h5 class="card-title">{{ chefprojet.civility }} {{ chefprojet.firstName }} {{ chefprojet.lastName }}</h5>
+            <p class="card-text">{{ chefprojet.speciality }}</p>
+            <div class="card-icons">
+              <a [href]="'mailto:' + chefprojet.email" class="icon"><i class="bi bi-envelope-at"></i></a>
+              <a href="#" class="icon"><i class="bi bi-chat-dots-fill"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row justify-content-center mt-4">
+      <div *ngFor="let collaborateur of collaborateurs" class="col-md-4">
+        <div class="card team-member">
+          <div class="card-header">
+            <h5 class="card-title">Collaborator</h5>
+          </div>
+          <div class="card-body text-center">
+            <h5 class="card-title">{{ collaborateur.civility }} {{ collaborateur.firstName }} {{ collaborateur.lastName }}</h5>
+            <p class="card-text">{{ collaborateur.speciality }}</p>
+            <div class="card-icons">
+              <a [href]="'mailto:' + collaborateur.email" class="icon"><i class="bi bi-envelope-at"></i></a>
+              <a href="#" class="icon"><i class="bi bi-chat-dots-fill"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
