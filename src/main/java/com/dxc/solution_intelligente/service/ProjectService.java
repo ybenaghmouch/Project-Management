@@ -2,15 +2,19 @@ package com.dxc.solution_intelligente.service;
 
 import com.dxc.solution_intelligente.DAO.ProjectRepository;
 
+import com.dxc.solution_intelligente.DAO.UserRepository;
 import com.dxc.solution_intelligente.DTO.Project.*;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
 import com.dxc.solution_intelligente.service.model.Project;
+import com.dxc.solution_intelligente.service.model.Role;
+import com.dxc.solution_intelligente.service.model.User;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,6 +23,7 @@ import java.util.stream.Collectors;
 public class ProjectService implements IProjectService{
 
     private final ProjectRepository projectRepository;
+    private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -35,7 +40,11 @@ public class ProjectService implements IProjectService{
                 {
                     throw new BusinessException(String.format("Projet deja existe avec le nom [%s]", name));
                 });
+
         AddProjectResponse response = modelMapper.map(projectRepository.save(bo), AddProjectResponse.class);
+        User manager = userRepository.findById(response.getManager().getId())
+                .orElseThrow(() -> new BusinessException("Manager not found"));
+        response.setManager(manager);
         response.setMessage(String.format("Projet : [Nom = %s, Description = %s, Date de debut = %s, Date de fin = %s, Duree = %S, Status = %s, Manager = %s, Backlog = %s]", response.getNom(), response.getDescription(), response.getDateDebut(), response.getDateFin(), response.getDuree(), response.getStatus(), response.getManager().getUsername(), response.getBacklogs()));
         return response;
     }

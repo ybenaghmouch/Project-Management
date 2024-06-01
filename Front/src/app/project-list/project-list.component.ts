@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit , OnInit, viewChild} from '@angular/core';
+import { Component, ViewChild, AfterViewInit , OnInit, viewChild, ChangeDetectorRef} from '@angular/core';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule,FormsModule,FormGroup,FormBuilder } from '@angular/forms';
@@ -20,6 +20,7 @@ const FILTER_PAG_REGEX = /[^0-9]/g;
 })
 export class ProjectListComponent implements AfterViewInit,OnInit{
   isVisible: boolean = false;
+  i:number=0;
   projects = [
     {
       "id": 0,
@@ -84,7 +85,7 @@ export class ProjectListComponent implements AfterViewInit,OnInit{
 
 
   constructor(private modalService: NgbModal,private projectListService :ProjectListService,private fb: FormBuilder,
-    private datePipe: DatePipe) {
+    private datePipe: DatePipe, private cd: ChangeDetectorRef) {
     this.searchForm = this.fb.group({
     name: ['']
   });
@@ -112,6 +113,24 @@ transformDate(date: string | null): string | null {
 }
 
 
+// ngAfterViewInit() {
+//   if (this.projectModal) {
+//     this.projectModal.projectAdded.subscribe((newProject: any) => {
+//       if (this.projectModal.isEditMode) {
+//         const index = this.projects.findIndex(project => project.nom === newProject.nom);
+//         if (index !== -1) {
+//           this.projects[index] = newProject;
+//         }
+//       } else {
+//         //newProject.id = this.projects.length + 1; // Assign a new ID or handle ID generation differently
+//         this.projects.push(newProject);
+//       }
+//     });
+//   } else {
+//     console.error('ProjectModalComponent is not initialized');
+//   }
+// }
+
 ngAfterViewInit() {
   if (this.projectModal) {
     this.projectModal.projectAdded.subscribe((newProject: any) => {
@@ -121,7 +140,7 @@ ngAfterViewInit() {
           this.projects[index] = newProject;
         }
       } else {
-        //newProject.id = this.projects.length + 1; // Assign a new ID or handle ID generation differently
+        //newTeam.id = this.teams.length + 1; // Assign a new ID or handle ID generation differently
         this.projects.push(newProject);
       }
     });
@@ -129,6 +148,8 @@ ngAfterViewInit() {
     console.error('ProjectModalComponent is not initialized');
   }
 }
+
+
 loadProjects() {
   this.projectListService.getProjects().subscribe(
     (data: any[]) => {
@@ -156,7 +177,7 @@ searchProjects(projectname: string) {
 }
 
 openCreateProjectModal() {
-  this.ngAfterViewInit();
+
   if (this.projectModal) {
     this.projectModal.isEditMode = false;
     this.projectModal.project = null;
@@ -178,6 +199,8 @@ openEditProjectModal(project: any) {
     console.error('ProjectModalComponent is not initialized');
   }
 }
+
+
 
 }
 
