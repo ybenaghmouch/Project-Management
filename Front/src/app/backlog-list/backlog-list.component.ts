@@ -1,4 +1,6 @@
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { Component, ViewChild, AfterViewInit , OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -61,14 +63,20 @@ export class BacklogListComponent implements AfterViewInit,OnInit{
 
 
 
-  constructor(private modalService: NgbModal,private userListService :BackListService,private fb: FormBuilder) {
+  constructor(private route: ActivatedRoute,private modalService: NgbModal,private userListService :BackListService,private fb: FormBuilder) {
     this.searchForm = this.fb.group({
     titre: ['']
   });
 }
 
 ngOnInit(): void {
-  this.loadUsers();
+  this.route.params.subscribe(params => {
+    const teamName = params['projectname'];
+    if (teamName) {
+      this.loadUsers(teamName);
+    }
+  });
+  
 
   this.searchForm.get('titre')!.valueChanges
     .pipe(
@@ -96,8 +104,8 @@ ngOnInit(): void {
       console.error('UserModalComponent is not initialized');
     }
   }
-  loadUsers() {
-    this.userListService.getUsers().subscribe(
+  loadUsers(projectname: string) {
+    this.userListService.getUsers(projectname).subscribe(
       (data: any[]) => {
         this.users = data;
       },
@@ -117,12 +125,23 @@ ngOnInit(): void {
         }
       );
     } else {
-      this.loadUsers(); // If search input is cleared, load all users
+      
+      this.route.params.subscribe(params => {
+        const teamName = params['projectname'];
+        if (teamName) {
+          this.loadUsers(teamName);
+        }
+      }); // If search input is cleared, load all users
     }
   }
   openCreateUserModal() {
     if (this.userModal) {
       this.userModal.isEditMode = false;
+      this.route.params.subscribe(params => {
+        const teamName = params['projectname'];
+        this.userModal.projectname = teamName;
+      });
+      
       this.userModal.user = null;
       this.userModal.openModal();
       

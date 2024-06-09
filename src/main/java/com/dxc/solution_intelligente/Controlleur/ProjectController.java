@@ -1,10 +1,13 @@
 package com.dxc.solution_intelligente.Controlleur;
 
 
+import com.dxc.solution_intelligente.DTO.Backlog.BacklogDTO;
+import com.dxc.solution_intelligente.DTO.Equipe.EquipeDTO;
 import com.dxc.solution_intelligente.DTO.Project.*;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
 import com.dxc.solution_intelligente.service.IProjectService;
 import com.dxc.solution_intelligente.service.ProjectService;
+import com.dxc.solution_intelligente.service.model.Backlog;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,5 +64,9 @@ public class ProjectController {
         return new ResponseEntity<>(projectService.updateProject(name, dto), HttpStatus.OK);
     }
 
+    @GetMapping("/backlogs/{nom}")
+    public List<Backlog> searchEquipeByNom(@PathVariable String nom) {
+        return projectService.findByexactName(nom).getBacklogs();
+    }
 
 }

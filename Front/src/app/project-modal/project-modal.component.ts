@@ -67,7 +67,7 @@ export class ProjectModalComponent implements OnInit {
   subscribeToDateChanges() {
     const startDateControl = this.form.get('dateDebut');
     const endDateControl = this.form.get('dateFin');
-
+  
     if (startDateControl && endDateControl) {
       startDateControl.valueChanges.subscribe(() => {
         this.updateDuration();
@@ -77,7 +77,7 @@ export class ProjectModalComponent implements OnInit {
       });
     }
   }
-
+  
   updateDuration() {
     const startDate = this.form.get('dateDebut')?.value;
     const endDate = this.form.get('dateFin')?.value;
@@ -86,14 +86,23 @@ export class ProjectModalComponent implements OnInit {
       this.form.patchValue({ duration: duration });
     }
   }
-
+  
   calculateDuration(startDate: string, endDate: string): number {
     const start = new Date(startDate);
     const end = new Date(endDate);
-    const duration = (end.getTime() - start.getTime()) / (1000 * 3600 * 24); // Convert to days
-    return Math.max(0, duration); // Ensure non-negative duration
+    let duration = 0;
+    let current = new Date(start);
+  
+    while (current <= end) {
+      const day = current.getDay();
+      if (day !== 0 && day !== 6) { // Exclude Sunday (0) and Saturday (6)
+        duration++;
+      }
+      current.setDate(current.getDate() + 1);
+    }
+  
+    return duration; // Ensure non-negative duration
   }
-
   loadUsers() {
     this.userService.getUsers().subscribe(users => {
       this.users = users;

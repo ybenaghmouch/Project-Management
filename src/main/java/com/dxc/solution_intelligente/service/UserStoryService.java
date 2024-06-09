@@ -1,8 +1,10 @@
 package com.dxc.solution_intelligente.service;
 
+import com.dxc.solution_intelligente.DAO.BacklogRepository;
 import com.dxc.solution_intelligente.DAO.UserStoryRepository;
 import com.dxc.solution_intelligente.DTO.UserStory.*;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
+import com.dxc.solution_intelligente.service.model.Backlog;
 import com.dxc.solution_intelligente.service.model.UserStory;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class UserStoryService implements IUserStoryService {
     private final UserStoryRepository userStoryRepository;
+    private final BacklogRepository backlogRepository;
     private final ModelMapper modelMapper;
     private PasswordEncoder passwordEncoder;
 
@@ -43,6 +46,32 @@ public class UserStoryService implements IUserStoryService {
         );
         AddUserStoryResponse response = modelMapper.map(userStoryRepository.save(bo), AddUserStoryResponse.class);
         //response.setMessage(String.format("UserStory : [code = %s, Prenom = %s, code = %s, Email = %s, Civility = %s, Specilite = %s]", response.getcode(), response.getCollaborateurs().toString(), response.getManager().toString(), response.getChefprojet().toString()));
+        return response;
+    }
+    @Override
+    public AddUserStoryResponse addUserStoryToBacklog(String backlogtitle, AddUserStoryRequest addUserStoryRequest) {
+        // Créer la UserStory
+        UserStory bo = modelMapper.map(addUserStoryRequest, UserStory.class);
+        String code = bo.getCode();
+        userStoryRepository.findBycode(code).ifPresent(userStory -> {
+            throw new BusinessException(String.format("UserStory avec le code [%s] existe déjà", code));
+        });
+
+        // Sauvegarder la UserStory d'abord
+        UserStory savedUserStory = userStoryRepository.save(bo);
+
+        // Trouver le backlog par ID
+        Backlog backlog = backlogRepository.findBacklogByTitre(backlogtitle)
+                .orElseThrow(() -> new BusinessException(String.format("Aucun backlog existe avec l'ID [%s] ", backlogtitle)));
+
+        // Ajouter la UserStory sauvegardée au backlog
+        backlog.getUserStories().add(savedUserStory);
+        backlogRepository.save(backlog);
+
+        // Préparer la réponse
+        AddUserStoryResponse response = modelMapper.map(savedUserStory, AddUserStoryResponse.class);
+        response.setMessage(String.format("UserStory ajoutée avec succès au backlog [%s] : [Code = %s, Description = %s]", backlogtitle, response.getCode(), response.getDescription()));
+
         return response;
     }
 

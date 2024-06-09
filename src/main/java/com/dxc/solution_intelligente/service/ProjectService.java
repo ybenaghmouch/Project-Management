@@ -1,16 +1,20 @@
 package com.dxc.solution_intelligente.service;
 
+import com.dxc.solution_intelligente.DAO.BacklogRepository;
 import com.dxc.solution_intelligente.DAO.ProjectRepository;
 
 import com.dxc.solution_intelligente.DAO.UserRepository;
+import com.dxc.solution_intelligente.DTO.Equipe.EquipeDTO;
 import com.dxc.solution_intelligente.DTO.Project.*;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
+import com.dxc.solution_intelligente.service.model.Backlog;
 import com.dxc.solution_intelligente.service.model.Project;
 import com.dxc.solution_intelligente.service.model.Role;
 import com.dxc.solution_intelligente.service.model.User;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +28,8 @@ public class ProjectService implements IProjectService{
 
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
+    private final BacklogRepository backlogRepository;
+    @Autowired
     private final ModelMapper modelMapper;
 
     @Override
@@ -51,16 +57,25 @@ public class ProjectService implements IProjectService{
 
     @Override
     public UpdateProjectResponse updateProject(String name, UpdateProjectRequest updateProjectRequest) {
-        Project projectToPersist = modelMapper.map(updateProjectRequest, Project.class);
-        Project projectFound = projectRepository.findAll().stream().filter(bo-> bo.getNom() != null && bo.getNom().equals(name)).findFirst().orElseThrow(
-                ()-> new BusinessException(String.format("Aucun projet existe avec le nom [%s] ", name))
-        );
-        projectToPersist.setId(projectFound.getId());
-        projectFound.setNom(name);
-        UpdateProjectResponse updateProjectResponse = modelMapper.map(projectRepository.save(projectToPersist), UpdateProjectResponse.class);
-        updateProjectResponse.setMessage(String.format("Projet avec le nom [%s] a ete modifie avec succes", name));
+        Project projectFound = projectRepository.findAll().stream()
+                .filter(bo -> bo.getNom() != null && bo.getNom().equals(name))
+                .findFirst()
+                .orElseThrow(() -> new BusinessException(String.format("Aucun projet existe avec le nom [%s] ", name)));
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setSkipNullEnabled(true);
+        // Utiliser ModelMapper pour mapper les propriétés non-nulles
+        modelMapper.map(updateProjectRequest, projectFound);
+
+        // Traiter les backlogs
+
+
+        Project savedProject = projectRepository.save(projectFound);
+        UpdateProjectResponse updateProjectResponse = modelMapper.map(savedProject, UpdateProjectResponse.class);
+        updateProjectResponse.setMessage(String.format("Projet avec le nom [%s] a été modifié avec succès", name));
+
         return updateProjectResponse;
     }
+
 
   
     /*@Override   Correct
@@ -91,8 +106,15 @@ public class ProjectService implements IProjectService{
 
     @Override
     public List<ProjectDTO> findByName(String searchTerm) {
-        return projectRepository.findProjectByNom(searchTerm.toLowerCase()).stream()
+        return projectRepository.findByNomContainingIgnoreCase(searchTerm.toLowerCase()).stream()
                 .map(project -> modelMapper.map(project, ProjectDTO.class)).collect(Collectors.toList());
     }
+
+    @Override
+    public ProjectDTO findByexactName(String searchTerm) {
+       return  modelMapper.map(projectRepository.findProjectByNom(searchTerm.toLowerCase()), ProjectDTO.class);
+    }
+
+
 
 }

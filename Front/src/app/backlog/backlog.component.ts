@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FilterByStatutPipe } from './filter-by-statut.pipe';
-import { FormsModule } from '@angular/forms'; // If you need forms support
-import { HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule,FormsModule,FormGroup,FormBuilder } from '@angular/forms';import { HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common'; // Add this import
-
+import { BacklogService } from './service/backlog.service';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 interface Feature {
   code: string;
   titre: string;
@@ -36,7 +36,8 @@ interface Backlog {
 @Component({
   selector: 'app-backlog',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule ,FilterByStatutPipe],
+  imports: [CommonModule, HttpClientModule ,FilterByStatutPipe,FormsModule,HttpClientModule,ReactiveFormsModule],
+  providers:[BacklogService],
   templateUrl: './backlog.component.html',
   styleUrl: './backlog.component.css'
 })
@@ -44,8 +45,13 @@ export class BacklogComponent implements OnInit {
   backlog: any;
   backlogId: string | null = null;
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) {}
+  constructor(private route: ActivatedRoute, private http: HttpClient,private backlogService:BacklogService,private fb: FormBuilder) {
+    this.searchForm = this.fb.group({
+    titre: ['']
+  });
 
+}
+  searchForm: FormGroup;
   ngOnInit(): void {
     this.route.queryParamMap.subscribe(params => {
       this.backlogId = params.get('backlogId');
@@ -53,15 +59,28 @@ export class BacklogComponent implements OnInit {
         this.getBacklog(this.backlogId);
       }
     });
+
+
+    this.searchForm.get('titre')!.valueChanges
+    .pipe(
+      debounceTime(300), // Wait for 300ms pause in events
+      distinctUntilChanged() // Only emit if value is different from previous value
+    )
+    .subscribe(value => {
+      this.searchUsers(value);
+    });
   }
 
   getBacklog(id: string): void {
     // Replace with your API endpoint
-    this.http.get<any[]>(`/api/backlog/search?titre=${id}`).subscribe(data => {
-      if (data.length > 0) {
-        this.backlog = data[0]; //to change change path
-      }
+    this.backlogService.getBacklog(id).subscribe(data => {
+      
+        this.backlog = data; //to change change path
+      
     });
+  }
+  searchUsers(titre: string) {
+   
   }
 
   getPriorityColor(priority: number): string {

@@ -11,7 +11,7 @@ import { TeamComponent } from './team/team.component';
 
 export const routes: Routes = [
     { path: 'users', component: UserListComponent },
-    { path: 'backlogs', component: BacklogListComponent },
+    { path: 'backlogs/:projectname', component: BacklogListComponent },
     { path: 'backlog', component: BacklogComponent },
     { path: 'projects', component: ProjectListComponent },
     { path: 'teams', component: TeamListComponent },

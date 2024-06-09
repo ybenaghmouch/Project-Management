@@ -20,6 +20,7 @@ export class BacklogModalComponent {
 
   @ViewChild('userModal') userModal!: ElementRef;
   @Input() isEditMode: boolean =false;
+  @Input() projectname: string ='';
   @Input() user: any;
 
   constructor(private formBuilder: FormBuilder,private userModalService:BacklogModalService) {
@@ -68,7 +69,7 @@ export class BacklogModalComponent {
     if (this.form.valid) {
       
       const formData = this.form.value;
-      this.userModalService.postUsers(formData).subscribe(
+      this.userModalService.postUsers(formData,this.projectname).subscribe(
         (data: any) => {
           this.user = data;
         },

@@ -1,4 +1,12 @@
-<div *ngIf="backlog">
+<div class="container mt-4" [formGroup]="searchForm">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Backlogs</h2>
+    <div class="d-flex align-items-center">
+      <input type="text" class="form-control search-input me-2" placeholder="Search" formControlName="titre">
+      <button class="btn btn-primary add-user-btn ms-4"  >+ Add US</button>
+    </div>
+  </div>
+  <div *ngIf="backlog">
   <h2>{{ backlog.titre }}</h2>
   <p>{{ backlog.description }}</p>
 
@@ -121,6 +129,7 @@
                 </div>
               </div>
             </div>
+            
           </div>
         </div>
       </div>
@@ -365,4 +374,5 @@
     </div>
 
   </div>
-</div>
+</div></div>
+
