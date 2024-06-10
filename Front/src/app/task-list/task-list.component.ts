@@ -1,60 +1,39 @@
 import { Component, OnInit,ViewChild,ChangeDetectorRef,NgModule   } from '@angular/core';
-import { FilterByStatutPipe } from './filter-by-statut.pipe';
-import { BrowserModule } from '@angular/platform-browser';
-import { RouterModule } from '@angular/router';
-
-import { ReactiveFormsModule,FormsModule,FormGroup,FormBuilder } from '@angular/forms';import { HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule,FormsModule,FormGroup,FormBuilder } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { NgbPaginationModule,NgbModule  } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common'; // Add this import
-import { BacklogService } from './service/backlog.service';
+import { TaskListService } from './service/task-list.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { UsModalComponent } from '../us-modal/us-modal.component';
-interface Feature {
-  code: string;
-  titre: string;
-  description: string;
-  id: number;
-  statut: string;
-  responsable: string | null;
-  priority: number;
-}
-
-interface UserStory {
-  code: string;
-  titre: string;
-  description: string;
-  priority: number;
-  id: number;
-  features: Feature[];
-  statut: string;
-}
-
-interface Backlog {
-  id: number;
-  titre: string;
-  description: string;
-  userStories: UserStory[];
-  status: string;
-}
+import { TaskModalComponent } from '../task-modal/task-modal.component';
+import { FilterByStatutPipe } from '../backlog/filter-by-statut.pipe';
 @Component({
-  selector: 'app-backlog',
+  selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule,NgbModule,HttpClientModule ,NgbPaginationModule,FilterByStatutPipe,FormsModule,HttpClientModule,ReactiveFormsModule,UsModalComponent,RouterModule],
-  providers:[BacklogService],
-  templateUrl: './backlog.component.html',
-  styleUrl: './backlog.component.css'
+  imports: [
+    CommonModule,
+    NgbModule,
+    HttpClientModule,
+    NgbPaginationModule,
+    FormsModule,
+    ReactiveFormsModule,
+    TaskModalComponent,FilterByStatutPipe
+  ],
+  providers: [TaskListService],
+  templateUrl: './task-list.component.html',
+  styleUrl: './task-list.component.css'
 })
-export class BacklogComponent implements OnInit {
+export class TaskListComponent implements OnInit {
   backlog: any;
   backlogId: string | null = null;
-  @ViewChild(UsModalComponent) userModal!: UsModalComponent;
+  @ViewChild(TaskModalComponent) userModal!: TaskModalComponent;
   searchForm: FormGroup;
   filteredUserStories: any[] = [];
   page: number = 1;
   pageSize: number = 10;
 
-  constructor(private cdr: ChangeDetectorRef, private route: ActivatedRoute, private backlogService: BacklogService, private fb: FormBuilder) {
+  constructor(private cdr: ChangeDetectorRef, private route: ActivatedRoute, private backlogService: TaskListService, private fb: FormBuilder) {
     this.searchForm = this.fb.group({
       titre: [''],
       statut: ['']
@@ -89,7 +68,7 @@ export class BacklogComponent implements OnInit {
   filterUserStories() {
     if (this.backlog) {
       const { titre, statut } = this.searchForm.value;
-      this.filteredUserStories = this.backlog.userStories.filter((userStory: any) => {
+      this.filteredUserStories = this.backlog.features.filter((userStory: any) => {
         return (!titre || userStory.titre.toLowerCase().includes(titre.toLowerCase())) &&
                (!statut || userStory.statut === statut);
       });
@@ -106,12 +85,12 @@ export class BacklogComponent implements OnInit {
   openCreateUserModal() {
     if (this.userModal) {
       this.userModal.isEditMode = false;
-      this.userModal.projectname = this.backlog.titre;
+      this.userModal.projectname = this.backlog.code;
       this.userModal.user = null;
       this.userModal.openModal();
 
       this.userModal.userAdded.subscribe((newUser: any) => {
-        this.backlog.userStories.push(newUser);
+        this.backlog.features.push(newUser);
         this.filterUserStories();
         this.cdr.detectChanges();
       });
@@ -124,13 +103,13 @@ export class BacklogComponent implements OnInit {
     if (this.userModal) {
       this.userModal.isEditMode = true;
       this.userModal.user = user;
-      this.userModal.projectname = this.backlog.titre;
+      this.userModal.projectname = this.backlog.code;
       this.userModal.openModal();
 
       this.userModal.userAdded.subscribe((updatedUser: any) => {
-        const index = this.backlog.userStories.findIndex((us: any) => us.id === updatedUser.id);
+        const index = this.backlog.features.findIndex((us: any) => us.id === updatedUser.id);
         if (index !== -1) {
-          this.backlog.userStories[index] = updatedUser;
+          this.backlog.features[index] = updatedUser;
         }
         this.filterUserStories();
         this.cdr.detectChanges();
@@ -141,9 +120,9 @@ export class BacklogComponent implements OnInit {
   }
 
   deleteUserStory(user: any) {
-    const index = this.backlog.userStories.indexOf(user, 0);
+    const index = this.backlog.features.indexOf(user, 0);
     if (index > -1) {
-      this.backlog.userStories.splice(index, 1);
+      this.backlog.features.splice(index, 1);
       this.filterUserStories();
       this.cdr.detectChanges();
     }

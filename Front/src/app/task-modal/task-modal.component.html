@@ -30,6 +30,15 @@
                         </div>
                     </div>
                     <div class="mb-3">
+                        <label for="manager" class="form-label">Responsable</label>
+                        <ng-select class="form-control" [items]="users"
+                                   bindLabel="username"
+                                   bindValue="id"
+                                   formControlName="responsable"
+                                   [searchable]="true">
+                        </ng-select>
+                      </div>
+                    <div class="mb-3">
                         <label for="priority" class="form-label">Priority</label>
                         <select class="form-select" id="priority" formControlName="priority">
                           <option *ngFor="let i of priorityRange" [value]="i">{{ i }}</option>

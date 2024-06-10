@@ -1,378 +1,49 @@
 <div class="container mt-4" [formGroup]="searchForm">
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Backlogs</h2>
+    <h2 class="display-4">Backlogs</h2>
     <div class="d-flex align-items-center">
       <input type="text" class="form-control search-input me-2" placeholder="Search" formControlName="titre">
-      <button class="btn btn-primary add-user-btn ms-4"  >+ Add US</button>
+      <div class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-funnel"></i>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <li><a class="dropdown-item" (click)="setFilter('')">All Statuts</a></li>
+          <li><a class="dropdown-item" (click)="setFilter('started')">Started</a></li>
+          <li><a class="dropdown-item" (click)="setFilter('pending')">Pending</a></li>
+          <li><a class="dropdown-item" (click)="setFilter('done')">Done</a></li>
+        </ul>
+      </div>
+      <button class="btn btn-primary add-user-btn ms-4" (click)="openCreateUserModal()">+ Add US</button>
     </div>
   </div>
   <div *ngIf="backlog">
-  <h2>{{ backlog.titre }}</h2>
-  <p>{{ backlog.description }}</p>
+    <h2>{{ backlog.titre }}</h2>
+    <p>{{ backlog.description }}</p>
 
-  <div class="accordion" id="accordionBacklog">
-    <!-- Started User Stories -->
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="headingStarted">
-        <button class="accordion-button" type="button" data-bs-toggle="collapse"
-          [attr.data-bs-target]="'#collapseStarted'" aria-expanded="true"
-          aria-controls="collapseStarted">
-          Started User Stories
-        </button>
-      </h2>
-      <div id="collapseStarted" class="accordion-collapse collapse show"
-        aria-labelledby="headingStarted" data-bs-parent="#accordionBacklog">
-        <div class="accordion-body">
-          <div *ngFor="let userStory of backlog.userStories | filterByStatut:'started'">
-            <h3>{{ userStory.titre }}</h3>
-            <p>{{ userStory.description }}</p>
-            <div class="accordion" id="accordionFeaturesStarted{{ userStory.id }}">
-              <div class="accordion-item">
-                <h2 class="accordion-header">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                    [attr.data-bs-target]="'#startedFeatures' + userStory.id" aria-expanded="true"
-                    [attr.aria-controls]="'startedFeatures' + userStory.id">
-                    Started Features
-                  </button>
-                </h2>
-                <div id="startedFeatures{{ userStory.id }}" class="accordion-collapse collapse show">
-                  <div class="accordion-body">
-                    <ul>
-                      <li *ngFor="let feature of userStory.features | filterByStatut:'started'">
-                        <hr>
-                        <div>
-                          <button class="btn btn-link" type="button" data-bs-toggle="collapse"
-                            [attr.data-bs-target]="'#feature' + feature.id" aria-expanded="false"
-                            [attr.aria-controls]="'feature' + feature.id">
-                            {{ feature.titre }}
-                          </button>
-                          <div id="feature{{ feature.id }}" class="collapse">
-                            <p>{{ feature.description }}</p>
-                            <p>Responsable: {{ feature.responsable.civility || 'UNASSIGNED' }} {{ feature.responsable.firstName || 'Task' }} {{ feature.responsable.lastName ||'' }}</p>
-                            <p [ngStyle]="{'color': getPriorityColor(feature.priority)}">Priority: {{ feature.priority }}</p>
-                            <button class="btn btn-secondary">Edit</button>
-                            <button class="btn btn-danger">Delete</button>
-                          </div>
-                        </div>
-                        <hr>
-                      </li>
-                    </ul>
-                    <button class="btn btn-primary">Add</button>
-                  </div>
-                </div>
-              </div>
-              <div class="accordion-item">
-                <h2 class="accordion-header">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                    [attr.data-bs-target]="'#pendingFeatures' + userStory.id" aria-expanded="true"
-                    [attr.aria-controls]="'pendingFeatures' + userStory.id">
-                    Pending Features
-                  </button>
-                </h2>
-                <div id="pendingFeatures{{ userStory.id }}" class="accordion-collapse collapse show">
-                  <div class="accordion-body">
-                    <ul>
-                      <li *ngFor="let feature of userStory.features | filterByStatut:'pending'">
-                        <hr>
-                        <div>
-                          <button class="btn btn-link" type="button" data-bs-toggle="collapse"
-                            [attr.data-bs-target]="'#feature' + feature.id" aria-expanded="false"
-                            [attr.aria-controls]="'feature' + feature.id">
-                            {{ feature.titre }}
-                          </button>
-                          <div id="feature{{ feature.id }}" class="collapse">
-                            <p>{{ feature.description }}</p>
-                            <p>Responsable: {{ feature.responsable.civility || 'UNASSIGNED' }} {{ feature.responsable.firstName || 'Task' }} {{ feature.responsable.lastName ||'' }}</p>
-                            <p [ngStyle]="{'color': getPriorityColor(feature.priority)}">Priority: {{ feature.priority }}</p>
-                            <button class="btn btn-secondary">Edit</button>
-                            <button class="btn btn-danger">Delete</button>
-                          </div>
-                        </div>
-                        <hr>
-                      </li>
-                      
-                    </ul>
-                    <button class="btn btn-primary">Add</button>
-                  </div>
-                </div>
-              </div>
-              <div class="accordion-item">
-                <h2 class="accordion-header">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                    [attr.data-bs-target]="'#doneFeatures' + userStory.id" aria-expanded="true"
-                    [attr.aria-controls]="'doneFeatures' + userStory.id">
-                    Done Features
-                  </button>
-                </h2>
-                <div id="doneFeatures{{ userStory.id }}" class="accordion-collapse collapse show">
-                  <div class="accordion-body">
-                    <ul>
-                      <li *ngFor="let feature of userStory.features | filterByStatut:'done'"><hr>
-                        <div>
-                          <button class="btn btn-link" type="button" data-bs-toggle="collapse"
-                            [attr.data-bs-target]="'#feature' + feature.id" aria-expanded="false"
-                            [attr.aria-controls]="'feature' + feature.id">
-                            {{ feature.titre }}
-                          </button>
-                          <div id="feature{{ feature.id }}" class="collapse">
-                            <p>{{ feature.description }}</p>
-                            <p>Responsable: {{ feature.responsable.civility || 'UNASSIGNED' }} {{ feature.responsable.firstName || 'Task' }} {{ feature.responsable.lastName ||'' }}</p>
-                            <p [ngStyle]="{'color': getPriorityColor(feature.priority)}">Priority: {{ feature.priority }}</p>
-                            <button class="btn btn-secondary">Edit</button>
-                            <button class="btn btn-danger">Delete</button>
-                          </div>
-                        </div><hr>
-                      </li>
-                    </ul>
-                    <button class="btn btn-primary">Add</button>
-                  </div>
-                </div>
-              </div>
-            </div>
+    <table class="table table-striped mt-4">
+      <thead>
+        <tr>
+          <th scope="col">TITRE</th>
+          <th scope="col">DESCRIPTION</th>
+          <th scope="col">STATUT</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let userStory of backlog.userStories | filterByStatut:searchForm.value.statut">
+          <td><a [routerLink]="['/tasks']" [queryParams]="{ backlogId: userStory.code }">{{ userStory.titre }}</a></td>
+          <td>{{ userStory.description }}</td>
+          <td>{{ userStory.statut }}</td>
+          <td class="d-flex justify-content-center">
+            <button class="btn btn-outline-primary btn-sm edit-btn" (click)="openEditUserModal(userStory)">Edit</button>
+            <button class="btn btn-danger btn-sm delete-btn" (click)="deleteUserStory(userStory)">Delete</button>
             
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Pending User Stories -->
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="headingPending">
-        <button class="accordion-button" type="button" data-bs-toggle="collapse"
-          [attr.data-bs-target]="'#collapsePending'" aria-expanded="true"
-          aria-controls="collapsePending">
-          Pending User Stories
-        </button>
-      </h2>
-      <div id="collapsePending" class="accordion-collapse collapse show"
-        aria-labelledby="headingPending" data-bs-parent="#accordionBacklog">
-        <div class="accordion-body">
-          <div *ngFor="let userStory of backlog.userStories | filterByStatut:'pending'">
-            <h3>{{ userStory.titre }}</h3>
-            <p>{{ userStory.description }}</p>
-            <div class="accordion" id="accordionFeaturesPending{{ userStory.id }}">
-              <div class="accordion-item">
-                <h2 class="accordion-header">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                    [attr.data-bs-target]="'#startedFeatures' + userStory.id" aria-expanded="true"
-                    [attr.aria-controls]="'startedFeatures' + userStory.id">
-                    Started Features
-                  </button>
-                </h2>
-                <div id="startedFeatures{{ userStory.id }}" class="accordion-collapse collapse show">
-                  <div class="accordion-body">
-                    <ul>
-                      <li *ngFor="let feature of userStory.features | filterByStatut:'started'"><hr>
-                        <div>
-                          <button class="btn btn-link" type="button" data-bs-toggle="collapse"
-                            [attr.data-bs-target]="'#feature' + feature.id" aria-expanded="false"
-                            [attr.aria-controls]="'feature' + feature.id">
-                            {{ feature.titre }}
-                          </button>
-                          <div id="feature{{ feature.id }}" class="collapse">
-                            <p>{{ feature.description }}</p>
-                            <p>Responsable: {{ feature.responsable.civility || 'UNASSIGNED' }} {{ feature.responsable.firstName || 'Task' }} {{ feature.responsable.lastName ||'' }}</p>
-                            <p [ngStyle]="{'color': getPriorityColor(feature.priority)}">Priority: {{ feature.priority }}</p>
-                            <button class="btn btn-secondary">Edit</button>
-                            <button class="btn btn-danger">Delete</button>
-                          </div>
-                        </div><hr>
-                      </li>
-                    </ul>
-                    <button class="btn btn-primary">Add</button>
-                  </div>
-                </div>
-              </div>
-              <div class="accordion-item">
-                <h2 class="accordion-header">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                    [attr.data-bs-target]="'#pendingFeatures' + userStory.id" aria-expanded="true"
-                    [attr.aria-controls]="'pendingFeatures' + userStory.id">
-                    Pending Features
-                  </button>
-                </h2>
-                <div id="pendingFeatures{{ userStory.id }}" class="accordion-collapse collapse show">
-                  <div class="accordion-body">
-                    <ul>
-                      <li *ngFor="let feature of userStory.features | filterByStatut:'pending'"><hr>
-                        <div>
-                          <button class="btn btn-link" type="button" data-bs-toggle="collapse"
-                            [attr.data-bs-target]="'#feature' + feature.id" aria-expanded="false"
-                            [attr.aria-controls]="'feature' + feature.id">
-                            {{ feature.titre }}
-                          </button>
-                          <div id="feature{{ feature.id }}" class="collapse">
-                            <p>{{ feature.description }}</p>
-                            <p>Responsable: {{ feature.responsable.civility || 'UNASSIGNED' }} {{ feature.responsable.firstName || 'Task' }} {{ feature.responsable.lastName ||'' }}</p>
-                            <p [ngStyle]="{'color': getPriorityColor(feature.priority)}">Priority: {{ feature.priority }}</p>
-                            <button class="btn btn-secondary">Edit</button>
-                            <button class="btn btn-danger">Delete</button>
-                          </div>
-                        </div><hr>
-                      </li>
-                    </ul>
-                    <button class="btn btn-primary">Add</button>
-                  </div>
-                </div>
-              </div>
-              <div class="accordion-item">
-                <h2 class="accordion-header">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                    [attr.data-bs-target]="'#doneFeatures' + userStory.id" aria-expanded="true"
-                    [attr.aria-controls]="'doneFeatures' + userStory.id">
-                    Done Features
-                  </button>
-                </h2>
-                <div id="doneFeatures{{ userStory.id }}" class="accordion-collapse collapse show">
-                  <div class="accordion-body">
-                    <ul>
-                      <li *ngFor="let feature of userStory.features | filterByStatut:'done'"><hr>
-                        <hr>
-                        <div>
-                          <button class="btn btn-link" type="button" data-bs-toggle="collapse"
-                            [attr.data-bs-target]="'#feature' + feature.id" aria-expanded="false"
-                            [attr.aria-controls]="'feature' + feature.id">
-                            {{ feature.titre }}
-                          </button>
-                          <div id="feature{{ feature.id }}" class="collapse">
-                            <p>{{ feature.description }}</p>
-                            <p>Responsable: {{ feature.responsable.civility || 'UNASSIGNED' }} {{ feature.responsable.firstName || 'Task' }} {{ feature.responsable.lastName ||'' }}</p>
-                            <p [ngStyle]="{'color': getPriorityColor(feature.priority)}">Priority: {{ feature.priority }}</p>
-                            <button class="btn btn-secondary">Edit</button>
-                            <button class="btn btn-danger">Delete</button>
-                          </div>
-                        </div>
-                        <hr>
-                      </li>
-                    </ul>
-                    <button class="btn btn-primary">Add</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Done User Stories -->
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="headingDone">
-        <button class="accordion-button" type="button" data-bs-toggle="collapse"
-          [attr.data-bs-target]="'#collapseDone'" aria-expanded="true"
-          aria-controls="collapseDone">
-          Done User Stories
-        </button>
-      </h2>
-      <div id="collapseDone" class="accordion-collapse collapse show"
-        aria-labelledby="headingDone" data-bs-parent="#accordionBacklog">
-        <div class="accordion-body">
-          <div *ngFor="let userStory of backlog.userStories | filterByStatut:'done'">
-            <h3>{{ userStory.titre }}</h3>
-            <p>{{ userStory.description }}</p>
-            <div class="accordion" id="accordionFeaturesDone{{ userStory.id }}">
-              <div class="accordion-item">
-                <h2 class="accordion-header">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                    [attr.data-bs-target]="'#startedFeatures' + userStory.id" aria-expanded="true"
-                    [attr.aria-controls]="'startedFeatures' + userStory.id">
-                    Started Features
-                  </button>
-                </h2>
-                <div id="startedFeatures{{ userStory.id }}" class="accordion-collapse collapse show">
-                  <div class="accordion-body">
-                    <ul>
-                      <li *ngFor="let feature of userStory.features | filterByStatut:'started'"><hr>
-                        <div>
-                          <button class="btn btn-link" type="button" data-bs-toggle="collapse"
-                            [attr.data-bs-target]="'#feature' + feature.id" aria-expanded="false"
-                            [attr.aria-controls]="'feature' + feature.id">
-                            {{ feature.titre }}
-                          </button>
-                          <div id="feature{{ feature.id }}" class="collapse">
-                            <p>{{ feature.description }}</p>
-                            <p>Responsable: {{ feature.responsable.civility || 'UNASSIGNED' }} {{ feature.responsable.firstName || 'Task' }} {{ feature.responsable.lastName ||'' }}</p>
-                            <p [ngStyle]="{'color': getPriorityColor(feature.priority)}">Priority: {{ feature.priority }}</p>
-                            <button class="btn btn-secondary">Edit</button>
-                            <button class="btn btn-danger">Delete</button>
-                          </div>
-                        </div><hr>
-                      </li>
-                    </ul>
-                    <button class="btn btn-primary">Add</button>
-                  </div>
-                </div>
-              </div>
-              <div class="accordion-item">
-                <h2 class="accordion-header">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                    [attr.data-bs-target]="'#pendingFeatures' + userStory.id" aria-expanded="true"
-                    [attr.aria-controls]="'pendingFeatures' + userStory.id">
-                    Pending Features
-                  </button>
-                </h2>
-                <div id="pendingFeatures{{ userStory.id }}" class="accordion-collapse collapse show">
-                  <div class="accordion-body">
-                    <ul>
-                      <li *ngFor="let feature of userStory.features | filterByStatut:'pending'"><hr>
-                        <div>
-                          <button class="btn btn-link" type="button" data-bs-toggle="collapse"
-                            [attr.data-bs-target]="'#feature' + feature.id" aria-expanded="false"
-                            [attr.aria-controls]="'feature' + feature.id">
-                            {{ feature.titre }}
-                          </button>
-                          <div id="feature{{ feature.id }}" class="collapse">
-                            <p>{{ feature.description }}</p>
-                            <p>Responsable: {{ feature.responsable.civility || 'UNASSIGNED' }} {{ feature.responsable.firstName || 'Task' }} {{ feature.responsable.lastName ||'' }}</p>
-                            <p [ngStyle]="{'color': getPriorityColor(feature.priority)}">Priority: {{ feature.priority }}</p>
-                            <button class="btn btn-secondary">Edit</button>
-                            <button class="btn btn-danger">Delete</button>
-                          </div>
-                        </div><hr>
-                      </li>
-                    </ul>
-                    <button class="btn btn-primary">Add</button>
-                  </div>
-                </div>
-              </div>
-              <div class="accordion-item">
-                <h2 class="accordion-header">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                    [attr.data-bs-target]="'#doneFeatures' + userStory.id" aria-expanded="true"
-                    [attr.aria-controls]="'doneFeatures' + userStory.id">
-                    Done Features
-                  </button>
-                </h2>
-                <div id="doneFeatures{{ userStory.id }}" class="accordion-collapse collapse show">
-                  <div class="accordion-body">
-                    <ul>
-                      <li *ngFor="let feature of userStory.features | filterByStatut:'done'"><hr>
-                        <div>
-                          <button class="btn btn-link" type="button" data-bs-toggle="collapse"
-                            [attr.data-bs-target]="'#feature' + feature.id" aria-expanded="false"
-                            [attr.aria-controls]="'feature' + feature.id">
-                            {{ feature.titre }}
-                          </button>
-                          <div id="feature{{ feature.id }}" class="collapse">
-                            <p>{{ feature.description }}</p>
-                            <p>Responsable: {{ feature.responsable.civility || 'UNASSIGNED' }} {{ feature.responsable.firstName || 'Task' }} {{ feature.responsable.lastName ||'' }}</p>
-                            <p [ngStyle]="{'color': getPriorityColor(feature.priority)}">Priority: {{ feature.priority }}</p>
-                            <button class="btn btn-secondary">Edit</button>
-                            <button class="btn btn-danger">Delete</button>
-                          </div>
-                        </div><hr>
-                      </li>
-                    </ul>
-                    <button class="btn btn-primary">Add</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <ngb-pagination [collectionSize]="backlog.userStories.length" [(page)]="page" [pageSize]="pageSize"></ngb-pagination>
   </div>
-</div></div>
-
+  <app-us-modal></app-us-modal>
+</div>

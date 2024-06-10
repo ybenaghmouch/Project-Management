@@ -1,5 +1,6 @@
 package com.dxc.solution_intelligente.Controlleur;
 
+import com.dxc.solution_intelligente.DTO.Backlog.BacklogDTO;
 import com.dxc.solution_intelligente.DTO.UserStory.AddUserStoryRequest;
 import com.dxc.solution_intelligente.DTO.UserStory.AddUserStoryResponse;
 import com.dxc.solution_intelligente.DTO.UserStory.UserStoryDTO;
@@ -69,5 +70,9 @@ public class UserStoryController {
     public ResponseEntity<AddUserStoryResponse> addUserStoryToBacklog(@PathVariable String backlogtitle, @RequestBody AddUserStoryRequest addUserStoryRequest) {
         AddUserStoryResponse response = userStoryService.addUserStoryToBacklog(backlogtitle, addUserStoryRequest);
         return ResponseEntity.ok(response);
+    }
+    @GetMapping("/{code}")
+    public UserStoryDTO searchBacklogByTitre(@PathVariable String code){
+        return userStoryService.findByCode(code);
     }
 }

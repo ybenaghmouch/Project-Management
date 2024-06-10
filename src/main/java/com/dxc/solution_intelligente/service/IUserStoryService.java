@@ -10,4 +10,5 @@ public interface IUserStoryService {
     UpdateUserStoryResponse updateUserStory(String code, UpdateUserStoryRequest updateUserStoryRequest);
     List<UserStoryDTO> findByCodeAndTitreContaining(String searchTerm);
     AddUserStoryResponse addUserStoryToBacklog(String backlogtitle, AddUserStoryRequest addUserStoryRequest);
+    UserStoryDTO findByCode(String searchTerm);
 }

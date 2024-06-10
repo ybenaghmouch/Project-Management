@@ -94,4 +94,7 @@ public class UserStoryService implements IUserStoryService {
                 map(userStory -> modelMapper.map(userStory, UserStoryDTO.class)).
                 collect(Collectors.toList());
     }
+    public UserStoryDTO findByCode(String searchTerm) {
+        return modelMapper.map(userStoryRepository.findBycode(searchTerm.toLowerCase()), UserStoryDTO.class);
+    }
 }
