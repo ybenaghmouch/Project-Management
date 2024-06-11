@@ -8,17 +8,17 @@ import { CommonModule } from '@angular/common';
 import { ProjectListComponent } from './project-list/project-list.component';
 import { RoleListComponent } from './role-list/role-list.component';
 import { TeamComponent } from './team/team.component';
-import { SprintListComponent } from './sprint-list/sprint-list.component';
+import { TaskListComponent } from './task-list/task-list.component';
 
 export const routes: Routes = [
     { path: 'users', component: UserListComponent },
-    { path: 'backlogs', component: BacklogListComponent },
+    { path: 'backlogs/:projectname', component: BacklogListComponent },
     { path: 'backlog', component: BacklogComponent },
+    { path: 'tasks', component: TaskListComponent },
     { path: 'projects', component: ProjectListComponent },
     { path: 'teams', component: TeamListComponent },
     { path: 'team/:teamname', component: TeamComponent },
-    { path: 'roles', component: RoleListComponent },
-    { path: 'sprints', component: SprintListComponent }
+    { path: 'roles', component: RoleListComponent }
 ];
 
 @NgModule({

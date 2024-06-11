@@ -31,7 +31,8 @@ public class ModelMapperConfig {
 
 
                 .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE)
-                .setMatchingStrategy(MatchingStrategies.STRICT);
+                .setMatchingStrategy(MatchingStrategies.STRICT)
+                .setSkipNullEnabled(true);
 
         // Convertisseurs existants pour les dates
         Converter<Date, String> dateToStringConverter = new AbstractConverter<>() {

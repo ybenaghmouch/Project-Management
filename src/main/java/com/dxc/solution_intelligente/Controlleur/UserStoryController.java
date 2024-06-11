@@ -1,6 +1,8 @@
 package com.dxc.solution_intelligente.Controlleur;
 
+import com.dxc.solution_intelligente.DTO.Backlog.BacklogDTO;
 import com.dxc.solution_intelligente.DTO.UserStory.AddUserStoryRequest;
+import com.dxc.solution_intelligente.DTO.UserStory.AddUserStoryResponse;
 import com.dxc.solution_intelligente.DTO.UserStory.UserStoryDTO;
 import com.dxc.solution_intelligente.DTO.UserStory.UpdateUserStoryRequest;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
@@ -61,5 +63,16 @@ public class UserStoryController {
     @GetMapping("/search")
     public List<UserStoryDTO> searchUserStoryByNom(@RequestParam String nom) {
         return userStoryService.findByCodeAndTitreContaining(nom);
+    }
+
+
+    @PostMapping("/{backlogtitle}/userstories")
+    public ResponseEntity<AddUserStoryResponse> addUserStoryToBacklog(@PathVariable String backlogtitle, @RequestBody AddUserStoryRequest addUserStoryRequest) {
+        AddUserStoryResponse response = userStoryService.addUserStoryToBacklog(backlogtitle, addUserStoryRequest);
+        return ResponseEntity.ok(response);
+    }
+    @GetMapping("/{code}")
+    public UserStoryDTO searchBacklogByTitre(@PathVariable String code){
+        return userStoryService.findByCode(code);
     }
 }
