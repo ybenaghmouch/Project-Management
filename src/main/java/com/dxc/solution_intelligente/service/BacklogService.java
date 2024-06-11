@@ -5,6 +5,7 @@ import com.dxc.solution_intelligente.DTO.Backlog.*;
 import com.dxc.solution_intelligente.DTO.Project.*;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
 import com.dxc.solution_intelligente.service.model.Backlog;
+import com.dxc.solution_intelligente.service.model.Permission;
 import com.dxc.solution_intelligente.service.model.Project;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -58,6 +59,19 @@ public class BacklogService implements IBacklogService{
     public List<BacklogDTO> findByTitre(String titre) {
         return backlogRepository.findByTitreContainingIgnoreCase(titre.toLowerCase()).stream()
                 .map(backlog -> modelMapper.map(backlog, BacklogDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public String deleteBacklogById(Long id) {
+        if (id == null)
+            throw new BusinessException("Enter a correct identity backlog");
+        Backlog backlogFound = backlogRepository.findAll().stream().filter(backlog -> backlog.getId()==id).findFirst().orElseThrow(
+                () -> new BusinessException(String.format("No customer with identity %d exist in database", id))
+        );
+
+        backlogRepository.delete(backlogFound);
+        return String.format("Backlog with identity %d is deleted with success", id);
+
     }
 
 

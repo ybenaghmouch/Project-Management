@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { ProjectListComponent } from './project-list/project-list.component';
 import { RoleListComponent } from './role-list/role-list.component';
 import { TeamComponent } from './team/team.component';
+import { SprintListComponent } from './sprint-list/sprint-list.component';
 
 export const routes: Routes = [
     { path: 'users', component: UserListComponent },
@@ -16,7 +17,8 @@ export const routes: Routes = [
     { path: 'projects', component: ProjectListComponent },
     { path: 'teams', component: TeamListComponent },
     { path: 'team/:teamname', component: TeamComponent },
-    { path: 'roles', component: RoleListComponent }
+    { path: 'roles', component: RoleListComponent },
+    { path: 'sprints', component: SprintListComponent }
 ];
 
 @NgModule({

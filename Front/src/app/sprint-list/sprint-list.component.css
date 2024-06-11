@@ -67,21 +67,65 @@
     color: #6f42c1 !important;
   }
 
-  .btn-outline-primary.edit-btn {
-    color: #6f42c1;
-    border-color: #6f42c1;
-  }
-  .btn-outline-primary.delete-btn {
-    color: #d40505;
-    border-color: #ff0b0b;
-  }
+  /*************************************/
+  .timeline {
+    position: relative;
+    margin: 20px 0;
+    padding: 0;
+}
 
-  .btn-outline-primary.edit-btn:hover {
-    color: #fff;
-    background-color: #6f42c1;
-    border-color: #6f42c1;
-  }
+.timeline-item {
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 20px;
+}
 
-  .dropdown-toggle::after {
-    display: none;
-  }
+.timeline-mark-line {
+    position: absolute;
+    width: 2px;
+    background: #6f42c1;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+}
+
+.timeline-content {
+    padding: 10px 20px;
+    background-color: #f8f9fa;
+    border-left: 3px solid #6f42c1;
+}
+
+.dates {
+    font-style: italic;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.actions {
+    margin-top: 10px;
+}
+
+.timeline {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between; /* Assure un espacement uniforme entre les éléments */
+}
+
+.timeline-item {
+  flex-basis: 31%; /* Réduit la largeur de chaque élément de sprint pour en adapter trois par ligne */
+  margin-bottom: 20px; /* Espacement entre les lignes */
+  margin-right: 2%; /* Espacement entre les éléments */
+}
+
+/* Vous pouvez avoir besoin de retirer le margin-right sur chaque troisième élément pour aligner parfaitement les éléments */
+.timeline-item:nth-child(3n) {
+  margin-right: 0;
+}
+
+.edit-btn-purple {
+  background-color: #6f42c1;
+  color: white; /* Assure la visibilité du texte */
+}
+
+
+

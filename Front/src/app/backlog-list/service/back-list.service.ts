@@ -14,7 +14,11 @@ export class BackListService {
     return this.http.get<any[]>(`/api/backlog`);
   }
   searchUsers(username: string): Observable<any[]> {
-    
+
     return this.http.get<any[]>(`/api/backlog/search?titre=${username}`);
+  }
+
+  deleteBacklog(id: number): Observable<any[]>{
+    return this.http.delete<any[]>(`/api/backlog/${id}`);
   }
 }

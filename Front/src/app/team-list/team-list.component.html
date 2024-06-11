@@ -12,7 +12,6 @@
           <th scope="col">NAME</th>
           <th scope="col">Manager</th>
           <th scope="col">Project Leader</th>
-          <th scope="col">Collaborators</th>
           <th scope="col">Projects</th>
           <th scope="col">Actions</th>
         </tr>
@@ -22,23 +21,12 @@
           <td>{{ team.nom }}</td>
           <td>{{ team.manager.civility }} {{ team.manager.firstName }} {{ team.manager.lastName }}</td>
           <td>{{ team.chefprojet.civility }} {{ team.chefprojet.firstName }} {{ team.chefprojet.lastName }}</td>
-          <td>collab here</td>
           <td>projects here</td>
           <td class="overflow-hidden">
-            <div ngbDropdown container="body">
-              <i class="bi bi-three-dots-vertical" ngbDropdownToggle></i>
-
-              <div ngbDropdownMenu>
-                <button ngbDropdownItem class="btn btn-outline-primary btn-sm edit-btn" (click)="openEditTeamModal(team)">Edit</button>
-                <button ngbDropdownItem class="btn btn-outline-primary btn-sm edit-btn" [routerLink]="['/team', team.nom]">List</button>
-                <div class="dropdown-divider"></div>
-                <button ngbDropdownItem class="btn btn-outline-primary btn-sm delete-btn">Delete</button>
-              </div>
-            </div>
-            
-          </td>
-            
-          
+            <button class="btn btn-outline-primary btn-sm edit-btn me-2" (click)="openEditTeamModal(team)">Edit</button>
+            <button class="btn btn-outline-primary btn-sm edit-btn me-2" [routerLink]="['/team', team.nom]">List</button>
+            <button class="btn btn-outline-danger btn-sm delete-btn">Delete</button>
+        </td>
         </tr>
       </tbody>
     </table>

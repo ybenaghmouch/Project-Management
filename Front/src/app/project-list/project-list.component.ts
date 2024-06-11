@@ -8,12 +8,13 @@ import { ProjectListService } from './service/project-list.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { DatePipe } from '@angular/common';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 const FILTER_PAG_REGEX = /[^0-9]/g;
 
 @Component({
   selector: 'app-project-list',
   standalone: true,
-  imports: [CommonModule,NgbPaginationModule,ProjectModalComponent,FormsModule,HttpClientModule,ReactiveFormsModule],
+  imports: [CommonModule,NgbPaginationModule,ProjectModalComponent,FormsModule,HttpClientModule,ReactiveFormsModule, NgbDropdownModule],
   providers: [ProjectListService, DatePipe],
   templateUrl: './project-list.component.html',
   styleUrl: './project-list.component.css'

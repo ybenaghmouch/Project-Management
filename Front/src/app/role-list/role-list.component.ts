@@ -8,12 +8,13 @@ import { RoleListService } from './service/role-list.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 const FILTER_PAG_REGEX = /[^0-9]/g;
 
 @Component({
   selector: 'app-role-list',
   standalone: true,
-  imports: [CommonModule, NgbPaginationModule, RoleModalComponent, FormsModule, HttpClientModule, ReactiveFormsModule, RouterModule, HttpClientModule],
+  imports: [CommonModule, NgbPaginationModule, RoleModalComponent, FormsModule, HttpClientModule, ReactiveFormsModule, RouterModule, HttpClientModule, NgbDropdownModule],
   providers:[RoleListService],
   templateUrl: './role-list.component.html',
   styleUrl: './role-list.component.css'
@@ -109,10 +110,6 @@ ngOnInit(): void {
     );
   }
 
-  displayAuthorities(authorities: any[]): string {
-    return authorities.map(auth => auth.authority).join(', ');
-  }
-
 
   // searchRoles(rolename: string) {
   //   if (rolename.trim()) {
@@ -150,6 +147,17 @@ ngOnInit(): void {
       this.roleModal.isEditMode = true;
       this.roleModal.role = role;
 
+      this.roleModal.openModal();
+    } else {
+      console.error('RoleModalComponent is not initialized');
+    }
+  }
+
+  openListRoleModal(role: any) {
+    if (this.roleModal) {
+      this.roleModal.isEditMode = true;
+      this.roleModal.role = role;
+      this.roleModal.form.disable();
       this.roleModal.openModal();
     } else {
       console.error('RoleModalComponent is not initialized');

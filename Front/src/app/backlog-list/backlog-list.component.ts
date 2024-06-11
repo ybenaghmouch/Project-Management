@@ -8,12 +8,13 @@ import { BackListService } from './service/back-list.service';
 import { HttpClientModule } from '@angular/common/http';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { RouterModule } from '@angular/router';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 const FILTER_PAG_REGEX = /[^0-9]/g;
 
 @Component({
   selector: 'app-backlog-list',
   standalone: true,
-  imports: [CommonModule,NgbPaginationModule,BacklogModalComponent,FormsModule,HttpClientModule,ReactiveFormsModule,RouterModule],
+  imports: [CommonModule,NgbPaginationModule,BacklogModalComponent,FormsModule,HttpClientModule,ReactiveFormsModule,RouterModule, NgbDropdownModule],
   providers: [BackListService],
   templateUrl: './backlog-list.component.html',
   styleUrl: './backlog-list.component.css'
@@ -27,7 +28,7 @@ export class BacklogListComponent implements AfterViewInit,OnInit{
       "description": "",
       "status": ""
     }
-    // Add more users 
+    // Add more users
   ];
   searchForm: FormGroup;
 
@@ -36,9 +37,15 @@ export class BacklogListComponent implements AfterViewInit,OnInit{
     console.log('Edit user:', user);
   }
 
-  deleteUser(user: any) {
-    // Handle delete user action
-    console.log('Delete user:', user);
+  deleteBacklog(user: any) {
+    const index : number = this.users.indexOf(user);
+    this.userListService.deleteBacklog(user.id).subscribe(user => {
+
+    });
+    if (index !== -1) {
+      this.users.splice(index, 1);
+  }
+    console.log('Delete backlog:', user);
   }
 
   page = 1;
@@ -125,13 +132,13 @@ ngOnInit(): void {
       this.userModal.isEditMode = false;
       this.userModal.user = null;
       this.userModal.openModal();
-      
+
       /*this.userModal.userAdded.subscribe((newUser: any) => {
         this.users.push(newUser);
         console.log(this.users);
-        
+
       });*/
-      
+
     } else {
       console.error('UserModalComponent is not initialized');
     }
@@ -141,7 +148,7 @@ ngOnInit(): void {
     if (this.userModal) {
       this.userModal.isEditMode = true;
       this.userModal.user = user;
-      
+
       this.userModal.openModal();
     } else {
       console.error('UserModalComponent is not initialized');

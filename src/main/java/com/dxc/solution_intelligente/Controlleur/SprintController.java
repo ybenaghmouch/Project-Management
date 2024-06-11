@@ -1,9 +1,12 @@
 package com.dxc.solution_intelligente.Controlleur;
 
-import com.dxc.solution_intelligente.DTO.Backlog.*;
-import com.dxc.solution_intelligente.DTO.Project.*;
+import com.dxc.solution_intelligente.DTO.Sprint.UpdateSprintRequest;
+import com.dxc.solution_intelligente.DTO.Sprint.UpdateSprintResponse;
+import com.dxc.solution_intelligente.DTO.Sprint.AddSprintRequest;
+import com.dxc.solution_intelligente.DTO.Sprint.AddSprintResponse;
+import com.dxc.solution_intelligente.DTO.Sprint.SprintDTO;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
-import com.dxc.solution_intelligente.service.IBacklogService;
+import com.dxc.solution_intelligente.service.SprintService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,24 +16,24 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/backlog")
-public class BacklogController {
-    private final IBacklogService backlogService;
+@RequestMapping("/api/sprint")
+public class SprintController {
+    private final SprintService sprintService;
 
     @GetMapping
-    List<BacklogDTO> backlogs(){
-        return backlogService.getAllBacklogs();
+    List<SprintDTO> sprints(){
+        return sprintService.getAllSprints();
     }
 
     @GetMapping("/search")
-    public List<BacklogDTO> searchBacklogByTitre(@RequestParam String titre){
-        return backlogService.findByTitre(titre);
+    public List<SprintDTO> searchSprintByTitre(@RequestParam String titre){
+        return sprintService.findByTitre(titre);
     }
 
     @PostMapping
-    public ResponseEntity<?> createBacklog(@RequestBody AddBacklogRequest dto){
+    public ResponseEntity<?> createSprint(@RequestBody AddSprintRequest dto){
         try {
-            AddBacklogResponse response = backlogService.createBacklog(dto);
+            AddSprintResponse response = sprintService.createSprint(dto);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         }catch (BusinessException e){
             return ResponseEntity
@@ -41,22 +44,17 @@ public class BacklogController {
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erreur interne du serveur."+e.getMessage());
         }
-
     }
 
-    /*@PutMapping("/{name}")
-    public ResponseEntity<UpdateProjectResponse> updateProject(@PathVariable String name, @RequestBody UpdateProjectRequest dto){
-        return new ResponseEntity<>(projectService.updateProject(name, dto), HttpStatus.OK);
-    }*/
     @PutMapping("/{titre}")
-    public ResponseEntity<UpdateBacklogResponse> updateBacklog(@PathVariable String titre, @RequestBody UpdateBacklogRequest dto){
-        return new ResponseEntity<>(backlogService.updateBacklog(titre, dto), HttpStatus.OK);
+    public ResponseEntity<UpdateSprintResponse> updateSprint(@PathVariable String titre, @RequestBody UpdateSprintRequest dto){
+        return new ResponseEntity<>(sprintService.updateSprint(titre, dto), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteBacklog(@PathVariable Long id){
+    public ResponseEntity<?> deleteSprint(@PathVariable Long id){
         try {
-            return new ResponseEntity<>(backlogService.deleteBacklogById(id), HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(sprintService.deleteSprintById(id), HttpStatus.ACCEPTED);
         }catch (BusinessException e){
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
@@ -68,7 +66,4 @@ public class BacklogController {
         }
 
     }
-
-
-
 }
