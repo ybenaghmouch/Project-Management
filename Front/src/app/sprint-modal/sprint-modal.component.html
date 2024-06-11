@@ -1,0 +1,60 @@
+<div class="modal fade" id="sprintModal" tabindex="-1" aria-labelledby="sprintModalLabel" aria-hidden="true" #sprintModal>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ isEditMode ? 'Edit Sprint' : 'Create Sprint' }}</h5>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="form" (ngSubmit)="submitForm()">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="titre" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="titre" formControlName="titre" placeholder="Sprint title">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <input type="text" class="form-control" id="description" formControlName="description" placeholder="Describe the sprint">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="startDate" class="form-label">Start Date</label>
+                            <input type="date" class="form-control" id="startDate" formControlName="date_debut">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="endDate" class="form-label">End Date</label>
+                            <input type="date" class="form-control" id="endDate" formControlName="date_fin">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-control" id="status" formControlName="status">
+                                <option value="active" selected>Active</option>
+                                <option value="completed">Completed</option>
+                                <option value="onHold">On Hold</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="userStories" class="form-label">User Stories</label>
+                            <ng-select class="form-control"
+                                       [items]="userstories"
+                                       bindLabel="titre"
+                                       bindValue="id"
+                                       formControlName="userStories"
+                                       [multiple]="true"
+                                       [searchable]="true">
+                            </ng-select>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">{{ isEditMode ? 'Save' : 'Add' }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

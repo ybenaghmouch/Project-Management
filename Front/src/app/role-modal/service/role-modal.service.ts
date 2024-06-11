@@ -15,7 +15,7 @@ export class RoleModalService {
   putRole(formData: any,username: string): Observable<any> {
     return this.http.put<any>(`/api/role/${username}`,formData);
   }
-  getUsers(type: string = "user"): Observable<any[]> {
-    return this.http.get<any[]>(`/api/user`);
-  }
+  // getUsers(type: string = "user"): Observable<any[]> {
+  //   return this.http.get<any[]>(`/api/user`);
+  // }
 }

@@ -1,0 +1,122 @@
+<!-- <div class="container mt-4" [formGroup]="searchForm">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Sprints</h2>
+        <div class="d-flex align-items-center">
+            <input type="text" class="form-control search-input me-2" placeholder="Search" formControlName="name">
+            <button class="btn btn-primary add-user-btn ms-4" (click)="openCreateSprintModal()">+ Add sprint</button>
+        </div>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">TITRE</th>
+                <th scope="col">DESCRIPTION</th>
+                <th scope="col">START DATE</th>
+                <th scope="col">END DATE</th>
+                <th scope="col">STATUS</th>
+                <th scope="col">USER STORIES</th>
+                <th scope="col">ACTIONS</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let sprint of sprints">
+                <td> {{ sprint.titre }} </td>
+                <td>{{ sprint.description }} </td>
+                <td>{{ transformDate(sprint.date_debut) }}</td>
+                <td>{{ transformDate(sprint.date_fin) }}</td>
+                <td> {{ sprint.status }} </td>
+                <td> {{ sprint.userStories }} </td>
+                <td class="overflow-hidden">
+                  <button class="btn btn-outline-primary btn-sm edit-btn me-2" (click)="openEditSprintModal(sprint)">Edit</button>
+                  <button class="btn btn-outline-primary btn-sm edit-btn me-2">List</button>
+                  <button class="btn btn-outline-danger btn-sm delete-btn">Delete</button>
+              </td>
+            </tr>
+        </tbody>
+    </table>
+    <ngb-pagination [collectionSize]="70" [(page)]="page" [boundaryLinks]="true">
+      <ng-template ngbPaginationPages let-page let-pages="pages">
+        @if (pages.length > 0) {
+          <li class="ngb-custom-pages-item">
+            <div class="mb-3 d-flex flex-nowrap px-2">
+              <label id="paginationInputLabel" for="paginationInput" class="col-form-label me-2 ms-1">Page</label>
+              <input
+                #i
+                type="text"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                class="form-control custom-pages-input"
+                id="paginationInput"
+                [value]="page"
+                (keyup.enter)="selectPage(i.value)"
+                (blur)="selectPage(i.value)"
+                (input)="formatInput($any($event).target)"
+                aria-labelledby="paginationInputLabel paginationDescription"
+                style="width: 2.5rem"
+              />
+              <span id="paginationDescription" class="col-form-label text-nowrap px-2"> of {{ pages.length }}</span>
+            </div>
+          </li>
+        }
+      </ng-template>
+    </ngb-pagination>
+
+    <app-sprint-modal #sprintModal></app-sprint-modal>
+</div> -->
+<div class="container mt-4" [formGroup]="searchForm">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2>Sprints</h2>
+      <div class="d-flex align-items-center">
+          <input type="text" class="form-control search-input me-2" placeholder="Search" formControlName="name">
+          <button class="btn btn-primary add-user-btn ms-4" (click)="openCreateSprintModal()">+ Add sprint</button>
+      </div>
+  </div>
+
+  <div class="timeline">
+      <div *ngFor="let sprint of sprints" class="timeline-item">
+          <div class="timeline-mark-line"></div>
+          <div class="timeline-content">
+              <h3>{{ sprint.titre }}</h3>
+              <p>{{ sprint.description }}</p>
+              <div class="dates">
+                  <span>Start: {{ transformDate(sprint.date_debut) }}</span>
+                  <span>End: {{ transformDate(sprint.date_fin) }}</span>
+              </div>
+              <span class="badge bg-info">{{ sprint.status }}</span>
+              <div class="actions">
+                <button class="btn btn-outline-primary btn-sm" style="margin-right: 5px;" (click)="openEditSprintModal(sprint)">Edit</button>
+                <button class="btn btn-outline-danger btn-sm">Delete</button>
+              </div>
+          </div>
+      </div>
+  </div>
+  <!-- Pagination can remain similar -->
+  <ngb-pagination [collectionSize]="70" [(page)]="page" [boundaryLinks]="true">
+    <ng-template ngbPaginationPages let-page let-pages="pages">
+      @if (pages.length > 0) {
+        <li class="ngb-custom-pages-item">
+          <div class="mb-3 d-flex flex-nowrap px-2">
+            <label id="paginationInputLabel" for="paginationInput" class="col-form-label me-2 ms-1">Page</label>
+            <input
+              #i
+              type="text"
+              inputmode="numeric"
+              pattern="[0-9]*"
+              class="form-control custom-pages-input"
+              id="paginationInput"
+              [value]="page"
+              (keyup.enter)="selectPage(i.value)"
+              (blur)="selectPage(i.value)"
+              (input)="formatInput($any($event).target)"
+              aria-labelledby="paginationInputLabel paginationDescription"
+              style="width: 2.5rem"
+            />
+            <span id="paginationDescription" class="col-form-label text-nowrap px-2"> of {{ pages.length }}</span>
+          </div>
+        </li>
+      }
+    </ng-template>
+  </ngb-pagination>
+  <app-sprint-modal #sprintModal></app-sprint-modal>
+</div>
+

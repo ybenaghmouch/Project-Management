@@ -8,6 +8,7 @@ import { ReactiveFormsModule,FormsModule,FormGroup,FormBuilder } from '@angular/
 import { UserListService } from './service/user-list.service';
 import { HttpClient,HttpClientModule } from '@angular/common/http';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
 
@@ -16,7 +17,7 @@ const FILTER_PAG_REGEX = /[^0-9]/g;
   standalone: true,
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css'],
-  imports: [CommonModule,NgbPaginationModule,UserModalComponent,FormsModule,HttpClientModule,ReactiveFormsModule],
+  imports: [CommonModule,NgbPaginationModule,UserModalComponent,FormsModule,HttpClientModule,ReactiveFormsModule, NgbDropdownModule],
   providers: [UserListService]
 })
 export class UserListComponent implements AfterViewInit,OnInit {
@@ -40,9 +41,9 @@ export class UserListComponent implements AfterViewInit,OnInit {
           "authority": "user_delete"
       }
   ], status: true, civility: 'Mme.'
-      
+
      }
-    // Add more users 
+    // Add more users
   ];
   searchForm: FormGroup;
 
@@ -141,13 +142,13 @@ ngOnInit(): void {
       this.userModal.isEditMode = false;
       this.userModal.user = null;
       this.userModal.openModal();
-      
+
       /*this.userModal.userAdded.subscribe((newUser: any) => {
         this.users.push(newUser);
         console.log(this.users);
-        
+
       });*/
-      
+
     } else {
       console.error('UserModalComponent is not initialized');
     }
@@ -157,7 +158,7 @@ ngOnInit(): void {
     if (this.userModal) {
       this.userModal.isEditMode = true;
       this.userModal.user = user;
-      
+
       this.userModal.openModal();
     } else {
       console.error('UserModalComponent is not initialized');
