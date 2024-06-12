@@ -20,6 +20,6 @@ public class Sprint {
     private Date date_fin;
     private String status;
     @OneToMany
-    private List<UserStory> userStories;
+    private List<Project> projects;
 
 }

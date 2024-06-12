@@ -32,6 +32,7 @@ export class RoleModalComponent implements OnInit {
   @Output() roleAdded = new EventEmitter<any>();
   @ViewChild('roleModal', { static: false }) roleModal!: ElementRef;
   @Input() isEditMode: boolean = false;
+  @Input() isListMode: boolean = false;
   @Input() role: any;
 
   modules = [
@@ -141,7 +142,13 @@ export class RoleModalComponent implements OnInit {
           this.roleAdded.emit(response);
           this.closeModal();
         });
-      } else {
+      } else
+      if(this.isListMode){
+        this.roleModalService.putRole(roleData, roleData.authority).subscribe((response: any) => {
+          this.roleAdded.emit(response);
+          this.closeModal();
+        });
+      }else {
         this.roleModalService.postRole(roleData).subscribe((response: any) => {
           this.roleAdded.emit(response);
           this.closeModal();

@@ -9,5 +9,6 @@ public interface ISprintService {
     AddSprintResponse createSprint(AddSprintRequest addSprintRequest);
     UpdateSprintResponse updateSprint(String titre, UpdateSprintRequest updateSprintRequest);
     List<SprintDTO> findByTitre(String titre);
+    AddSprintResponse addSprintToProject(String projectName, AddSprintRequest addSprintRequest);
     String deleteSprintById(Long id);
 }

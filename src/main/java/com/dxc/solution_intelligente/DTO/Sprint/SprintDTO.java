@@ -1,5 +1,6 @@
 package com.dxc.solution_intelligente.DTO.Sprint;
 
+import com.dxc.solution_intelligente.DTO.Project.ProjectDTO;
 import com.dxc.solution_intelligente.DTO.UserStory.UserStoryDTO;
 import com.dxc.solution_intelligente.service.model.UserStory;
 import lombok.Data;
@@ -18,5 +19,5 @@ public class SprintDTO {
     private Date date_debut;
     private Date date_fin;
     private String status;
-    private List<UserStoryDTO> userStories;
+    private List<ProjectDTO> projects;
 }
