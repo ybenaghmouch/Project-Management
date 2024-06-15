@@ -10,4 +10,5 @@ public interface ISprintService {
     UpdateSprintResponse updateSprint(String titre, UpdateSprintRequest updateSprintRequest);
     List<SprintDTO> findByTitre(String titre);
     String deleteSprintById(Long id);
+    public AddSprintResponse addSprintToProject(String projectName, AddSprintRequest addSprintRequest);
 }

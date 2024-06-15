@@ -25,6 +25,7 @@ public class Project {
     private User manager;
     @OneToMany
     private List<Backlog> backlogs;
-
+    @OneToMany
+    private List<Sprint> sprints;
 
 }

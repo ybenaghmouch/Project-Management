@@ -12,9 +12,6 @@ import com.dxc.solution_intelligente.DTO.Sprint.AddSprintResponse;
 import com.dxc.solution_intelligente.DTO.Sprint.SprintDTO;
 import com.dxc.solution_intelligente.DTO.Sprint.*;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
-import com.dxc.solution_intelligente.service.model.*;
-import com.dxc.solution_intelligente.service.model.Sprint;
-import com.dxc.solution_intelligente.service.model.Sprint;
 import com.dxc.solution_intelligente.service.model.Sprint;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -70,6 +67,25 @@ public class SprintService implements ISprintService{
     public List<SprintDTO> findByTitre(String titre) {
         return sprintRepository.findByTitreContainingIgnoreCase(titre.toLowerCase()).stream()
                 .map(sprint -> modelMapper.map(sprint, SprintDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public AddSprintResponse addSprintToProject(String projectName, AddSprintRequest addSprintRequest) {
+       /* Sprint bo = modelMapper.map(addSprintRequest, Sprint.class);
+        String titre = bo.getTitre();
+        sprintRepository.findSprintByTitre(titre).ifPresent(sprint -> {
+            throw new BusinessException(String.format("Sprint avec le titre [%s] déjà existe", titre));
+        });
+        Sprint savedSprint = sprintRepository.save(bo);
+        Project project = projectRepository.findAll().stream().filter(proj-> proj.getNom()!= null && proj.getNom().equals(projectName))
+                .findFirst()
+                .orElseThrow(() -> new BusinessException(String.format("Aucun projet existe avec le nom [%s] ", projectName)));
+        project.get().add(savedSprint);
+        Project savedProject = projectRepository.save(project);
+        AddSprintResponse response = modelMapper.map(savedProject, AddSprintResponse.class);
+        response.setMessage(String.format("Sprint ajouté avec succes au projet [%s] : Titre = %s", projectName, response.getTitre()));
+        return response;*/
+        return null;
     }
 
     @Override

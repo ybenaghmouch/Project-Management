@@ -156,6 +156,7 @@ ngOnInit(): void {
   openListRoleModal(role: any) {
     if (this.roleModal) {
       this.roleModal.isEditMode = true;
+      this.roleModal.isListMode = true;
       this.roleModal.role = role;
       this.roleModal.form.disable();
       this.roleModal.openModal();
