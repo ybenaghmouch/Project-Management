@@ -10,6 +10,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class UserStory {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long Id;

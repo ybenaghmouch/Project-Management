@@ -1,25 +1,21 @@
-package com.dxc.solution_intelligente.service.model;
+package com.dxc.solution_intelligente.DTO.Conge;
 
-import jakarta.persistence.*;
+import com.dxc.solution_intelligente.service.model.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.mapping.ToOne;
 
 import java.util.Date;
 
-@Entity
 @Data
 @NoArgsConstructor
-public class Conge {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class CongeDTO {
+
     private Long id;
-    @ManyToOne
+
     private User Demandeur;
-    @ManyToOne
+    private String motif;
     private User Backup;
     private int Duration;
-    private String motif;
     private Date FromDate;
     private Date EndDate;
     private String Status;
