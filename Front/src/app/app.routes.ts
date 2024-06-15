@@ -10,10 +10,12 @@ import { RoleListComponent } from './role-list/role-list.component';
 import { TeamComponent } from './team/team.component';
 import { TaskListComponent } from './task-list/task-list.component';
 import { SprintListComponent } from './sprint-list/sprint-list.component';
+import { BoardComponent } from './board/board.component';
 
 export const routes: Routes = [
     { path: 'users', component: UserListComponent },
     { path: 'backlogs/:projectname', component: BacklogListComponent },
+    { path: 'backlogs', component: BacklogListComponent },
     { path: 'backlog', component: BacklogComponent },
     { path: 'tasks', component: TaskListComponent },
     { path: 'projects', component: ProjectListComponent },
@@ -21,6 +23,7 @@ export const routes: Routes = [
     { path: 'team/:teamname', component: TeamComponent },
     { path: 'roles', component: RoleListComponent },
     { path: 'sprints', component: SprintListComponent },
+    { path: 'board', component: BoardComponent }
 ];
 
 @NgModule({

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { ProjectListService } from '../project-list/service/project-list.service';
 
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { Component, ViewChild, AfterViewInit , OnInit } from '@angular/core';
@@ -17,7 +18,7 @@ const FILTER_PAG_REGEX = /[^0-9]/g;
   selector: 'app-backlog-list',
   standalone: true,
   imports: [CommonModule,NgbPaginationModule,BacklogModalComponent,FormsModule,HttpClientModule,ReactiveFormsModule,RouterModule, NgbDropdownModule],
-  providers: [BackListService],
+  providers: [BackListService,ProjectListService],
   templateUrl: './backlog-list.component.html',
   styleUrl: './backlog-list.component.css'
 })
@@ -70,7 +71,7 @@ export class BacklogListComponent implements AfterViewInit,OnInit{
 
 
 
-  constructor(private route: ActivatedRoute,private modalService: NgbModal,private userListService :BackListService,private fb: FormBuilder) {
+  constructor(private route: ActivatedRoute,private modalService: NgbModal,private userListService :BackListService,private fb: FormBuilder,private projectListService :ProjectListService) {
     this.searchForm = this.fb.group({
     titre: ['']
   });
@@ -79,8 +80,20 @@ export class BacklogListComponent implements AfterViewInit,OnInit{
 ngOnInit(): void {
   this.route.params.subscribe(params => {
     const teamName = params['projectname'];
+    
     if (teamName) {
       this.loadUsers(teamName);
+    }else{
+      this.projectListService.getProjects().subscribe(
+        (data: any[]) => {
+            const teamName =data[0].nom;
+            this.loadUsers(teamName);
+        },
+        error => {
+          console.error('Error fetching projects', error);
+        }
+      );
+      
     }
   });
   
@@ -111,7 +124,8 @@ ngOnInit(): void {
       console.error('UserModalComponent is not initialized');
     }
   }
-  loadUsers(projectname: string) {
+  loadUsers(projectname: string="debug") {
+    console.log(projectname)
     this.userListService.getUsers(projectname).subscribe(
       (data: any[]) => {
         this.users = data;

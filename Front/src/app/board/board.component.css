@@ -1,0 +1,67 @@
+:root {
+  --main-purple: #6a0dad;
+  --light-purple: #e0c3fc;
+}
+
+.container {
+  margin-top: 20px;
+}
+
+.text-purple {
+  color: var(--main-purple);
+}
+
+.row {
+  display: flex;
+  justify-content: space-around;
+}
+
+.col-md-4 {
+  padding: 0 15px;
+}
+
+.board {
+  background-color: var(--light-purple);
+  border: 2px solid var(--main-purple);
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.list {
+  min-height: 300px;
+}
+
+.list-title {
+  text-align: center;
+  color: var(--main-purple);
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.card {
+  cursor: move;
+  background-color: white;
+  border: 1px solid var(--main-purple);
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card-body {
+  text-align: center;
+  color: var(--main-purple);
+}
+
+.btn-link {
+  color: var(--main-purple);
+}
+
+.form-check-input:checked {
+  background-color: #6a0dad;
+  border-color: #6a0dad;
+}
