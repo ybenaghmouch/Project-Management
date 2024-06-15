@@ -17,7 +17,7 @@ public class Conge {
     @ManyToOne
     private User Demandeur;
     @ManyToOne
-    private User Backup;
+    private User backup;
     private int Duration;
     private String motif;
     private Date FromDate;

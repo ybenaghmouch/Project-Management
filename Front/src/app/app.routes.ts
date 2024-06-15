@@ -11,7 +11,7 @@ import { TeamComponent } from './team/team.component';
 import { TaskListComponent } from './task-list/task-list.component';
 import { SprintListComponent } from './sprint-list/sprint-list.component';
 import { BoardComponent } from './board/board.component';
-
+import { CongeComponent } from './conge/conge.component';
 export const routes: Routes = [
     { path: 'users', component: UserListComponent },
     { path: 'backlogs/:projectname', component: BacklogListComponent },
@@ -23,6 +23,7 @@ export const routes: Routes = [
     { path: 'team/:teamname', component: TeamComponent },
     { path: 'roles', component: RoleListComponent },
     { path: 'sprints', component: SprintListComponent },
+    { path: 'leaves', component: CongeComponent },
     { path: 'board', component: BoardComponent }
 ];
 

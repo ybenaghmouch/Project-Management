@@ -23,7 +23,7 @@ public class EquipeService implements IEquipeService{
     private final ModelMapper modelMapper;
 
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
 
 
