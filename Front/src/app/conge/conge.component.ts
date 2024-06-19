@@ -4,13 +4,15 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { ReactiveFormsModule, FormsModule, FormGroup, FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UserListService } from '../user-list/service/user-list.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-conge',
   standalone: true,
   imports: [CommonModule, FormsModule, HttpClientModule, ReactiveFormsModule, NgSelectModule, NgbModule],
-  providers: [CongeService],
+  providers: [CongeService, UserListService, DatePipe],
   templateUrl: './conge.component.html',
   styleUrls: ['./conge.component.css']
 })
@@ -21,15 +23,15 @@ export class CongeComponent implements OnInit {
   selectedConge: any | null = null;
   users: any[] = []; // Replace with actual user model
 
-  constructor(private fb: FormBuilder, private modalService: NgbModal, private congeService: CongeService) {
+  constructor(private fb: FormBuilder, private modalService: NgbModal, private congeService: CongeService, private userService: UserListService, private datePipe: DatePipe) {
     this.congeForm = this.fb.group({
-      motif: [''],
-      duration: [0],
-      status: ['pending'],
-      fromDate: [''],
-      endDate: [''],
-      demandeur: [null],
-      backup: [null]
+      motif: ['', Validators.required],
+      duration: [{ value: 0, disabled: true }, Validators.required],
+      status: ['pending', Validators.required],
+      fromDate: ['', Validators.required],
+      endDate: ['', Validators.required],
+      demandeur: [null, Validators.required],
+      backup: [null, Validators.required]
     });
   }
 
@@ -44,13 +46,9 @@ export class CongeComponent implements OnInit {
   }
 
   loadUsers() {
-    // Replace with actual service call to get users
-    // this.userService.getAllUsers().subscribe(users => this.users = users);
-    this.users = [
-      { id: 1, username: 'User 1' },
-      { id: 2, username: 'User 2' },
-      { id: 3, username: 'User 3' }
-    ];
+    this.userService.getUsers().subscribe(users => {
+      this.users = users;
+    });
   }
 
   openCreateCongeModal(content: any) {
@@ -63,19 +61,33 @@ export class CongeComponent implements OnInit {
   openEditCongeModal(conge: any, content: any) {
     this.isEditMode = true;
     this.selectedConge = conge;
-    this.congeForm.patchValue(conge);
+    this.congeForm.patchValue({
+      motif: conge.motif,
+      duration: conge.duration,
+      status: conge.status,
+      fromDate: this.datePipe.transform(conge.fromDate, 'yyyy-MM-dd'),
+      endDate: this.datePipe.transform(conge.endDate, 'yyyy-MM-dd'),
+      demandeur: conge.demandeur.id,
+      backup: conge.backup.id
+    });
     this.modalService.open(content);
   }
 
   saveConge(modal: NgbModalRef) {
-    const congeData = this.congeForm.value;
+    const congeData = this.congeForm.getRawValue();
+    const transformedData = {
+      ...congeData,
+      demandeur: { id: congeData.demandeur },
+      backup: { id: congeData.backup }
+    };
+
     if (this.isEditMode && this.selectedConge) {
-      this.congeService.updateConge(this.selectedConge.id, congeData).subscribe(() => {
+      this.congeService.updateConge(this.selectedConge.id, transformedData).subscribe(() => {
         this.loadConges();
         modal.dismiss();
       });
     } else {
-      this.congeService.createConge(congeData).subscribe(() => {
+      this.congeService.createConge(transformedData).subscribe(() => {
         this.loadConges();
         modal.dismiss();
       });

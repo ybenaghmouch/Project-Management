@@ -7,23 +7,25 @@
     <thead>
       <tr>
         <th scope="col">Motif</th>
+        <th scope="col">Demandeur</th>
         <th scope="col">Duration</th>
+        
+        <th scope="col">Backup</th>
         <th scope="col">Status</th>
-        <th scope="col">From Date</th>
-        <th scope="col">End Date</th>
         <th scope="col">Actions</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let conge of conges">
         <td>{{ conge.motif }}</td>
+        <td>{{ conge.demandeur?.civility }} {{ conge.demandeur?.firstName }} {{ conge.demandeur?.lastName }}</td>
         <td>{{ conge.duration }}</td>
+        
+        <td>{{ conge.backup?.civility }} {{ conge.backup?.firstName }} {{ conge.backup?.lastName }}</td>
         <td>{{ conge.status }}</td>
-        <td>{{ conge.fromDate | date }}</td>
-        <td>{{ conge.endDate | date }}</td>
         <td>
-          <button class="btn btn-outline-primary btn-sm me-2" (click)="openEditCongeModal(conge, congeModal)">Edit</button>
-          <button *ngIf="conge.status === 'pending'" class="btn btn-outline-success btn-sm me-2" (click)="updateCongeStatus(conge, 'allowed')">Allow</button>
+          <button *ngIf="conge.status === 'pending' || conge.status === 'refused'" class="btn btn-outline-primary btn-sm me-2" (click)="openEditCongeModal(conge, congeModal)">Edit</button>
+          <button *ngIf="conge.status === 'pending' || conge.status === 'refused'" class="btn btn-outline-success btn-sm me-2" (click)="updateCongeStatus(conge, 'allowed')">Allow</button>
           <button *ngIf="conge.status === 'pending'" class="btn btn-outline-danger btn-sm" (click)="updateCongeStatus(conge, 'refused')">Refuse</button>
         </td>
       </tr>
@@ -44,14 +46,12 @@
         </div>
         <div class="mb-3">
           <label for="duration" class="form-label">Duration</label>
-          <input type="number" class="form-control" id="duration" formControlName="duration" placeholder="Duration in days">
+          <input type="number" class="form-control" id="duration" formControlName="duration" placeholder="Duration in days" readonly>
         </div>
         <div class="mb-3">
           <label for="status" class="form-label">Status</label>
           <select class="form-control" id="status" formControlName="status">
             <option value="pending" selected>Pending</option>
-            <option value="allowed">Allowed</option>
-            <option value="refused">Refused</option>
           </select>
         </div>
         <div class="mb-3">
