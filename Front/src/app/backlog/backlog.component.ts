@@ -140,6 +140,17 @@ export class BacklogComponent implements OnInit {
     }
   }
 
+  openListBacklogModal(user: any) {
+    if (this.userModal) {
+      this.userModal.isListMode = true;
+      this.userModal.user = user;
+      this.userModal.openModal();
+      this.userModal.form.disable();
+    } else {
+      console.error('ModalComponent is not initialized');
+    }
+  }
+
   deleteUserStory(user: any) {
     const index = this.backlog.userStories.indexOf(user, 0);
     if (index > -1) {
@@ -162,4 +173,6 @@ export class BacklogComponent implements OnInit {
   setFilter(statut: string) {
     this.searchForm.patchValue({ statut });
   }
+
 }
+

@@ -1,5 +1,7 @@
 package com.dxc.solution_intelligente.Controlleur;
 
+import com.dxc.solution_intelligente.DTO.Backlog.AddBacklogRequest;
+import com.dxc.solution_intelligente.DTO.Backlog.AddBacklogResponse;
 import com.dxc.solution_intelligente.DTO.Sprint.UpdateSprintRequest;
 import com.dxc.solution_intelligente.DTO.Sprint.UpdateSprintResponse;
 import com.dxc.solution_intelligente.DTO.Sprint.AddSprintRequest;
@@ -65,5 +67,11 @@ public class SprintController {
                     .body("Erreur interne du serveur."+e.getMessage());
         }
 
+    }
+
+    @PostMapping("/{projectName}")
+    public ResponseEntity<AddSprintResponse> addSprintToProject(@PathVariable String projectName, @RequestBody AddSprintRequest addSprintRequest) {
+        AddSprintResponse response = sprintService.addSprintToProject(projectName, addSprintRequest);
+        return ResponseEntity.ok(response);
     }
 }

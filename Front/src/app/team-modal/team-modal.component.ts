@@ -33,6 +33,7 @@ export class TeamModalComponent implements OnInit  {
   @Output() teamAdded = new EventEmitter<any>();
   @ViewChild('teamModal', { static: false }) teamModal!: ElementRef;
   @Input() isEditMode: boolean = false;
+  @Input() isListMode: boolean = false;
   @Input() team: any;
 
   constructor(private formBuilder: FormBuilder, private teamModalService: TeamModalService, private userService: TeamModalService,private http: HttpClient) {
@@ -79,6 +80,8 @@ export class TeamModalComponent implements OnInit  {
     const modalInstance = bootstrap.Modal.getInstance(modalElement);
     this.form.reset();
     modalInstance.hide();
+    this.isListMode = false;
+    this.form.enable();
   }
 
   submitForm() {

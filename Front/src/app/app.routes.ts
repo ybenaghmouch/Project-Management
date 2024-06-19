@@ -23,6 +23,7 @@ export const routes: Routes = [
     { path: 'team/:teamname', component: TeamComponent },
     { path: 'roles', component: RoleListComponent },
     { path: 'sprints', component: SprintListComponent },
+    { path: 'sprints/:projectname', component: SprintListComponent },
     { path: 'leaves', component: CongeComponent },
     { path: 'board', component: BoardComponent }
 ];

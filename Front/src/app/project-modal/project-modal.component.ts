@@ -39,6 +39,7 @@ export class ProjectModalComponent implements OnInit {
   @Output() projectAdded = new EventEmitter<any>();
   @ViewChild('projectModal', { static: false }) projectModal!: ElementRef;
   @Input() isEditMode: boolean = false;
+  @Input() isListMode: boolean = false;
   @Input() project: any;
 
 
@@ -67,7 +68,7 @@ export class ProjectModalComponent implements OnInit {
   subscribeToDateChanges() {
     const startDateControl = this.form.get('dateDebut');
     const endDateControl = this.form.get('dateFin');
-  
+
     if (startDateControl && endDateControl) {
       startDateControl.valueChanges.subscribe(() => {
         this.updateDuration();
@@ -77,7 +78,7 @@ export class ProjectModalComponent implements OnInit {
       });
     }
   }
-  
+
   updateDuration() {
     const startDate = this.form.get('dateDebut')?.value;
     const endDate = this.form.get('dateFin')?.value;
@@ -86,13 +87,13 @@ export class ProjectModalComponent implements OnInit {
       this.form.patchValue({ duration: duration });
     }
   }
-  
+
   calculateDuration(startDate: string, endDate: string): number {
     const start = new Date(startDate);
     const end = new Date(endDate);
     let duration = 0;
     let current = new Date(start);
-  
+
     while (current <= end) {
       const day = current.getDay();
       if (day !== 0 && day !== 6) { // Exclude Sunday (0) and Saturday (6)
@@ -100,7 +101,7 @@ export class ProjectModalComponent implements OnInit {
       }
       current.setDate(current.getDate() + 1);
     }
-  
+
     return duration; // Ensure non-negative duration
   }
   loadUsers() {
@@ -146,7 +147,10 @@ export class ProjectModalComponent implements OnInit {
     const modalInstance = bootstrap.Modal.getInstance(modalElement);
     this.form.reset();
     modalInstance.hide();
+    this.isListMode = false;
+    this.form.enable();
   }
+
 
   submitForm() {
     if (this.form.valid) {
@@ -187,6 +191,7 @@ export class ProjectModalComponent implements OnInit {
         }
     }
 }
+
 
 
 }

@@ -19,11 +19,12 @@ declare var bootstrap: any;
 export class UserModalComponent implements OnInit {
   form: FormGroup;
   roles: any[] = [];
-  
+
   @Output() userAdded = new EventEmitter<any>();
 
   @ViewChild('userModal') userModal!: ElementRef;
   @Input() isEditMode: boolean = false;
+  @Input() isListMode: boolean = false;
   @Input() user: any;
 
   constructor(private formBuilder: FormBuilder, private userModalService: UserModalService, private roleListService: RoleListService) {
@@ -69,6 +70,8 @@ export class UserModalComponent implements OnInit {
     const modalInstance = bootstrap.Modal.getInstance(modalElement);
     this.form.reset();
     modalInstance.hide();
+    this.isListMode = false;
+    this.form.enable();
   }
 
   getRoles(): void {

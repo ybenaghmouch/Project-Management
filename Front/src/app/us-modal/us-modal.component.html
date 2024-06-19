@@ -2,7 +2,8 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="userModalLabel">{{ isEditMode ? 'Edit Backlog' : 'Create Backlog' }}</h5>
+                <h5 [hidden]="isListMode" class="modal-title" id="userModalLabel">{{ isEditMode ? 'Edit Backlog' : 'Create Backlog' }}</h5>
+                <h5 [hidden]="!isListMode" class="modal-title" id="userModalLabel">List User Story</h5>
                 <button type="button" class="btn-close" (click)="closeModal()"></button>
             </div>
             <div class="modal-body">
@@ -37,11 +38,10 @@
                       </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
-                        <button type="submit" class="btn btn-primary">{{ isEditMode ? 'Save' : 'Add' }}</button>
+                        <button [hidden]="isListMode" type="submit" class="btn btn-primary">{{ isEditMode ? 'Save' : 'Add' }}</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
   </div>
-  

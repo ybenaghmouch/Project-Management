@@ -110,6 +110,7 @@ export class RoleModalComponent implements OnInit {
     const modalInstance = bootstrap.Modal.getInstance(modalElement);
     this.form.reset();
     modalInstance.hide();
+    this.isListMode = false;
     this.form.enable();
   }
 

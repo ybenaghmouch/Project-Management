@@ -16,5 +16,4 @@ public class UpdateSprintRequest {
     private Date date_debut;
     private Date date_fin;
     private String status;
-    private List<ProjectDTO> projects;
 }

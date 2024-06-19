@@ -19,7 +19,5 @@ public class Sprint {
     private Date date_debut;
     private Date date_fin;
     private String status;
-    @OneToMany
-    private List<Project> projects;
 
 }

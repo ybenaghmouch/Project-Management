@@ -80,7 +80,7 @@ export class BacklogListComponent implements AfterViewInit,OnInit{
 ngOnInit(): void {
   this.route.params.subscribe(params => {
     const teamName = params['projectname'];
-    
+
     if (teamName) {
       this.loadUsers(teamName);
     }else{
@@ -93,10 +93,10 @@ ngOnInit(): void {
           console.error('Error fetching projects', error);
         }
       );
-      
+
     }
   });
-  
+
 
   this.searchForm.get('titre')!.valueChanges
     .pipe(
@@ -146,7 +146,7 @@ ngOnInit(): void {
         }
       );
     } else {
-      
+
       this.route.params.subscribe(params => {
         const teamName = params['projectname'];
         if (teamName) {
@@ -162,7 +162,7 @@ ngOnInit(): void {
         const teamName = params['projectname'];
         this.userModal.projectname = teamName;
       });
-      
+
       this.userModal.user = null;
       this.userModal.openModal();
 
@@ -181,10 +181,20 @@ ngOnInit(): void {
     if (this.userModal) {
       this.userModal.isEditMode = true;
       this.userModal.user = user;
-
       this.userModal.openModal();
     } else {
       console.error('UserModalComponent is not initialized');
+    }
+  }
+
+  openListBacklogModal(user: any) {
+    if (this.userModal) {
+      this.userModal.isListMode = true;
+      this.userModal.user = user;
+      this.userModal.openModal();
+      this.userModal.form.disable();
+    } else {
+      console.error('ProjectModalComponent is not initialized');
     }
   }
 

@@ -38,7 +38,7 @@
             <td>{{ feature.statut }}</td>
             <td class="overflow-hidden">
               <button class="btn btn-outline-primary btn-sm edit-btn me-2" (click)="openEditUserModal(feature)">Edit</button>
-              <button class="btn btn-outline-primary btn-sm edit-btn me-2">List</button>
+              <button class="btn btn-outline-primary btn-sm edit-btn me-2" (click)="openListUserModal(feature)">List</button>
               <button class="btn btn-outline-danger btn-sm delete-btn" (click)="deleteUserStory(feature)">Delete</button>
           </td>
           </tr>

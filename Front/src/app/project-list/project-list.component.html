@@ -26,10 +26,11 @@
           <td>{{ project.manager.civility }} {{ project.manager.firstName }} {{ project.manager.lastName }}</td>
           <td class="overflow-hidden">
             <button class="btn btn-outline-primary btn-sm edit-btn me-2" (click)="openEditProjectModal(project)">Edit</button>
-            <button class="btn btn-outline-primary btn-sm edit-btn me-2">List</button>
+            <button class="btn btn-outline-primary btn-sm edit-btn me-2" (click)="openListProjectModal(project)">List</button>
             <button class="btn btn-outline-primary btn-sm edit-btn me-2" [routerLink]="['/backlogs', project.nom]">Backlogs</button>
+            <button class="btn btn-outline-primary btn-sm edit-btn me-2" [routerLink]="['/sprints', project.nom]">Sprints</button>
             <button class="btn btn-outline-danger btn-sm delete-btn">Delete</button>
-        </td>
+          </td>
         </tr>
       </tbody>
     </table>

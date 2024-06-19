@@ -9,6 +9,7 @@ import com.dxc.solution_intelligente.DTO.Sprint.UpdateSprintResponse;
 import com.dxc.solution_intelligente.DTO.Sprint.AddSprintRequest;
 import com.dxc.solution_intelligente.DTO.Sprint.AddSprintResponse;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
+import com.dxc.solution_intelligente.service.model.Project;
 import com.dxc.solution_intelligente.service.model.Sprint;
 
 import jakarta.transaction.Transactional;
@@ -44,7 +45,7 @@ public class SprintService implements ISprintService{
         /*User manager = userRepository.findById(response.getManager().getId())
                 .orElseThrow(() -> new BusinessException("Manager not found"));
         response.setManager(manager);*/
-        response.setMessage(String.format("Sprint : [Titre = %s, Description = %s, Status = %s, Date de debut = %s, Date de fin = %s, Projects = %s]", response.getTitre(), response.getDescription(), response.getStatus(), response.getDate_debut(), response.getDate_fin(), response.getProjects()));
+        response.setMessage(String.format("Sprint : [Titre = %s, Description = %s, Status = %s, Date de debut = %s, Date de fin = %s]", response.getTitre(), response.getDescription(), response.getStatus(), response.getDate_debut(), response.getDate_fin()));
         return response;
     }
 
@@ -72,7 +73,7 @@ public class SprintService implements ISprintService{
 
     @Override
     public AddSprintResponse addSprintToProject(String projectName, AddSprintRequest addSprintRequest) {
-       /* Sprint bo = modelMapper.map(addSprintRequest, Sprint.class);
+        Sprint bo = modelMapper.map(addSprintRequest, Sprint.class);
         String titre = bo.getTitre();
         sprintRepository.findSprintByTitre(titre).ifPresent(sprint -> {
             throw new BusinessException(String.format("Sprint avec le titre [%s] déjà existe", titre));
@@ -81,12 +82,11 @@ public class SprintService implements ISprintService{
         Project project = projectRepository.findAll().stream().filter(proj-> proj.getNom()!= null && proj.getNom().equals(projectName))
                 .findFirst()
                 .orElseThrow(() -> new BusinessException(String.format("Aucun projet existe avec le nom [%s] ", projectName)));
-        project.get().add(savedSprint);
+        project.getSprints().add(savedSprint);
         Project savedProject = projectRepository.save(project);
         AddSprintResponse response = modelMapper.map(savedProject, AddSprintResponse.class);
         response.setMessage(String.format("Sprint ajouté avec succes au projet [%s] : Titre = %s", projectName, response.getTitre()));
-        return response;*/
-        return null;
+        return response;
     }
 
     @Override

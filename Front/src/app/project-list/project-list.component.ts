@@ -179,7 +179,6 @@ searchProjects(projectname: string) {
 }
 
 openCreateProjectModal() {
-
   if (this.projectModal) {
     this.projectModal.isEditMode = false;
     this.projectModal.project = null;
@@ -195,8 +194,18 @@ openEditProjectModal(project: any) {
   if (this.projectModal) {
     this.projectModal.isEditMode = true;
     this.projectModal.project = project;
-
     this.projectModal.openModal();
+  } else {
+    console.error('ProjectModalComponent is not initialized');
+  }
+}
+
+openListProjectModal(project: any) {
+  if (this.projectModal) {
+    this.projectModal.isListMode = true;
+    this.projectModal.project = project;
+    this.projectModal.openModal();
+    this.projectModal.form.disable();
   } else {
     console.error('ProjectModalComponent is not initialized');
   }

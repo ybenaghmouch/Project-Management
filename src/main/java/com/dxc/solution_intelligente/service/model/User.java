@@ -26,7 +26,7 @@ public class User {
     private String Speciality;
     private boolean Status;
     private int soldeConge;
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.MERGE)
     private List<Role> authorities;
 
 

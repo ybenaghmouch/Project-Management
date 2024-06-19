@@ -20,6 +20,7 @@ export class UsModalComponent {
 
   @ViewChild('userModal') userModal!: ElementRef;
   @Input() isEditMode: boolean = false;
+  @Input() isListMode: boolean = false;
   @Input() projectname: string = '';
   @Input() user: any;
 

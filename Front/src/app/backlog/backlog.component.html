@@ -1,3 +1,158 @@
+<!-- <div class="container mt-4" [formGroup]="searchForm">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Backlog </h2>
+    <div class="d-flex align-items-center">
+      <input type="text" class="form-control search-input me-2" placeholder="Search" formControlName="titre">
+      <div class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-funnel"></i>
+        </button>
+      <div id="collapseStarted" class="accordion-collapse collapse show"
+        aria-labelledby="headingStarted" data-bs-parent="#accordionBacklog">
+        <div class="accordion-body">
+          <div *ngFor="let userStory of backlog.userStories | filterByStatut:'started'">
+            <h3>{{ userStory.titre }}</h3>
+            <p>{{ userStory.description }}</p>
+            <div class="accordion" id="accordionFeaturesStarted{{ userStory.id }}">
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                    [attr.data-bs-target]="'#startedFeatures' + userStory.id" aria-expanded="true"
+                    [attr.aria-controls]="'startedFeatures' + userStory.id">
+                    Started Features
+                  </button>
+                </h2>
+                <div id="startedFeatures{{ userStory.id }}" class="accordion-collapse collapse show">
+                  <div class="accordion-body">
+                    <ul>
+                      <li *ngFor="let feature of userStory.features | filterByStatut:'started'">
+                        <hr>
+                        <div>
+                          <button class="btn btn-link" type="button" data-bs-toggle="collapse"
+                            [attr.data-bs-target]="'#feature' + feature.id" aria-expanded="false"
+                            [attr.aria-controls]="'feature' + feature.id">
+                            {{ feature.titre }}
+                          </button>
+                          <div id="feature{{ feature.id }}" class="collapse">
+                            <p>{{ feature.description }}</p>
+                            <p>Responsable: {{ feature.responsable.civility || 'UNASSIGNED' }} {{ feature.responsable.firstName || 'Task' }} {{ feature.responsable.lastName ||'' }}</p>
+                            <p [ngStyle]="{'color': getPriorityColor(feature.priority)}">Priority: {{ feature.priority }}</p>
+                            <button class="btn btn-secondary">Edit</button>
+                            <button class="btn btn-danger">Delete</button>
+                          </div>
+                        </div>
+                        <hr>
+                      </li>
+                    </ul>
+                    <button class="btn btn-primary">Add</button>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                    [attr.data-bs-target]="'#pendingFeatures' + userStory.id" aria-expanded="true"
+                    [attr.aria-controls]="'pendingFeatures' + userStory.id">
+                    Pending Features
+                  </button>
+                </h2>
+                <div id="pendingFeatures{{ userStory.id }}" class="accordion-collapse collapse show">
+                  <div class="accordion-body">
+                    <ul>
+                      <li *ngFor="let feature of userStory.features | filterByStatut:'pending'">
+                        <hr>
+                        <div>
+                          <button class="btn btn-link" type="button" data-bs-toggle="collapse"
+                            [attr.data-bs-target]="'#feature' + feature.id" aria-expanded="false"
+                            [attr.aria-controls]="'feature' + feature.id">
+                            {{ feature.titre }}
+                          </button>
+                          <div id="feature{{ feature.id }}" class="collapse">
+                            <p>{{ feature.description }}</p>
+                            <p>Responsable: {{ feature.responsable.civility || 'UNASSIGNED' }} {{ feature.responsable.firstName || 'Task' }} {{ feature.responsable.lastName ||'' }}</p>
+                            <p [ngStyle]="{'color': getPriorityColor(feature.priority)}">Priority: {{ feature.priority }}</p>
+                            <button class="btn btn-secondary">Edit</button>
+                            <button class="btn btn-danger">Delete</button>
+                          </div>
+                        </div>
+                        <hr>
+                      </li>
+
+                    </ul>
+                    <button class="btn btn-primary">Add</button>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                    [attr.data-bs-target]="'#doneFeatures' + userStory.id" aria-expanded="true"
+                    [attr.aria-controls]="'doneFeatures' + userStory.id">
+                    Done Features
+                  </button>
+                </h2>
+                <div id="doneFeatures{{ userStory.id }}" class="accordion-collapse collapse show">
+                  <div class="accordion-body">
+                    <ul>
+                      <li *ngFor="let feature of userStory.features | filterByStatut:'done'"><hr>
+                        <div>
+                          <button class="btn btn-link" type="button" data-bs-toggle="collapse"
+                            [attr.data-bs-target]="'#feature' + feature.id" aria-expanded="false"
+                            [attr.aria-controls]="'feature' + feature.id">
+                            {{ feature.titre }}
+                          </button>
+                          <div id="feature{{ feature.id }}" class="collapse">
+                            <p>{{ feature.description }}</p>
+                            <p>Responsable: {{ feature.responsable.civility || 'UNASSIGNED' }} {{ feature.responsable.firstName || 'Task' }} {{ feature.responsable.lastName ||'' }}</p>
+                            <p [ngStyle]="{'color': getPriorityColor(feature.priority)}">Priority: {{ feature.priority }}</p>
+                            <button class="btn btn-secondary">Edit</button>
+                            <button class="btn btn-danger">Delete</button>
+                          </div>
+                        </div><hr>
+                      </li>
+                    </ul>
+                    <button class="btn btn-primary">Add</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary add-user-btn ms-4" (click)="openCreateUserModal()">+ Add User Story</button>
+    </div>
+  </div>
+  <div *ngIf="backlog">
+    <h1 class="display-4">{{ backlog.titre }}</h1>
+    <p>{{ backlog.description }}</p>
+    <h2>User Stories </h2>
+    <table class="table table-striped mt-4">
+      <thead>
+        <tr>
+          <th scope="col">TITRE</th>
+          <th scope="col">DESCRIPTION</th>
+          <th scope="col">STATUT</th>
+          <th scope="col">ACTIONS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let userStory of backlog.userStories | filterByStatut:searchForm.value.statut">
+          <td>{{ userStory.titre }}</td>
+          <td>{{ userStory.description }}</td>
+          <td>{{ userStory.statut }}</td>
+          <td class="overflow-hidden">
+            <button class="btn btn-outline-primary btn-sm edit-btn me-2" (click)="openEditUserModal(userStory)">Edit</button>
+            <button class="btn btn-outline-primary btn-sm edit-btn me-2">List</button>
+            <button class="btn btn-outline-primary btn-sm edit-btn me-2" [routerLink]="['/tasks']" [queryParams]="{ backlogId: userStory.code }">Tasks</button>
+            <button class="btn btn-outline-danger btn-sm delete-btn" (click)="deleteUserStory(userStory)">Delete</button>
+        </td>
+        </tr>
+      </tbody>
+    </table>
+    <ngb-pagination [collectionSize]="backlog.userStories.length" [(page)]="page" [pageSize]="pageSize"></ngb-pagination>
+  </div>
+  <app-us-modal></app-us-modal>
+</div> -->
 <div class="container mt-4" [formGroup]="searchForm">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h2>Backlog </h2>
@@ -37,7 +192,7 @@
           <td>{{ userStory.statut }}</td>
           <td class="overflow-hidden">
             <button class="btn btn-outline-primary btn-sm edit-btn me-2" (click)="openEditUserModal(userStory)">Edit</button>
-            <button class="btn btn-outline-primary btn-sm edit-btn me-2">List</button>
+            <button class="btn btn-outline-primary btn-sm edit-btn me-2" (click)="openListBacklogModal(userStory)">List</button>
             <button class="btn btn-outline-primary btn-sm edit-btn me-2" [routerLink]="['/tasks']" [queryParams]="{ backlogId: userStory.code }">Tasks</button>
             <button class="btn btn-outline-danger btn-sm delete-btn" (click)="deleteUserStory(userStory)">Delete</button>
         </td>
