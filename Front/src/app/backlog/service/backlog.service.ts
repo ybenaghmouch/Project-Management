@@ -38,7 +38,7 @@ export class BacklogService {
 
   constructor(private http: HttpClient) {}
 
-  getBacklog(id: number): Observable<Backlog[]> {
-    return this.http.get<Backlog[]>(`/api/backlog/search?titre=${id}`);
+  getBacklog(id: string): Observable<Backlog[]> {
+    return this.http.get<Backlog[]>(`/api/backlog/${id}`);
   }
 }

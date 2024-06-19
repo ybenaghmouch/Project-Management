@@ -1,6 +1,7 @@
 package com.dxc.solution_intelligente.Controlleur;
 
 import com.dxc.solution_intelligente.DTO.Tache.AddTacheRequest;
+import com.dxc.solution_intelligente.DTO.Tache.AddTacheResponse;
 import com.dxc.solution_intelligente.DTO.Tache.TacheDTO;
 import com.dxc.solution_intelligente.DTO.Tache.UpdateTacheRequest;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
@@ -40,10 +41,10 @@ public class TacheController {
         }
     }
 
-    @PutMapping("/{nom}")
-    public ResponseEntity<?> updateTache(@PathVariable String nom, @RequestBody UpdateTacheRequest dto){
+    @PutMapping("/{code}")
+    public ResponseEntity<?> updateTache(@PathVariable String code, @RequestBody UpdateTacheRequest dto){
         try{
-            return new ResponseEntity<>(tacheService.updateTache(nom, dto), HttpStatus.OK);
+            return new ResponseEntity<>(tacheService.updateTache(code, dto), HttpStatus.OK);
         } catch (BusinessException e) {
             // Log de l'erreur si nécessaire
             return ResponseEntity
@@ -61,5 +62,10 @@ public class TacheController {
     @GetMapping("/search")
     public List<TacheDTO> searchTacheByNom(@RequestParam String nom) {
         return tacheService.findByCodeAndTitreContaining(nom);
+    }
+    @PostMapping("/userstories/{code}/taches")
+    public ResponseEntity<AddTacheResponse> addTacheToUserStory(@PathVariable String code, @RequestBody AddTacheRequest addTacheRequest) {
+        AddTacheResponse response = tacheService.addTacheToUserStory(code, addTacheRequest);
+        return ResponseEntity.ok(response);
     }
 }

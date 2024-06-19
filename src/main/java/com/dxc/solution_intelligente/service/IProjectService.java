@@ -10,4 +10,5 @@ public interface IProjectService {
     UpdateProjectResponse updateProject(String name, UpdateProjectRequest updateProjectRequest);
     List<ProjectDTO> findProjectByManager(String username);
     List<ProjectDTO> findByName(String searchTerm);
+    ProjectDTO findByexactName(String searchTerm);
 }

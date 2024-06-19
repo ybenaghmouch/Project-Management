@@ -39,6 +39,7 @@ export class ProjectModalComponent implements OnInit {
   @Output() projectAdded = new EventEmitter<any>();
   @ViewChild('projectModal', { static: false }) projectModal!: ElementRef;
   @Input() isEditMode: boolean = false;
+  @Input() isListMode: boolean = false;
   @Input() project: any;
 
 
@@ -90,10 +91,19 @@ export class ProjectModalComponent implements OnInit {
   calculateDuration(startDate: string, endDate: string): number {
     const start = new Date(startDate);
     const end = new Date(endDate);
-    const duration = (end.getTime() - start.getTime()) / (1000 * 3600 * 24); // Convert to days
-    return Math.max(0, duration); // Ensure non-negative duration
-  }
+    let duration = 0;
+    let current = new Date(start);
 
+    while (current <= end) {
+      const day = current.getDay();
+      if (day !== 0 && day !== 6) { // Exclude Sunday (0) and Saturday (6)
+        duration++;
+      }
+      current.setDate(current.getDate() + 1);
+    }
+
+    return duration; // Ensure non-negative duration
+  }
   loadUsers() {
     this.userService.getUsers().subscribe(users => {
       this.users = users;
@@ -137,7 +147,10 @@ export class ProjectModalComponent implements OnInit {
     const modalInstance = bootstrap.Modal.getInstance(modalElement);
     this.form.reset();
     modalInstance.hide();
+    this.isListMode = false;
+    this.form.enable();
   }
+
 
   submitForm() {
     if (this.form.valid) {
@@ -178,6 +191,7 @@ export class ProjectModalComponent implements OnInit {
         }
     }
 }
+
 
 
 }

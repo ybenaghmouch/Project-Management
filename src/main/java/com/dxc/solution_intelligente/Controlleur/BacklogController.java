@@ -23,8 +23,12 @@ public class BacklogController {
     }
 
     @GetMapping("/search")
-    public List<BacklogDTO> searchBacklogByTitre(@RequestParam String titre){
+    public List<BacklogDTO> searchBacklogsByTitre(@RequestParam String titre){
         return backlogService.findByTitre(titre);
+    }
+    @GetMapping("/{titre}")
+    public BacklogDTO searchBacklogByTitre(@PathVariable String titre){
+        return backlogService.searchByTitre(titre);
     }
 
     @PostMapping
@@ -52,23 +56,10 @@ public class BacklogController {
     public ResponseEntity<UpdateBacklogResponse> updateBacklog(@PathVariable String titre, @RequestBody UpdateBacklogRequest dto){
         return new ResponseEntity<>(backlogService.updateBacklog(titre, dto), HttpStatus.OK);
     }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteBacklog(@PathVariable Long id){
-        try {
-            return new ResponseEntity<>(backlogService.deleteBacklogById(id), HttpStatus.ACCEPTED);
-        }catch (BusinessException e){
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erreur interne du serveur."+e.getMessage());
-        }
-
+    @PostMapping("/{projectName}")
+    public ResponseEntity<AddBacklogResponse> addBacklogToProject(@PathVariable String projectName, @RequestBody AddBacklogRequest addBacklogRequest) {
+        AddBacklogResponse response = backlogService.addBacklogToProject(projectName, addBacklogRequest);
+        return ResponseEntity.ok(response);
     }
-
-
 
 }

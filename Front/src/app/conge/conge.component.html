@@ -1,0 +1,82 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Conges</h2>
+    <button class="btn btn-primary ms-4" (click)="openCreateCongeModal(congeModal)">+ Add Conge</button>
+  </div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Motif</th>
+        <th scope="col">Duration</th>
+        <th scope="col">Status</th>
+        <th scope="col">From Date</th>
+        <th scope="col">End Date</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let conge of conges">
+        <td>{{ conge.motif }}</td>
+        <td>{{ conge.duration }}</td>
+        <td>{{ conge.status }}</td>
+        <td>{{ conge.fromDate | date }}</td>
+        <td>{{ conge.endDate | date }}</td>
+        <td>
+          <button class="btn btn-outline-primary btn-sm me-2" (click)="openEditCongeModal(conge, congeModal)">Edit</button>
+          <button *ngIf="conge.status === 'pending'" class="btn btn-outline-success btn-sm me-2" (click)="updateCongeStatus(conge, 'allowed')">Allow</button>
+          <button *ngIf="conge.status === 'pending'" class="btn btn-outline-danger btn-sm" (click)="updateCongeStatus(conge, 'refused')">Refuse</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Modal -->
+  <ng-template #congeModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">{{ isEditMode ? 'Edit Conge' : 'Add Conge' }}</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="closeModal(modal)"></button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="congeForm" (ngSubmit)="saveConge(modal)">
+        <div class="mb-3">
+          <label for="motif" class="form-label">Motif</label>
+          <input type="text" class="form-control" id="motif" formControlName="motif" placeholder="Conge Motif">
+        </div>
+        <div class="mb-3">
+          <label for="duration" class="form-label">Duration</label>
+          <input type="number" class="form-control" id="duration" formControlName="duration" placeholder="Duration in days">
+        </div>
+        <div class="mb-3">
+          <label for="status" class="form-label">Status</label>
+          <select class="form-control" id="status" formControlName="status">
+            <option value="pending" selected>Pending</option>
+            <option value="allowed">Allowed</option>
+            <option value="refused">Refused</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="fromDate" class="form-label">From Date</label>
+          <input type="date" class="form-control" id="fromDate" formControlName="fromDate">
+        </div>
+        <div class="mb-3">
+          <label for="endDate" class="form-label">End Date</label>
+          <input type="date" class="form-control" id="endDate" formControlName="endDate">
+        </div>
+        <div class="mb-3">
+          <label for="demandeur" class="form-label">Demandeur</label>
+          <ng-select class="form-control" [items]="users" bindLabel="username" bindValue="id" formControlName="demandeur" [searchable]="true">
+          </ng-select>
+        </div>
+        <div class="mb-3">
+          <label for="backup" class="form-label">Backup</label>
+          <ng-select class="form-control" [items]="users" bindLabel="username" bindValue="id" formControlName="backup" [searchable]="true">
+          </ng-select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal(modal)">Cancel</button>
+          <button type="submit" class="btn btn-primary">{{ isEditMode ? 'Save' : 'Add' }}</button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+</div>

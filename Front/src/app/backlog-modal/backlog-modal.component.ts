@@ -15,16 +15,18 @@ declare var bootstrap: any;
 })
 export class BacklogModalComponent {
   form: FormGroup;
-  
+
   @Output() userAdded = new EventEmitter<any>();
 
   @ViewChild('userModal') userModal!: ElementRef;
   @Input() isEditMode: boolean =false;
+  @Input() isListMode: boolean =false;
+  @Input() projectname: string ='';
   @Input() user: any;
 
   constructor(private formBuilder: FormBuilder,private userModalService:BacklogModalService) {
     this.form = this.formBuilder.group({
-      
+
       titre: [ '', Validators.required ],
       description: ['', Validators.required],
       status: ['', Validators.required]
@@ -34,10 +36,10 @@ export class BacklogModalComponent {
 
   openModal() {
     if (this.user) {
-      
+
       this.form.patchValue(this.user);
     }
-    
+
     const modalElement = this.userModal.nativeElement;
     const modalInstance = new bootstrap.Modal(modalElement);
     modalInstance.show();
@@ -48,6 +50,8 @@ export class BacklogModalComponent {
     const modalInstance = bootstrap.Modal.getInstance(modalElement);
     this.form.reset();
     modalInstance.hide();
+    this.isListMode = false;
+    this.form.enable();
   }
 
   submitForm() {
@@ -63,12 +67,12 @@ export class BacklogModalComponent {
         }
       );
       this.userAdded.emit({ ...this.form.value, titre: this.user.titre });
-      
+
     }else{
     if (this.form.valid) {
-      
+
       const formData = this.form.value;
-      this.userModalService.postUsers(formData).subscribe(
+      this.userModalService.postUsers(formData,this.projectname).subscribe(
         (data: any) => {
           this.user = data;
         },
@@ -76,14 +80,14 @@ export class BacklogModalComponent {
           console.error('Error fetching users', error);
         }
       );
-      
-      
-      
-      
+
+
+
+
       this.userAdded.emit(formData);
-      
+
     }
-    
+
   }
   this.form.reset();
   this.closeModal();

@@ -12,7 +12,7 @@ import { RouterModule } from '@angular/router';
 })
 export class SidebarComponent {
   menuItems = [
-    { label: 'Board', icon: 'bi bi-clipboard2-data',link:'/backlog?backlogId=Testing' },
+    { label: 'Board', icon: 'bi bi-clipboard2-data',link:'/board' },
     { label: 'Backlog', icon: 'bi bi-box-arrow-in-down' ,link:'/backlogs'},
     { label: 'Report', icon: 'bi bi-bar-chart',link:'#' },
     { label: 'Inbox', icon: 'bi bi-inbox' ,link:'#'},
@@ -20,7 +20,7 @@ export class SidebarComponent {
     { label: 'Manage Users', icon: 'bi bi-people' ,link:'/users'},
     { label: 'Manage Teams', icon: 'bi bi-person-plus',link:'/teams' },
     { label: 'Manage Projects', icon: 'bi bi-briefcase' ,link:'/projects'},
-    { label: 'Manage Leaves', icon: 'bi bi-airplane' ,link:'#'},
+    { label: 'Manage Leaves', icon: 'bi bi-airplane' ,link:'/leaves'},
     { label: 'Manage Roles', icon: 'bi bi-people-fill' ,link:'/roles'},
     { label: 'Sprints', icon: 'bi bi-people-fill' ,link:'/sprints'}
   ];

@@ -30,6 +30,7 @@ public class UserService implements IUserService {
     private final RoleRepository roleRepository;
 
     private final ModelMapper modelMapper;
+
     private PasswordEncoder passwordEncoder;
 
 

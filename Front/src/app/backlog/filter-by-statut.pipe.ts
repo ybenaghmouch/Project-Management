@@ -9,6 +9,6 @@ export class FilterByStatutPipe implements PipeTransform {
     if (!items || !statut) {
       return items;
     }
-    return items.filter(item => item.statut === statut);
+    return items.filter(item => item.statut.toLowerCase( ) === statut);
   }
 }

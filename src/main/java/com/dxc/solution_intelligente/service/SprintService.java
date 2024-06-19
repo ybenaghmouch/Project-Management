@@ -1,18 +1,17 @@
 package com.dxc.solution_intelligente.service;
 
+import com.dxc.solution_intelligente.DAO.ProjectRepository;
 import com.dxc.solution_intelligente.DAO.SprintRepository;
 import com.dxc.solution_intelligente.DAO.UserRepository;
-import com.dxc.solution_intelligente.DTO.Project.AddProjectRequest;
-import com.dxc.solution_intelligente.DTO.Project.AddProjectResponse;
 import com.dxc.solution_intelligente.DTO.Sprint.SprintDTO;
 import com.dxc.solution_intelligente.DTO.Sprint.UpdateSprintRequest;
 import com.dxc.solution_intelligente.DTO.Sprint.UpdateSprintResponse;
 import com.dxc.solution_intelligente.DTO.Sprint.AddSprintRequest;
 import com.dxc.solution_intelligente.DTO.Sprint.AddSprintResponse;
-import com.dxc.solution_intelligente.DTO.Sprint.SprintDTO;
-import com.dxc.solution_intelligente.DTO.Sprint.*;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
+import com.dxc.solution_intelligente.service.model.Project;
 import com.dxc.solution_intelligente.service.model.Sprint;
+
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -26,6 +25,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class SprintService implements ISprintService{
     private final SprintRepository sprintRepository;
+    private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     @Override
@@ -45,9 +45,11 @@ public class SprintService implements ISprintService{
         /*User manager = userRepository.findById(response.getManager().getId())
                 .orElseThrow(() -> new BusinessException("Manager not found"));
         response.setManager(manager);*/
-        response.setMessage(String.format("Sprint : [Titre = %s, Description = %s, Status = %s, Date de debut = %s, Date de fin = %s, User Stories = %s]", response.getTitre(), response.getDescription(), response.getStatus(), response.getDate_debut(), response.getDate_fin(), response.getUserStories()));
+        response.setMessage(String.format("Sprint : [Titre = %s, Description = %s, Status = %s, Date de debut = %s, Date de fin = %s]", response.getTitre(), response.getDescription(), response.getStatus(), response.getDate_debut(), response.getDate_fin()));
         return response;
     }
+
+
     
 
     @Override
@@ -71,7 +73,7 @@ public class SprintService implements ISprintService{
 
     @Override
     public AddSprintResponse addSprintToProject(String projectName, AddSprintRequest addSprintRequest) {
-       /* Sprint bo = modelMapper.map(addSprintRequest, Sprint.class);
+        Sprint bo = modelMapper.map(addSprintRequest, Sprint.class);
         String titre = bo.getTitre();
         sprintRepository.findSprintByTitre(titre).ifPresent(sprint -> {
             throw new BusinessException(String.format("Sprint avec le titre [%s] déjà existe", titre));
@@ -80,12 +82,11 @@ public class SprintService implements ISprintService{
         Project project = projectRepository.findAll().stream().filter(proj-> proj.getNom()!= null && proj.getNom().equals(projectName))
                 .findFirst()
                 .orElseThrow(() -> new BusinessException(String.format("Aucun projet existe avec le nom [%s] ", projectName)));
-        project.get().add(savedSprint);
+        project.getSprints().add(savedSprint);
         Project savedProject = projectRepository.save(project);
         AddSprintResponse response = modelMapper.map(savedProject, AddSprintResponse.class);
         response.setMessage(String.format("Sprint ajouté avec succes au projet [%s] : Titre = %s", projectName, response.getTitre()));
-        return response;*/
-        return null;
+        return response;
     }
 
     @Override

@@ -1,0 +1,43 @@
+/* Custom styles for modal */
+.modal-header {
+    border-bottom: none;
+  }
+  
+  .modal-title {
+    font-weight: bold;
+  }
+  
+  .modal-footer {
+    border-top: none;
+  }
+  
+  .form-label {
+    font-weight: bold;
+  }
+  
+  .form-control,
+  .form-select {
+    font-size: 1rem;
+    color: rgb(17, 16, 17);
+    background-color: #f7f8fa;
+    border: none;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.25rem;
+    width: 100%; /* Make inputs take up full width */
+  }
+  
+  /* Custom styles for the checkbox */
+  .form-check-input:checked {
+    background-color: #6f42c1 !important; /* Purple color for active */
+    border-color: #6f42c1 !important;
+  }
+  
+  .form-check-input:not(:checked) {
+    background-color: #6c757d !important; /* Grey color for inactive */
+    border-color: #6c757d !important;
+  }
+  
+  .form-check-input {
+    cursor: pointer;
+  }
+  

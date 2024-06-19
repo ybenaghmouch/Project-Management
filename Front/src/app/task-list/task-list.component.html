@@ -1,0 +1,51 @@
+<div class="container mt-4" [formGroup]="searchForm">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2>User Stories</h2>
+      <div class="d-flex align-items-center">
+        <input type="text" class="form-control search-input me-2" placeholder="Search" formControlName="titre">
+        <div class="dropdown">
+          <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-funnel"></i>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li><a class="dropdown-item" (click)="setFilter('')">All Statuts</a></li>
+            <li><a class="dropdown-item" (click)="setFilter('started')">Started</a></li>
+            <li><a class="dropdown-item" (click)="setFilter('pending')">Pending</a></li>
+            <li><a class="dropdown-item" (click)="setFilter('done')">Done</a></li>
+          </ul>
+        </div>
+        <button class="btn btn-primary add-user-btn ms-4" (click)="openCreateUserModal()">+ Add Task</button>
+      </div>
+    </div>
+    <div *ngIf="backlog">
+      <h1 class="display-4">{{ backlog.titre }}</h1>
+      <p>{{ backlog.description }}</p>
+      <h2>Task </h2>
+      <table class="table table-striped mt-4">
+        <thead>
+          <tr>
+            <th scope="col">TITLE</th>
+            <th scope="col">Responsable</th>
+            <th scope="col">STATUT</th>
+            <th scope="col">ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let feature of backlog.features | filterByStatut:searchForm.value.statut">
+            <td>{{ feature.titre }}</td>
+
+            <td>{{ feature.responsable?.civility || 'UNASSIGNED' }} {{ feature.responsable?.firstName || '' }} {{ feature.responsable?.lastName || '' }}</td>
+            <td>{{ feature.statut }}</td>
+            <td class="overflow-hidden">
+              <button class="btn btn-outline-primary btn-sm edit-btn me-2" (click)="openEditUserModal(feature)">Edit</button>
+              <button class="btn btn-outline-primary btn-sm edit-btn me-2" (click)="openListUserModal(feature)">List</button>
+              <button class="btn btn-outline-danger btn-sm delete-btn" (click)="deleteUserStory(feature)">Delete</button>
+          </td>
+          </tr>
+        </tbody>
+      </table>
+      <ngb-pagination [collectionSize]="backlog.features.length" [(page)]="page" [pageSize]="pageSize"></ngb-pagination>
+    </div>
+    <app-task-modal></app-task-modal>
+  </div>
+

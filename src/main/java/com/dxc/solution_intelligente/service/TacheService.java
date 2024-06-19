@@ -1,9 +1,13 @@
 package com.dxc.solution_intelligente.service;
 
 import com.dxc.solution_intelligente.DAO.TacheRepository;
+import com.dxc.solution_intelligente.DAO.UserRepository;
+import com.dxc.solution_intelligente.DAO.UserStoryRepository;
 import com.dxc.solution_intelligente.DTO.Tache.*;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
 import com.dxc.solution_intelligente.service.model.Tache;
+import com.dxc.solution_intelligente.service.model.User;
+import com.dxc.solution_intelligente.service.model.UserStory;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +24,8 @@ public class TacheService implements ITacheService{
 
     private final TacheRepository tacheRepository;
     private final ModelMapper modelMapper;
+    private final UserRepository userRepository;
+    private final UserStoryRepository userStoryRepository;
     private PasswordEncoder passwordEncoder;
 
 
@@ -47,6 +53,40 @@ public class TacheService implements ITacheService{
         //response.setMessage(String.format("Tache : [code = %s, Prenom = %s, code = %s, Email = %s, Civility = %s, Specilite = %s]", response.getcode(), response.getCollaborateurs().toString(), response.getManager().toString(), response.getChefprojet().toString()));
         return response;
     }
+
+    @Override
+    public AddTacheResponse addTacheToUserStory(String userStoryCode, AddTacheRequest addTacheRequest) {
+        // Mapper AddTacheRequest à Tache
+        Tache tache = modelMapper.map(addTacheRequest, Tache.class);
+        String code = tache.getCode();
+
+        // Vérifier si une tâche avec le même code existe déjà
+        tacheRepository.findBycode(code).ifPresent(existingTache -> {
+            throw new BusinessException(String.format("Tache avec le code [%s] existe déjà", code));
+        });
+
+        // Sauvegarder la Tache d'abord
+        Tache savedTache = tacheRepository.save(tache);
+
+        // Trouver la User Story par code
+        UserStory userStory = userStoryRepository.findBycode(userStoryCode)
+                .orElseThrow(() -> new BusinessException(String.format("Aucune User Story existe avec le code [%s]", userStoryCode)));
+
+        // Ajouter la Tache sauvegardée à la User Story
+        userStory.getFeatures().add(savedTache);
+        userStoryRepository.save(userStory);
+
+        // Préparer la réponse
+        AddTacheResponse response = modelMapper.map(savedTache, AddTacheResponse.class);
+        response.setMessage(String.format("Tache ajoutée avec succès à la User Story [%s] : [Code = %s, Titre = %s]", userStoryCode, response.getCode(), response.getTitre()));
+       if(response.getResponsable()!=null ){
+        User responsable = userRepository.findById(response.getResponsable().getId())
+                .orElseThrow(() -> new BusinessException("Manager not found"));
+        response.setResponsable(responsable);}
+
+        return response;
+    }
+
 
     @Override
     public UpdateTacheResponse updateTache(String code, UpdateTacheRequest updateTacheRequest) {

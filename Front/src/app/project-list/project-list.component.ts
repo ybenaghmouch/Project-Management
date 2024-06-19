@@ -8,13 +8,14 @@ import { ProjectListService } from './service/project-list.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { DatePipe } from '@angular/common';
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { RouterModule } from '@angular/router';
+
 const FILTER_PAG_REGEX = /[^0-9]/g;
 
 @Component({
   selector: 'app-project-list',
   standalone: true,
-  imports: [CommonModule,NgbPaginationModule,ProjectModalComponent,FormsModule,HttpClientModule,ReactiveFormsModule, NgbDropdownModule],
+  imports: [CommonModule,NgbPaginationModule,ProjectModalComponent,FormsModule,HttpClientModule,ReactiveFormsModule,RouterModule],
   providers: [ProjectListService, DatePipe],
   templateUrl: './project-list.component.html',
   styleUrl: './project-list.component.css'
@@ -178,7 +179,6 @@ searchProjects(projectname: string) {
 }
 
 openCreateProjectModal() {
-
   if (this.projectModal) {
     this.projectModal.isEditMode = false;
     this.projectModal.project = null;
@@ -194,8 +194,18 @@ openEditProjectModal(project: any) {
   if (this.projectModal) {
     this.projectModal.isEditMode = true;
     this.projectModal.project = project;
-
     this.projectModal.openModal();
+  } else {
+    console.error('ProjectModalComponent is not initialized');
+  }
+}
+
+openListProjectModal(project: any) {
+  if (this.projectModal) {
+    this.projectModal.isListMode = true;
+    this.projectModal.project = project;
+    this.projectModal.openModal();
+    this.projectModal.form.disable();
   } else {
     console.error('ProjectModalComponent is not initialized');
   }

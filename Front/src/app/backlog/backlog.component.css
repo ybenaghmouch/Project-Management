@@ -1,0 +1,78 @@
+.container {
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dropdown-toggle::after {
+  display: none;
+}
+
+.d-flex.align-items-center {
+  align-items: center !important;
+}
+
+.search-input {
+  background-color: #f7f8fa;
+  border: none;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
+  width: 200px; /* Set width to make it smaller */
+}
+
+.search-input::placeholder {
+  color: #6c757d;
+}
+
+.add-user-btn {
+  background-color: #6f42c1;
+  border-color: #6f42c1;
+  color: #fff;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem; /* Adjust font size to make it smaller */
+}
+
+.add-user-btn:hover {
+  background-color: #563d7c;
+  border-color: #563d7c;
+}
+
+.btn-outline-primary.edit-btn {
+  color: #6f42c1;
+  border-color: #6f42c1;
+}
+
+.btn-outline-primary.edit-btn:hover {
+  color: #fff;
+  background-color: #6f42c1;
+  border-color: #6f42c1;
+}
+
+.table td,
+.table th {
+  vertical-align: middle; /* Center align text vertically in table cells */
+}
+
+/* Pagination Styling */
+::ng-deep .pagination .page-link {
+  background-color: #f6f6f6 !important;
+  color: #6f42c1 !important;
+}
+
+.display-4 {
+  font-size: 2.5rem;
+  font-weight: 300;
+  line-height: 1.2;
+}
+
+.input-group-text {
+  background-color: #f7f8fa;
+  border: none;
+  border-radius: 0.25rem;
+}

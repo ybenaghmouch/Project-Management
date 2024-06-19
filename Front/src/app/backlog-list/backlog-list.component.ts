@@ -1,4 +1,7 @@
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { ProjectListService } from '../project-list/service/project-list.service';
+
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { Component, ViewChild, AfterViewInit , OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -15,7 +18,7 @@ const FILTER_PAG_REGEX = /[^0-9]/g;
   selector: 'app-backlog-list',
   standalone: true,
   imports: [CommonModule,NgbPaginationModule,BacklogModalComponent,FormsModule,HttpClientModule,ReactiveFormsModule,RouterModule, NgbDropdownModule],
-  providers: [BackListService],
+  providers: [BackListService,ProjectListService],
   templateUrl: './backlog-list.component.html',
   styleUrl: './backlog-list.component.css'
 })
@@ -68,14 +71,32 @@ export class BacklogListComponent implements AfterViewInit,OnInit{
 
 
 
-  constructor(private modalService: NgbModal,private userListService :BackListService,private fb: FormBuilder) {
+  constructor(private route: ActivatedRoute,private modalService: NgbModal,private userListService :BackListService,private fb: FormBuilder,private projectListService :ProjectListService) {
     this.searchForm = this.fb.group({
     titre: ['']
   });
 }
 
 ngOnInit(): void {
-  this.loadUsers();
+  this.route.params.subscribe(params => {
+    const teamName = params['projectname'];
+
+    if (teamName) {
+      this.loadUsers(teamName);
+    }else{
+      this.projectListService.getProjects().subscribe(
+        (data: any[]) => {
+            const teamName =data[0].nom;
+            this.loadUsers(teamName);
+        },
+        error => {
+          console.error('Error fetching projects', error);
+        }
+      );
+
+    }
+  });
+
 
   this.searchForm.get('titre')!.valueChanges
     .pipe(
@@ -103,8 +124,9 @@ ngOnInit(): void {
       console.error('UserModalComponent is not initialized');
     }
   }
-  loadUsers() {
-    this.userListService.getUsers().subscribe(
+  loadUsers(projectname: string="debug") {
+    console.log(projectname)
+    this.userListService.getUsers(projectname).subscribe(
       (data: any[]) => {
         this.users = data;
       },
@@ -124,12 +146,23 @@ ngOnInit(): void {
         }
       );
     } else {
-      this.loadUsers(); // If search input is cleared, load all users
+
+      this.route.params.subscribe(params => {
+        const teamName = params['projectname'];
+        if (teamName) {
+          this.loadUsers(teamName);
+        }
+      }); // If search input is cleared, load all users
     }
   }
   openCreateUserModal() {
     if (this.userModal) {
       this.userModal.isEditMode = false;
+      this.route.params.subscribe(params => {
+        const teamName = params['projectname'];
+        this.userModal.projectname = teamName;
+      });
+
       this.userModal.user = null;
       this.userModal.openModal();
 
@@ -148,10 +181,20 @@ ngOnInit(): void {
     if (this.userModal) {
       this.userModal.isEditMode = true;
       this.userModal.user = user;
-
       this.userModal.openModal();
     } else {
       console.error('UserModalComponent is not initialized');
+    }
+  }
+
+  openListBacklogModal(user: any) {
+    if (this.userModal) {
+      this.userModal.isListMode = true;
+      this.userModal.user = user;
+      this.userModal.openModal();
+      this.userModal.form.disable();
+    } else {
+      console.error('ProjectModalComponent is not initialized');
     }
   }
 

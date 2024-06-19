@@ -126,16 +126,11 @@ ngOnInit(): void {
   //   }
   // }
   openCreateRoleModal() {
-
     if (this.roleModal) {
-
       this.roleModal.isEditMode = false;
       this.roleModal.role = null;
       console.log("test1");
       this.roleModal.openModal();
-
-
-
     } else {
       console.error('RoleModalComponent is not initialized');
       console.log("test2");
@@ -146,7 +141,6 @@ ngOnInit(): void {
     if (this.roleModal) {
       this.roleModal.isEditMode = true;
       this.roleModal.role = role;
-
       this.roleModal.openModal();
     } else {
       console.error('RoleModalComponent is not initialized');
@@ -155,11 +149,10 @@ ngOnInit(): void {
 
   openListRoleModal(role: any) {
     if (this.roleModal) {
-      this.roleModal.isEditMode = true;
       this.roleModal.isListMode = true;
       this.roleModal.role = role;
-      this.roleModal.form.disable();
       this.roleModal.openModal();
+      this.roleModal.form.disable();
     } else {
       console.error('RoleModalComponent is not initialized');
     }

@@ -165,4 +165,14 @@ ngOnInit(): void {
     }
   }
 
+  openListUserModal(role: any) {
+    if (this.userModal) {
+      this.userModal.isListMode = true;
+      this.userModal.user = role;
+      this.userModal.openModal();
+      this.userModal.form.disable();
+    } else {
+      console.error('RoleModalComponent is not initialized');
+    }
+  }
 }
