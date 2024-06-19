@@ -22,6 +22,7 @@ export class SidebarComponent {
     { label: 'Manage Projects', icon: 'bi bi-briefcase' ,link:'/projects'},
     { label: 'Manage Leaves', icon: 'bi bi-airplane' ,link:'/leaves'},
     { label: 'Manage Roles', icon: 'bi bi-people-fill' ,link:'/roles'},
+    { label: 'Manage Holidays', icon: 'bi bi-calendar' ,link:'/holidays'},
     { label: 'Sprints', icon: 'bi bi-people-fill' ,link:'/sprints'}
   ];
   selectedItem: number = -1;
