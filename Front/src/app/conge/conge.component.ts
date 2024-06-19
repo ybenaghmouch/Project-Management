@@ -7,12 +7,12 @@ import { NgbModule, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule, FormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserListService } from '../user-list/service/user-list.service';
 import { DatePipe } from '@angular/common';
-
+import { UtilsService } from '../utils';
 @Component({
   selector: 'app-conge',
   standalone: true,
   imports: [CommonModule, FormsModule, HttpClientModule, ReactiveFormsModule, NgSelectModule, NgbModule],
-  providers: [CongeService, UserListService, DatePipe],
+  providers: [CongeService, UserListService, UtilsService,DatePipe],
   templateUrl: './conge.component.html',
   styleUrls: ['./conge.component.css']
 })
@@ -23,7 +23,7 @@ export class CongeComponent implements OnInit {
   selectedConge: any | null = null;
   users: any[] = []; // Replace with actual user model
 
-  constructor(private fb: FormBuilder, private modalService: NgbModal, private congeService: CongeService, private userService: UserListService, private datePipe: DatePipe) {
+  constructor(private fb: FormBuilder, private modalService: NgbModal,    private utilsService: UtilsService,private congeService: CongeService, private userService: UserListService, private datePipe: DatePipe) {
     this.congeForm = this.fb.group({
       motif: ['', Validators.required],
       duration: [{ value: 0, disabled: true }, Validators.required],
@@ -121,25 +121,16 @@ export class CongeComponent implements OnInit {
     const startDate = this.congeForm.get('fromDate')?.value;
     const endDate = this.congeForm.get('endDate')?.value;
     if (startDate && endDate) {
-      const duration = this.calculateDuration(startDate, endDate);
-      this.congeForm.patchValue({ duration: duration });
+      this.utilsService.calculateDuration(startDate, endDate).subscribe(
+        duration => {
+          this.congeForm.patchValue({ duration: duration });
+        },
+        error => {
+          console.error('Error calculating duration:', error);
+        }
+      );
     }
   }
 
-  calculateDuration(startDate: string, endDate: string): number {
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    let duration = 0;
-    let current = new Date(start);
-
-    while (current <= end) {
-      const day = current.getDay();
-      if (day !== 0 && day !== 6) { // Exclude Sunday (0) and Saturday (6)
-        duration++;
-      }
-      current.setDate(current.getDate() + 1);
-    }
-
-    return duration; // Ensure non-negative duration
-  }
+  
 }

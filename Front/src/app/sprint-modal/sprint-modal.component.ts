@@ -14,6 +14,8 @@ import { NgbCalendar, NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-b
 import { JsonPipe } from '@angular/common';
 import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef } from '@angular/core';
+import { UtilsService } from '../utils';
+
 declare var bootstrap: any;
 
 @Component({
@@ -25,7 +27,7 @@ declare var bootstrap: any;
     NgbModalModule,
     NgbPaginationModule,
     NgSelectModule, TagInputModule, NgbDatepickerModule, NgbAlertModule, JsonPipe],
-  providers:[SprintModalService, DatePipe],
+  providers:[SprintModalService, DatePipe,UtilsService,UtilsService],
   templateUrl: './sprint-modal.component.html',
   styleUrl: './sprint-modal.component.css'
 })
@@ -37,7 +39,7 @@ export class SprintModalComponent implements OnInit{
   @Input() isEditMode: boolean = false;
   @Input() sprint: any;
 
-  constructor(private cdr: ChangeDetectorRef, private formatter: NgbDateParserFormatter, private formBuilder: FormBuilder, private sprintModalService: SprintModalService, private userService: SprintModalService, private http: HttpClient, private datePipe: DatePipe) {
+  constructor(private cdr: ChangeDetectorRef,    private utilsService: UtilsService, private formatter: NgbDateParserFormatter, private formBuilder: FormBuilder, private sprintModalService: SprintModalService, private userService: SprintModalService, private http: HttpClient, private datePipe: DatePipe) {
     this.form = this.formBuilder.group({
       titre: ['', Validators.required],
       description: ['', Validators.required],
@@ -81,8 +83,14 @@ export class SprintModalComponent implements OnInit{
     const startDate = this.form.get('date_debut')?.value;
     const endDate = this.form.get('date_fin')?.value;
     if (startDate && endDate) {
-      const duration = this.calculateDuration(startDate, endDate);
-      this.form.patchValue({ duration: duration });
+      this.utilsService.calculateDuration(startDate, endDate).subscribe(
+        duration => {
+          this.form.patchValue({ duration: duration });
+        },
+        error => {
+          console.error('Error calculating duration:', error);
+        }
+      );
     }
   }
   calculateDuration(startDate: string, endDate: string): number {
