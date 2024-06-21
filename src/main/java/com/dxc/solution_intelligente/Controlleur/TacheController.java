@@ -68,4 +68,19 @@ public class TacheController {
         AddTacheResponse response = tacheService.addTacheToUserStory(code, addTacheRequest);
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteTache(@PathVariable Long id){
+        try {
+            return new ResponseEntity<>(tacheService.deleteTacheById(id), HttpStatus.ACCEPTED);
+        }catch (BusinessException e){
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur interne du serveur."+e.getMessage());
+        }
+    }
 }

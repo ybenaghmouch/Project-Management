@@ -9,9 +9,12 @@ import { tap,map } from 'rxjs/operators';
 export class SprintListService {
 
   constructor(private http: HttpClient) { }
-  getSprints(): Observable<any[]> {
-    return this.http.get<any[]>(`/api/sprint`);
+  getSprints(titre: string): Observable<any[]> {
+    return this.http.get<any[]>(`/api/project/sprints/${titre}`);
   }
+  // getAllSprint(): Observable<any[]> {
+  //   return this.http.get<any[]>('/api/sprint');
+  // }
 
   searchSprints(titre: string): Observable<any[]> {
 

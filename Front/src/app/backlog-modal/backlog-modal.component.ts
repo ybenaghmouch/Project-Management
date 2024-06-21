@@ -55,7 +55,6 @@ export class BacklogModalComponent {
   }
 
   submitForm() {
-
     if (this.user){
       const formData = this.form.value;
       this.userModalService.putUsers(formData,formData.titre).subscribe(
@@ -80,10 +79,6 @@ export class BacklogModalComponent {
           console.error('Error fetching users', error);
         }
       );
-
-
-
-
       this.userAdded.emit(formData);
 
     }

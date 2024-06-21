@@ -12,4 +12,6 @@ public interface IBacklogService {
     List<BacklogDTO> findByTitre(String titre);
     AddBacklogResponse addBacklogToProject(String projectName, AddBacklogRequest addBacklogRequest);
     BacklogDTO searchByTitre(String titre);
+
+    String deleteBacklogById(Long id);
 }

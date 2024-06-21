@@ -14,9 +14,9 @@ public class Conge {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     private User Demandeur;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     private User backup;
     private int Duration;
     private String motif;

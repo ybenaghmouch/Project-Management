@@ -1,6 +1,7 @@
 package com.dxc.solution_intelligente.DTO.Sprint;
 
 import com.dxc.solution_intelligente.DTO.Project.ProjectDTO;
+import com.dxc.solution_intelligente.DTO.UserStory.UserStoryDTO;
 import com.dxc.solution_intelligente.service.model.UserStory;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,4 +18,5 @@ public class AddSprintResponse {
     private Date date_fin;
     private String status;
     private String message;
+    List<UserStoryDTO> userStories;
 }

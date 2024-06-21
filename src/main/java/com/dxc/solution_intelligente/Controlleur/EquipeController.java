@@ -18,7 +18,6 @@ import java.util.List;
 public class EquipeController {
     private final IEquipeService equipeService;
 
-
     @GetMapping()
     List<EquipeDTO> equipes(){
         return equipeService.getAllEquipes();
@@ -67,6 +66,22 @@ public class EquipeController {
     @GetMapping("/{nom}")
     public EquipeDTO searchEquipeByNom(@PathVariable String nom) {
         return equipeService.findByNom(nom);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteEquipe(@PathVariable Long id){
+        try {
+            return new ResponseEntity<>(equipeService.deleteEquipeById(id), HttpStatus.ACCEPTED);
+        }catch (BusinessException e){
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur interne du serveur."+e.getMessage());
+        }
+
     }
 
 }

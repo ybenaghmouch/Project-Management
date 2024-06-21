@@ -17,6 +17,6 @@ public class Backlog {
     private String titre;
     private String description;
     private String Status;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.MERGE)
     private List<UserStory> userStories;
 }

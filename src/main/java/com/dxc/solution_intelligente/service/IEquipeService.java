@@ -10,4 +10,5 @@ public interface IEquipeService {
     UpdateEquipeResponse updateEquipe(String username, UpdateEquipeRequest updateEquipeRequest);
     List<EquipeDTO> findByNomContaining(String searchTerm);
     EquipeDTO findByNom(String searchTerm);
+    String deleteEquipeById(Long id);
 }

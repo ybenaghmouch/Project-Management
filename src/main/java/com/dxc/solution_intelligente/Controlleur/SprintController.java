@@ -28,8 +28,13 @@ public class SprintController {
     }
 
     @GetMapping("/search")
-    public List<SprintDTO> searchSprintByTitre(@RequestParam String titre){
+    public List<SprintDTO> searchSprintsByTitre(@RequestParam String titre){
         return sprintService.findByTitre(titre);
+    }
+
+    @GetMapping("{titre}")
+    public SprintDTO searchSprintByTitre(@PathVariable String titre){
+        return sprintService.searchByTitre(titre);
     }
 
     @PostMapping

@@ -5,6 +5,7 @@ import com.dxc.solution_intelligente.DAO.UserStoryRepository;
 import com.dxc.solution_intelligente.DTO.UserStory.*;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
 import com.dxc.solution_intelligente.service.model.Backlog;
+import com.dxc.solution_intelligente.service.model.Tache;
 import com.dxc.solution_intelligente.service.model.UserStory;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -96,5 +97,16 @@ public class UserStoryService implements IUserStoryService {
     }
     public UserStoryDTO findByCode(String searchTerm) {
         return modelMapper.map(userStoryRepository.findBycode(searchTerm.toLowerCase()), UserStoryDTO.class);
+    }
+
+    @Override
+    public String deleteUserStoryById(Long id) {
+        if (id == null)
+            throw new BusinessException("Enter a correct identity User Story");
+        UserStory userStoryFound = userStoryRepository.findAll().stream().filter(tache -> tache.getId()==id).findFirst().orElseThrow(
+                () -> new BusinessException(String.format("No User Story with identity %d exist in database", id))
+        );
+        userStoryRepository.delete(userStoryFound);
+        return String.format("User Story with identity %d is deleted with success", id);
     }
 }
