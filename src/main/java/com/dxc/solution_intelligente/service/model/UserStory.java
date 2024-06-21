@@ -19,6 +19,6 @@ public class UserStory {
     private String Description;
     private int Priority;
     private String Statut;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.MERGE)
     private List<Tache> Features;
 }

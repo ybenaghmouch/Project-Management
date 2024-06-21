@@ -66,8 +66,14 @@
 <div class="container mt-4" [formGroup]="searchForm">
   <div class="d-flex justify-content-between align-items-center mb-3">
       <h2>Sprints</h2>
+      <div class="select-container">
+        <select class="form-select me-2" (change)="onProjectChange($event)">
+          <option value="" selected disabled>Select a project</option>
+          <option *ngFor="let project of projects" [value]="project.nom">{{ project.nom }}</option>
+        </select>
+      </div>
       <div class="d-flex align-items-center">
-          <input type="text" class="form-control search-input me-2" placeholder="Search" formControlName="name">
+          <input type="text" class="form-control search-input me-2" placeholder="Search" formControlName="titre">
           <button class="btn btn-primary add-user-btn ms-4" (click)="openCreateSprintModal()">+ Add sprint</button>
       </div>
   </div>
@@ -84,8 +90,8 @@
               </div>
               <span class="badge bg-info">{{ sprint.status }}</span>
               <div class="actions">
-                <button class="btn btn-outline-primary btn-sm" style="margin-right: 5px;" (click)="openEditSprintModal(sprint)">Edit</button>
-                <button class="btn btn-outline-danger btn-sm">Delete</button>
+                <button class="btn btn-outline-primary btn-sm edit-btn" style="margin-right: 5px;" (click)="openEditSprintModal(sprint)">Edit</button>
+                <button class="btn btn-outline-danger btn-sm delete-btn">Delete</button>
               </div>
           </div>
       </div>

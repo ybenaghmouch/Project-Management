@@ -6,6 +6,7 @@ import com.dxc.solution_intelligente.DTO.Equipe.*;
 import com.dxc.solution_intelligente.DTO.Project.ProjectDTO;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
 import com.dxc.solution_intelligente.service.model.Equipe;
+import com.dxc.solution_intelligente.service.model.Sprint;
 import com.dxc.solution_intelligente.service.model.User;
 import lombok.AllArgsConstructor;
 import org.apache.catalina.Manager;
@@ -82,6 +83,17 @@ public class EquipeService implements IEquipeService{
     public EquipeDTO findByNom(String searchTerm) {
         return
         modelMapper.map(equipeRepository.findByNom(searchTerm.toLowerCase()), EquipeDTO.class);
+    }
+
+    @Override
+    public String deleteEquipeById(Long id) {
+        if (id == null)
+            throw new BusinessException("Enter a correct identity Equipe");
+        Equipe equipeFound = equipeRepository.findAll().stream().filter(equipe -> equipe.getId()==id).findFirst().orElseThrow(
+                ()-> new BusinessException(String.format("Aucune equipe existe avec l identite %d", id))
+        );
+        equipeRepository.delete(equipeFound);
+        return String.format("Team with identity %d is deleted with success", id);
     }
 
 }

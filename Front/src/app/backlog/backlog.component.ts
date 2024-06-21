@@ -46,6 +46,54 @@ interface Backlog {
   styleUrl: './backlog.component.css'
 })
 export class BacklogComponent implements OnInit {
+
+  userSotries = [
+    {
+      "code": "string",
+      "titre": "string",
+      "priority": 0,
+      "id": 0,
+      "description": "string",
+      "features": [
+        {
+          "code": "string",
+          "titre": "string",
+          "priority": 0,
+          "id": 0,
+          "description": "string",
+          "responsable": {
+            "id": 0,
+            "username": "string",
+            "soldeConge": 0,
+            "authorities": [
+              {
+                "id": 0,
+                "authority": "string",
+                "authorities": [
+                  {
+                    "id": 0,
+                    "authority": "string"
+                  }
+                ]
+              }
+            ],
+            "password": "string",
+            "status": true,
+            "firstName": "string",
+            "lastName": "string",
+            "speciality": "string",
+            "email": "string",
+            "civility": "string",
+            "force_change_password": true
+          },
+          "statut": "string"
+        }
+      ],
+      "statut": "string"
+    }
+  ]
+
+
   backlog: any;
   backlogId: string | null = null;
   @ViewChild(UsModalComponent) userModal!: UsModalComponent;
@@ -151,14 +199,29 @@ export class BacklogComponent implements OnInit {
     }
   }
 
-  deleteUserStory(user: any) {
-    const index = this.backlog.userStories.indexOf(user, 0);
-    if (index > -1) {
-      this.backlog.userStories.splice(index, 1);
-      this.filterUserStories();
-      this.cdr.detectChanges();
-    }
+  deleteUserStory(userStory: any) {
+    const index: number = this.userSotries.indexOf(userStory);
+    this.backlogService.deleteUserStory(userStory.id).subscribe(()=>{
+      if(index !== -1){
+        this.backlog.userStories.splice(index, 1);
+      }
+    });
+    // if (index > -1) {
+    //   this.backlog.userStories.splice(index, 1);
+    //   this.filterUserStories();
+    //   this.cdr.detectChanges();
+    // }
   }
+
+  // deleteBacklog(user: any) {
+  //   const index: number = this.users.indexOf(user);
+  //   this.userListService.deleteBacklog(user.id).subscribe(() => {
+  //     if (index !== -1) {
+  //       this.users.splice(index, 1);
+  //     }
+  //   });
+  //   console.log('Delete backlog:', user);
+  // }
 
   openEditFeatureModal(feature: any) {
     // Logique pour ouvrir le modal d'édition pour la feature

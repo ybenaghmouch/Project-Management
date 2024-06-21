@@ -1,13 +1,14 @@
 <div class="container mt-4" [formGroup]="searchForm">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h2>Backlogs</h2>
-    <div class="d-flex align-items-center">
+    <div class="select-container">
       <select class="form-select me-2" (change)="onProjectChange($event)">
         <option value="" selected disabled>Select a project</option>
         <option *ngFor="let project of projects" [value]="project.nom">{{ project.nom }}</option>
       </select>
+    </div>
+    <div class="d-flex align-items-center">
       <input type="text" class="form-control search-input me-2" placeholder="Search" formControlName="titre">
-      
       <button class="btn btn-primary add-user-btn ms-4" (click)="openCreateUserModal()">+ Add Backlog</button>
     </div>
   </div>
@@ -27,7 +28,7 @@
         <td>{{ user.status }}</td>
         <td class="overflow-hidden">
           <button class="btn btn-outline-primary btn-sm edit-btn me-2" (click)="openEditUserModal(user)">Edit</button>
-          <button class="btn btn-outline-primary btn-sm edit-btn me-2">List</button>
+          <button class="btn btn-outline-primary btn-sm edit-btn me-2" (click)="openListUserModal(user)">List</button>
           <button class="btn btn-outline-primary btn-sm edit-btn me-2" [routerLink]="['/backlog']" [queryParams]="{ backlogId: user.titre }">User Stories</button>
           <button class="btn btn-outline-danger btn-sm delete-btn" (click)="deleteBacklog(user)">Delete</button>
         </td>

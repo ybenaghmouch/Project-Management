@@ -19,4 +19,5 @@ public class SprintDTO {
     private Date date_debut;
     private Date date_fin;
     private String status;
+    List<UserStoryDTO> userStories;
 }

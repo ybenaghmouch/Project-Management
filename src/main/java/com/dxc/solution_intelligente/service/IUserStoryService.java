@@ -11,4 +11,5 @@ public interface IUserStoryService {
     List<UserStoryDTO> findByCodeAndTitreContaining(String searchTerm);
     AddUserStoryResponse addUserStoryToBacklog(String backlogtitle, AddUserStoryRequest addUserStoryRequest);
     UserStoryDTO findByCode(String searchTerm);
+    String deleteUserStoryById(Long id);
 }

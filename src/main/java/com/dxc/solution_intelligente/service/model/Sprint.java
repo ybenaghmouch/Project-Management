@@ -19,5 +19,7 @@ public class Sprint {
     private Date date_debut;
     private Date date_fin;
     private String status;
+    @OneToMany(cascade = CascadeType.MERGE)
+    List<UserStory> userStories;
 
 }

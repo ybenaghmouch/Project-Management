@@ -10,4 +10,5 @@ public interface ITacheService {
     UpdateTacheResponse updateTache(String code, UpdateTacheRequest updateTacheRequest);
     List<TacheDTO> findByCodeAndTitreContaining(String searchTerm);
     AddTacheResponse addTacheToUserStory(String userStoryCode, AddTacheRequest addTacheRequest);
+    String deleteTacheById(Long id);
 }

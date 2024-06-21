@@ -11,4 +11,5 @@ public interface IProjectService {
     List<ProjectDTO> findProjectByManager(String username);
     List<ProjectDTO> findByName(String searchTerm);
     ProjectDTO findByexactName(String searchTerm);
+    String deleteProjectById(Long id);
 }

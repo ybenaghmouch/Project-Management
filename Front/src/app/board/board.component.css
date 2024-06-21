@@ -21,7 +21,7 @@
 }
 
 .board {
-  background-color: var(--light-purple);
+  background-color: #e6ddf1;
   border: 2px solid var(--main-purple);
   border-radius: 12px;
   padding: 10px;
@@ -41,7 +41,7 @@
 
 .card {
   cursor: move;
-  background-color: white;
+  background-color: #afa7e8;
   border: 1px solid var(--main-purple);
   border-radius: 4px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);

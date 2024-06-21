@@ -47,6 +47,12 @@
     color: #6f42c1;
     border-color: #6f42c1;
   }
+  .btn-outline-primary.delete-btn {
+    color: #d40505;
+    border-color: #ff0b0b;
+  }
+
+
 
   .btn-outline-primary.edit-btn:hover {
     color: #fff;
@@ -120,6 +126,20 @@
 /* Vous pouvez avoir besoin de retirer le margin-right sur chaque troisième élément pour aligner parfaitement les éléments */
 .timeline-item:nth-child(3n) {
   margin-right: 0;
+}
+
+.select-container{
+  margin-left: 36%;
+  }
+
+  .d-flex.align-items-center .form-select {
+    border-radius: 0.25rem;
+    background-color: #f8f9fa;
+    color: #495057;
+    font-size: 1rem;
+}
+select option{
+  background-color: #e0daec;
 }
 
 

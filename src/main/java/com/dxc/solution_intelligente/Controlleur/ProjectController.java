@@ -4,10 +4,12 @@ package com.dxc.solution_intelligente.Controlleur;
 import com.dxc.solution_intelligente.DTO.Backlog.BacklogDTO;
 import com.dxc.solution_intelligente.DTO.Equipe.EquipeDTO;
 import com.dxc.solution_intelligente.DTO.Project.*;
+import com.dxc.solution_intelligente.DTO.Sprint.SprintDTO;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
 import com.dxc.solution_intelligente.service.IProjectService;
 import com.dxc.solution_intelligente.service.ProjectService;
 import com.dxc.solution_intelligente.service.model.Backlog;
+import com.dxc.solution_intelligente.service.model.Sprint;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,6 +69,26 @@ public class ProjectController {
     @GetMapping("/backlogs/{nom}")
     public List<Backlog> searchEquipeByNom(@PathVariable String nom) {
         return projectService.findByexactName(nom).getBacklogs();
+    }
+
+    @GetMapping("/sprints/{nom}")
+    public List<SprintDTO> search(@PathVariable String nom){
+        return projectService.findByexactName(nom).getSprints();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProject(@PathVariable Long id){
+        try {
+            return new ResponseEntity<>(projectService.deleteProjectById(id), HttpStatus.ACCEPTED);
+        }catch (BusinessException e){
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur interne du serveur."+e.getMessage());
+        }
     }
 
 }

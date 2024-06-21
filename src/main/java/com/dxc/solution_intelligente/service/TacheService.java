@@ -5,6 +5,7 @@ import com.dxc.solution_intelligente.DAO.UserRepository;
 import com.dxc.solution_intelligente.DAO.UserStoryRepository;
 import com.dxc.solution_intelligente.DTO.Tache.*;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
+import com.dxc.solution_intelligente.service.model.Sprint;
 import com.dxc.solution_intelligente.service.model.Tache;
 import com.dxc.solution_intelligente.service.model.User;
 import com.dxc.solution_intelligente.service.model.UserStory;
@@ -26,9 +27,6 @@ public class TacheService implements ITacheService{
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final UserStoryRepository userStoryRepository;
-    private PasswordEncoder passwordEncoder;
-
-
 
 
     @Override
@@ -87,6 +85,16 @@ public class TacheService implements ITacheService{
         return response;
     }
 
+    @Override
+    public String deleteTacheById(Long id) {
+        if (id == null)
+            throw new BusinessException("Enter a correct identity tache");
+        Tache tacheFound = tacheRepository.findAll().stream().filter(tache -> tache.getId()==id).findFirst().orElseThrow(
+                () -> new BusinessException(String.format("No customer with identity %d exist in database", id))
+        );
+        tacheRepository.delete(tacheFound);
+        return String.format("Tache with identity %d is deleted with success", id);
+    }
 
     @Override
     public UpdateTacheResponse updateTache(String code, UpdateTacheRequest updateTacheRequest) {

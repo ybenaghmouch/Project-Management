@@ -17,7 +17,7 @@ public class Tache {
     private String titre;
     private String Description;
     private int Priority;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     private User Responsable;
     private String Statut;
 

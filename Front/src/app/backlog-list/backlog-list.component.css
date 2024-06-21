@@ -79,13 +79,21 @@
 
 /* Align dropdown and other elements properly */
 .d-flex.align-items-center .form-select {
-  margin-right: 1rem;
+    border-radius: 0.25rem;
+    background-color: #f8f9fa;
+    color: #495057;
+    font-size: 1rem;
 }
+select option{
+  background-color: #e0daec;
+}
+
 
 .d-flex.align-items-center .search-input {
   margin-right: 1rem;
 }
 
-.add-user-btn {
-  margin-left: 1rem;
+.select-container{
+margin-left: 36%;
 }
+

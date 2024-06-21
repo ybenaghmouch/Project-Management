@@ -58,7 +58,7 @@ export class BacklogListComponent implements AfterViewInit, OnInit {
         this.projectListService.getProjects().subscribe(
           (data: any[]) => {
             this.projects = data;
-     
+
           },
           error => {
             console.error('Error fetching projects', error);
@@ -78,9 +78,9 @@ export class BacklogListComponent implements AfterViewInit, OnInit {
             console.error('Error fetching projects', error);
           }
         );
-        
+
       }
-      
+
     });
 
     this.searchForm.get('titre')!.valueChanges
@@ -163,9 +163,21 @@ export class BacklogListComponent implements AfterViewInit, OnInit {
       this.userModal.user = user;
       this.userModal.openModal();
     } else {
-      console.error('UserModalComponent is not initialized');
+      console.error('BacklogMdalComponent is not initialized');
     }
   }
+
+  openListUserModal(user: any) {
+    if (this.userModal) {
+      this.userModal.isListMode = true;
+      this.userModal.user = user;
+      this.userModal.openModal();
+      this.userModal.form.disable();
+    } else {
+      console.error('BacklogMdalComponent is not initialized');
+    }
+  }
+
 
   onProjectChange(event: any) {
     const projectName = event.target.value;
@@ -185,7 +197,25 @@ export class BacklogListComponent implements AfterViewInit, OnInit {
       }
     });
     console.log('Delete backlog:', user);
+
   }
+
+//   deleteBacklog(user: any) {
+//     const confirmation = window.confirm("Êtes-vous sûr de vouloir supprimer ce backlog ?");
+//     if (confirmation) {
+//         const index: number = this.users.indexOf(user);
+//         this.userListService.deleteBacklog(user.id).subscribe(() => {
+//           if (index !== -1) {
+//             this.users.splice(index, 1);
+//           }
+//           console.log('Backlog supprimé:', user);
+//           alert('Le backlog a été supprimé avec succès.');
+//         });
+//     } else {
+//         console.log('Suppression annulée:', user);
+//     }
+// }
+
 
   getPageSymbol(current: number) {
     return ['A', 'B', 'C', 'D', 'E', 'F', 'G'][current - 1];

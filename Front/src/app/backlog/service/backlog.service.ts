@@ -32,7 +32,7 @@ interface Backlog {
   providedIn: 'root'
 })
 export class BacklogService {
-  
+
 
 
 
@@ -41,4 +41,9 @@ export class BacklogService {
   getBacklog(id: string): Observable<Backlog[]> {
     return this.http.get<Backlog[]>(`/api/backlog/${id}`);
   }
+
+  deleteUserStory(id: number): Observable<any[]>{
+    return this.http.delete<any[]>(`/api/us/${id}`);
+  }
+
 }

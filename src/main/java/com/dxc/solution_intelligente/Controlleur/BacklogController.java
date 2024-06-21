@@ -62,4 +62,20 @@ public class BacklogController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteBacklog(@PathVariable Long id){
+        try {
+            return new ResponseEntity<>(backlogService.deleteBacklogById(id), HttpStatus.ACCEPTED);
+        }catch (BusinessException e){
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur interne du serveur."+e.getMessage());
+        }
+
+    }
+
 }

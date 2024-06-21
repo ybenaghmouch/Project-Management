@@ -21,11 +21,11 @@ public class Project {
     private Date dateFin;
     private int duree;
     private String status;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     private User manager;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.MERGE)
     private List<Backlog> backlogs;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.MERGE)
     private List<Sprint> sprints;
 
 }

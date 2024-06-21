@@ -14,7 +14,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String authority;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.MERGE)
     private List<Permission> authorities;
 
 }

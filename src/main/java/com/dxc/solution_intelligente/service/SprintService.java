@@ -96,9 +96,12 @@ public class SprintService implements ISprintService{
         Sprint sprintFound = sprintRepository.findAll().stream().filter(sprint -> sprint.getId()==id).findFirst().orElseThrow(
                 () -> new BusinessException(String.format("No customer with identity %d exist in database", id))
         );
-
         sprintRepository.delete(sprintFound);
         return String.format("Sprint with identity %d is deleted with success", id);
+    }
 
+    @Override
+    public SprintDTO searchByTitre(String titre) {
+        return modelMapper.map(sprintRepository.findSprintByTitre(titre.toLowerCase()), SprintDTO.class);
     }
 }

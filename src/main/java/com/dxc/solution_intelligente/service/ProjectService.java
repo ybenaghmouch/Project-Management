@@ -7,10 +7,7 @@ import com.dxc.solution_intelligente.DAO.UserRepository;
 import com.dxc.solution_intelligente.DTO.Equipe.EquipeDTO;
 import com.dxc.solution_intelligente.DTO.Project.*;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
-import com.dxc.solution_intelligente.service.model.Backlog;
-import com.dxc.solution_intelligente.service.model.Project;
-import com.dxc.solution_intelligente.service.model.Role;
-import com.dxc.solution_intelligente.service.model.User;
+import com.dxc.solution_intelligente.service.model.*;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -115,6 +112,15 @@ public class ProjectService implements IProjectService{
        return  modelMapper.map(projectRepository.findProjectByNom(searchTerm.toLowerCase()), ProjectDTO.class);
     }
 
-
+    @Override
+    public String deleteProjectById(Long id) {
+        if (id == null)
+            throw new BusinessException("Enter a correct identity sprint");
+        Project projectFound = projectRepository.findAll().stream().filter(sprint -> sprint.getId()==id).findFirst().orElseThrow(
+                () -> new BusinessException(String.format("No Project with identity %d exist in database", id))
+        );
+        projectRepository.delete(projectFound);
+        return String.format("Project with identity %d is deleted with success", id);
+    }
 
 }

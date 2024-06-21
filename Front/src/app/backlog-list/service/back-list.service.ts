@@ -11,7 +11,6 @@ export class BackListService {
   constructor(private http: HttpClient) { }
 
   getUsers(name: string): Observable<any[]> {
-    
     return this.http.get<any[]>(`/api/project/backlogs/${name}`);
   }
   searchUsers(username: string): Observable<any[]> {
