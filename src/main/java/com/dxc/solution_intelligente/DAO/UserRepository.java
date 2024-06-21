@@ -14,6 +14,8 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
 
     Optional<User> findByUsername(String username);
+
+    Optional<User> findById(Long id);
     List<User> findByUsernameContainingIgnoreCase(String username);
 
     @Query("SELECT u FROM User u JOIN u.authorities r WHERE r.authority = :role AND LOWER(u.username) LIKE LOWER(CONCAT('%', :username, '%'))")

@@ -1,6 +1,7 @@
 package com.dxc.solution_intelligente.config;
 
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
+@AllArgsConstructor
 public class SecurityConfiguration {
 
     @Autowired
@@ -23,7 +25,7 @@ public class SecurityConfiguration {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/**", "/resources/**", "/static/**", "/css/**", "/js/**",
+        return (web) -> web.ignoring().requestMatchers("/**", "/resources/**", "/static/**", "/css/**","/chat-websocket/**", "/js/**",
                 "/images/**");
     }
 
