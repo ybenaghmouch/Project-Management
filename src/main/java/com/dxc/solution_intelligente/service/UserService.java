@@ -28,7 +28,7 @@ public class UserService implements IUserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-
+    private final EmailService emailService;
     private final ModelMapper modelMapper;
 
     private PasswordEncoder passwordEncoder;
@@ -93,6 +93,23 @@ public class UserService implements IUserService {
         response.setMessage(String.format("User: [Nom = %s, Prenom = %s, Username = %s, Email = %s, Civility = %s, Speciality = %s, Role = %s]",
                 response.getFirstName(), response.getLastName(), response.getUsername(),
                 response.getEmail(), response.getCivility(), response.getSpeciality(), response.getAuthorities()));
+        ////
+        try {
+            String htmlTemplate = emailService.getHtmlTemplate("src/main/resources/templates/account_created.html");
+            String populatedTemplate = emailService.populateTemplate(
+                    htmlTemplate,
+                    addUserRequest.getCivility(),
+                    addUserRequest.getLastName(),
+                    addUserRequest.getFirstName(),
+                    addUserRequest.getEmail(),
+                    addUserRequest.getPassword()
+            );
+            emailService.sendHtmlMessage(addUserRequest.getEmail(), "Account Created", populatedTemplate);
+        } catch (Exception e) {
+            // Handle exception (logging, rethrowing, etc.)
+            e.printStackTrace();
+        }
+        ////
 
         return response;
     }

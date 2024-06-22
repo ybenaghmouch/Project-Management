@@ -18,9 +18,5 @@ public class AddSprintRequest {
     private Date date_fin;
     private String status;
     List<UserStoryDTO> userStories;
-    @Data
-    @NoArgsConstructor
-    public static class UserStoryDTO {
-        private String code;
-    }
+
 }

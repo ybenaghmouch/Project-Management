@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+
 @AllArgsConstructor
 public class CongeService implements ICongeService {
     private final ModelMapper modelMapper;

@@ -25,5 +25,14 @@ services:
     ports:
       - "8081:80"
 
+  mailslurper:
+    image: derekahn/mailslurper
+    ports:
+      - 2500:2500
+      - 3030:8080
+      - 8085:8085
+    volumes:
+      - $PWD/custom-config.json:/opt/mailslurper/config.json
+
 volumes:
   mysql_data:
