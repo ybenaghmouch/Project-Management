@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 @Service
-@Transactional
+
 @AllArgsConstructor
 public class UserStoryService implements IUserStoryService {
     private final UserStoryRepository userStoryRepository;

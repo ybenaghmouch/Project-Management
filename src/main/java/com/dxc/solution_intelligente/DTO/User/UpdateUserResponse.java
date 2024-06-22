@@ -16,7 +16,7 @@ public class UpdateUserResponse {
     protected boolean Force_change_password=true;
     protected String Civility;
     protected String Speciality;
-    protected int soldeConge=30;
+    protected double soldeConge;
     protected boolean Status=true;
     private List<Role> authorities;
     protected String message;
