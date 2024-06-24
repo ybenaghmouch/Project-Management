@@ -45,15 +45,21 @@ public class ProjectService implements IProjectService{
                 });
 
         AddProjectResponse response = modelMapper.map(projectRepository.save(bo), AddProjectResponse.class);
+
         User manager = userRepository.findById(response.getManager().getId())
                 .orElseThrow(() -> new BusinessException("Manager not found"));
         response.setManager(manager);
+
         response.setMessage(String.format("Projet : [Nom = %s, Description = %s, Date de debut = %s, Date de fin = %s, Duree = %S, Status = %s, Manager = %s, Backlog = %s]", response.getNom(), response.getDescription(), response.getDateDebut(), response.getDateFin(), response.getDuree(), response.getStatus(), response.getManager().getUsername(), response.getBacklogs()));
         return response;
     }
 
     @Override
     public UpdateProjectResponse updateProject(String name, UpdateProjectRequest updateProjectRequest) {
+        User manager = userRepository.findById(updateProjectRequest.getManager().getId())
+                .orElseThrow(() -> new BusinessException("Manager not found"));
+        updateProjectRequest.setManager(manager);
+
         Project projectFound = projectRepository.findAll().stream()
                 .filter(bo -> bo.getNom() != null && bo.getNom().equals(name))
                 .findFirst()
@@ -63,7 +69,7 @@ public class ProjectService implements IProjectService{
         // Utiliser ModelMapper pour mapper les propriétés non-nulles
         modelMapper.map(updateProjectRequest, projectFound);
 
-        // Traiter les backlogs
+
 
 
         Project savedProject = projectRepository.save(projectFound);

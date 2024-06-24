@@ -21,11 +21,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-/*
+
 @Controller
 @AllArgsConstructor
-@RequestMapping("/api/chat")*/
-public class RestChatController {/*
+@RequestMapping("/api/chat")
+public class RestChatController {
 
     private final UserRepository userRepository;
     private final ChatRoomService chatRoomService;
@@ -81,12 +81,12 @@ public class RestChatController {/*
     }
 
     @GetMapping("/messages")
-    public ResponseEntity<List<MessageDTO>> getMessages(@RequestParam("chatRoomId") Long chatRoomId, @RequestParam("exp") Long expId) {
+    public ResponseEntity<?> getMessages(@RequestParam("chatRoomId") Long chatRoomId, @RequestParam("exp") Long expId) {
         try {
             List<MessageDTO> messages = messageService.getMessagesByChatRoomId(chatRoomId);
             return ResponseEntity.ok(messages);
         } catch (BusinessException e) {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }
 
@@ -100,24 +100,5 @@ public class RestChatController {/*
         }
     }
 
-    // WebSocket Mappings
-    @MessageMapping("/chat.sendMessage")
-    @SendTo("/topic/public")
-    public MessageDTO sendMessageWebSocket(@Payload AddMessageRequest addMessageRequest) {
-        AddMessageResponse response = messageService.createMessage(addMessageRequest);
-        MessageDTO messageDTO = new MessageDTO();
-        messageDTO.setId(response.getId());
-        messageDTO.setContent(response.getContent());
-        messageDTO.setExp(response.getExp());
-        messageDTO.setChatRoom(response.getChatRoom());
-        return messageDTO;
-    }
 
-    @MessageMapping("/chat.addUser")
-    @SendTo("/topic/public")
-    public String addUserWebSocket(@Payload AddChatRoomRequest addChatRoomRequest, SimpMessageHeaderAccessor headerAccessor) {
-        String username = addChatRoomRequest.getUsers().get(0).getUsername();
-        headerAccessor.getSessionAttributes().put("username", username);
-        return username + " joined the chat!";
-    }*/
 }

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #chatRoomList {
+            margin-bottom: 20px;
+        }
+        #messages {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+            margin-bottom: 20px;
+        }
+        #messageInput {
+            width: 80%;
+        }
+        #sendButton {
+            width: 15%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chat Application</h1>
+    <div>
+        <h2>Enter User ID</h2>
+        <input type="number" id="userIdInput" placeholder="User ID">
+        <button id="fetchChatRoomsButton">Get Chat Rooms</button>
+    </div>
+    <div>
+        <h2>Chat Rooms</h2>
+        <ul id="chatRoomList"></ul>
+    </div>
+    <div>
+        <h2>Messages</h2>
+        <div id="messages"></div>
+        <input type="text" id="messageInput" placeholder="Type a message...">
+        <button id="sendButton">Send</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+    <script>
+        let userId = null;
+        let selectedChatRoomId = null;
+        let stompClient = null;
+        let chatRoomUsers = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('fetchChatRoomsButton').addEventListener('click', fetchChatRooms);
+            document.getElementById('sendButton').addEventListener('click', sendMessage);
+            connectToWebSocket();
+        });
+
+        function fetchChatRooms() {
+            userId = document.getElementById('userIdInput').value;
+            if (!userId) {
+                alert('Please enter a valid User ID');
+                return;
+            }
+            fetch(`http://127.0.0.1:9090/api/chat/rooms/user/${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const chatRoomList = document.getElementById('chatRoomList');
+                    chatRoomList.innerHTML = '';
+                    data.forEach(chatRoom => {
+                        const li = document.createElement('li');
+                        li.textContent = chatRoom.nom;
+                        li.dataset.id = chatRoom.id;
+                        li.addEventListener('click', () => selectChatRoom(chatRoom.id, chatRoom.users));
+                        chatRoomList.appendChild(li);
+                    });
+                });
+        }
+
+        function connectToWebSocket() {
+            const socket = new SockJS('http://127.0.0.1:9090/ws');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, () => {
+                console.log('Connected to WebSocket');
+                stompClient.subscribe('/topic/public', (message) => {
+                    const msg = JSON.parse(message.body);
+                    if (msg.type === 'message') {
+                        showMessage(msg);
+                    }
+                });
+            });
+        }
+
+        function selectChatRoom(chatRoomId, users) {
+            selectedChatRoomId = chatRoomId;
+            chatRoomUsers = users;
+            document.getElementById('messages').innerHTML = '';
+            fetchMessages(chatRoomId);
+        }
+
+        function fetchMessages(chatRoomId) {
+            fetch(`http://127.0.0.1:9090/api/chat/messages?chatRoomId=${chatRoomId}&exp=${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(message => showMessage(message));
+                });
+        }
+
+        function showMessage(message) {
+            const messagesDiv = document.getElementById('messages');
+            const messageElement = document.createElement('div');
+
+            const senderName = message.exp.id === parseInt(userId) ? 'You' : chatRoomUsers.find(user => user.id === message.exp.id).username;
+
+            messageElement.textContent = `${senderName}: ${message.content}`;
+            messagesDiv.appendChild(messageElement);
+        }
+
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const messageContent = messageInput.value;
+
+            if (messageContent && selectedChatRoomId) {
+                const message = {
+                    
+                    chatRoom: { id: selectedChatRoomId },
+                    content: messageContent,
+                    exp: { id: userId }
+                };
+
+                stompClient.send('/app/chat.sendMessage', {}, JSON.stringify(message));
+                messageInput.value = '';
+                showMessage(message);
+            }
+        }
+    </script>
+</body>
+</html>
