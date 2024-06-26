@@ -42,19 +42,29 @@
             <div class="col-md-6 mb-3">
               <label for="status" class="form-label">Status</label>
               <select class="form-control" id="status" formControlName="status">
-                <option value="active" selected>Active</option>
-                <option value="completed">Completed</option>
-                <option value="onHold">On Hold</option>
+                <option value="Planning Phase" selected>Planning Phase</option>
+                <option value="Design Phase">Design Phase</option>
+                <option value="Development Phase">Development Phase</option>
+                <option value="Acceptance Testing Phase">Acceptance Testing Phase</option>
+                <option value="Production Deployment Phase">Production Deployment Phase</option>
               </select>
             </div>
           </div>
           <!-- Manager and Backlog in the same line -->
+           <div class="row">
           <div class="col-md-6 mb-3">
             <label for="manager" class="form-label">Manager</label>
             <ng-select class="form-control" [items]="users" bindLabel="username" bindValue="id"
               formControlName="manager"  [searchable]="true">
             </ng-select>
           </div>
+          <div class="col-md-6 mb-3">
+            <label for="equipe" class="form-label">Equipe</label>
+            <ng-select class="form-control" [items]="equipes" bindLabel="nom" bindValue="id"
+              formControlName="equipe"  [searchable]="true">
+            </ng-select>
+          </div>
+        </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
             <button [hidden]="isListMode" type="submit" class="btn btn-primary">{{ isEditMode ? 'Save' : 'Add' }}</button>

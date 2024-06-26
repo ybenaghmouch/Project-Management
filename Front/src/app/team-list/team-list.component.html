@@ -12,7 +12,6 @@
           <th scope="col">NAME</th>
           <th scope="col">Manager</th>
           <th scope="col">Project Leader</th>
-          <th scope="col">Projects</th>
           <th scope="col">Actions</th>
         </tr>
       </thead>
@@ -21,7 +20,6 @@
           <td>{{ team.nom }}</td>
           <td>{{ team.manager.civility }} {{ team.manager.firstName }} {{ team.manager.lastName }}</td>
           <td>{{ team.chefprojet.civility }} {{ team.chefprojet.firstName }} {{ team.chefprojet.lastName }}</td>
-          <td>projects here</td>
           <td class="overflow-hidden">
             <button class="btn btn-outline-primary btn-sm edit-btn me-2" (click)="openEditTeamModal(team)">Edit</button>
             <button class="btn btn-outline-primary btn-sm edit-btn me-2" [routerLink]="['/team', team.nom]">List</button>

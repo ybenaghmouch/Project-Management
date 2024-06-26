@@ -16,4 +16,8 @@ export class UsModalService {
     return this.http.put<any>(`/api/us/${username}`,formData);
   }
 
+  getUsers(type: string = "user"): Observable<any[]> {
+    return this.http.get<any[]>(`/api/user`);
+  }
+
 }

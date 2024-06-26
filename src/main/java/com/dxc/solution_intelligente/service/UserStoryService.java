@@ -1,11 +1,13 @@
 package com.dxc.solution_intelligente.service;
 
 import com.dxc.solution_intelligente.DAO.BacklogRepository;
+import com.dxc.solution_intelligente.DAO.UserRepository;
 import com.dxc.solution_intelligente.DAO.UserStoryRepository;
 import com.dxc.solution_intelligente.DTO.UserStory.*;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
 import com.dxc.solution_intelligente.service.model.Backlog;
 import com.dxc.solution_intelligente.service.model.Tache;
+import com.dxc.solution_intelligente.service.model.User;
 import com.dxc.solution_intelligente.service.model.UserStory;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -22,6 +24,7 @@ public class UserStoryService implements IUserStoryService {
     private final UserStoryRepository userStoryRepository;
     private final BacklogRepository backlogRepository;
     private final ModelMapper modelMapper;
+    private final UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
 
 
@@ -72,7 +75,10 @@ public class UserStoryService implements IUserStoryService {
         // Préparer la réponse
         AddUserStoryResponse response = modelMapper.map(savedUserStory, AddUserStoryResponse.class);
         response.setMessage(String.format("UserStory ajoutée avec succès au backlog [%s] : [Code = %s, Description = %s]", backlogtitle, response.getCode(), response.getDescription()));
-
+        if(response.getResponsable()!=null ){
+            User responsable = userRepository.findById(response.getResponsable().getId())
+                    .orElseThrow(() -> new BusinessException("Manager not found"));
+            response.setResponsable(responsable);}
         return response;
     }
 

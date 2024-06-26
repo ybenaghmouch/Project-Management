@@ -36,6 +36,7 @@ export class ProjectModalComponent implements OnInit {
 
   form: FormGroup;
   users: any[] = [];
+  equipes: any[] = [];
   @Output() projectAdded = new EventEmitter<any>();
   @ViewChild('projectModal', { static: false }) projectModal!: ElementRef;
   @Input() isEditMode: boolean = false;
@@ -52,6 +53,7 @@ export class ProjectModalComponent implements OnInit {
       duration: ['', Validators.required],
       status: ['', Validators.required],
       manager: [null, Validators.required],
+      equipe: [null, Validators.required],
       //backlogs: [[], Validators.required],
     });
 
@@ -59,6 +61,7 @@ export class ProjectModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadUsers();
+    this.loadTeams();
     this.subscribeToDateChanges();
     if (this.project) {
       this.form.patchValue(this.project);
@@ -110,6 +113,12 @@ export class ProjectModalComponent implements OnInit {
     });
   }
 
+  loadTeams(){
+    this.userService.getTeams().subscribe(equipes =>{
+      this.equipes = equipes;
+    });
+  }
+
 
   private formatDate(dateStr: string): string {
     const date = new Date(dateStr);
@@ -131,6 +140,7 @@ export class ProjectModalComponent implements OnInit {
         duration: this.project.duree,
         status: this.project.status,
         manager: this.project.manager.id,
+        equipe: this.project.equipe.id,
       });
 
     } else {
@@ -174,6 +184,7 @@ export class ProjectModalComponent implements OnInit {
             duree: formData.duration,
             status: formData.status,
             manager: { id: formData.manager },
+            equipe: { id : formData.equipe},
         };
         console.log("Sending Project Data:", projectData);
 
@@ -186,7 +197,6 @@ export class ProjectModalComponent implements OnInit {
             this.projectModalService.postProject(projectData).subscribe((response: any) => {
                 this.projectAdded.emit(response);
                 this.closeModal();
-
             });
         }
     }

@@ -21,4 +21,6 @@ public class UserStory {
     private String Statut;
     @OneToMany(cascade = CascadeType.MERGE)
     private List<Tache> Features;
+    @ManyToOne(cascade = CascadeType.MERGE)
+    private User Responsable;
 }

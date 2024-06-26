@@ -66,6 +66,21 @@ public class ProjectController {
         return new ResponseEntity<>(projectService.updateProject(name, dto), HttpStatus.OK);
     }
 
+    /*@DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProject(@PathVariable Long id){
+        try {
+            return new ResponseEntity<>(projectService.deleteProjectById(id), HttpStatus.ACCEPTED);
+        }catch (BusinessException e){
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur interne du serveur."+e.getMessage());
+        }
+    }*/
+
     @GetMapping("/backlogs/{nom}")
     public List<Backlog> searchEquipeByNom(@PathVariable String nom) {
         return projectService.findByexactName(nom).getBacklogs();

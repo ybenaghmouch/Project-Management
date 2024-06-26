@@ -2,19 +2,19 @@
 .modal-header {
     border-bottom: none;
   }
-  
+
   .modal-title {
     font-weight: bold;
   }
-  
+
   .modal-footer {
     border-top: none;
   }
-  
+
   .form-label {
     font-weight: bold;
   }
-  
+
   .form-control,
   .form-select {
     font-size: 1rem;
@@ -25,19 +25,67 @@
     border-radius: 0.25rem;
     width: 100%; /* Make inputs take up full width */
   }
-  
+
   /* Custom styles for the checkbox */
   .form-check-input:checked {
     background-color: #6f42c1 !important; /* Purple color for active */
     border-color: #6f42c1 !important;
   }
-  
+
   .form-check-input:not(:checked) {
     background-color: #6c757d !important; /* Grey color for inactive */
     border-color: #6c757d !important;
   }
-  
+
   .form-check-input {
     cursor: pointer;
   }
-  
+
+  ::ng-deep .ng-select {
+    display: block;
+    width: 100%; /* Ensures the select takes full width of its container */
+  }
+
+  ::ng-deep .ng-select .ng-select-container {
+    height: auto;
+    padding: 0.375rem 0.75rem;
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    line-height: 1.5; /* Matches default line-height for form controls */
+  }
+
+  ::ng-deep .ng-select .ng-value-container {
+    display: flex;
+    flex-wrap: wrap; /* Allows multiple selected items to wrap */
+    align-items: center;
+  }
+
+  ::ng-deep .ng-select .ng-value {
+    margin: 2px 5px 2px 0; /* Spacing between tags in multi-select */
+    background-color: #e9ecef; /* Light grey background for tags */
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  ::ng-deep .ng-select .ng-placeholder {
+    color: #6c757d; /* Placeholder color similar to that of default inputs */
+  }
+
+  ::ng-deep .ng-select .ng-option {
+    padding: 0.5rem 1rem; /* Padding for dropdown options */
+    font-size: 1rem; /* Font size for options */
+  }
+
+  ::ng-deep .ng-dropdown-panel {
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    z-index: 1060;
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    margin-top: 20%;
+    transform: translateX(-50%);
+  }

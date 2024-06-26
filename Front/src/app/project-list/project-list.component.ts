@@ -28,20 +28,32 @@ export class ProjectListComponent implements AfterViewInit,OnInit{
       "id": 0,
       "nom": "string",
       "description": "string",
-      "dateDebut": "2024-05-22",
-      "dateFin": "2024-05-22",
+      "dateDebut": "2024-06-22T20:14:58.316Z",
+      "dateFin": "2024-06-22T20:14:58.316Z",
       "duree": 0,
       "status": "string",
       "manager": {
         "id": 0,
         "username": "string",
-        "password": "string",
-        "role": "string",
+        "soldeConge": 0,
+        "authorities": [
+          {
+            "id": 0,
+            "authority": "string",
+            "authorities": [
+              {
+                "id": 0,
+                "authority": "string"
+              }
+            ]
+          }
+        ],
         "status": true,
-        "lastName": "string",
+        "password": "string",
+        "firstName": "string",
         "civility": "string",
         "speciality": "string",
-        "firstName": "string",
+        "lastName": "string",
         "email": "string",
         "force_change_password": true
       },
@@ -50,9 +62,108 @@ export class ProjectListComponent implements AfterViewInit,OnInit{
           "id": 0,
           "titre": "string",
           "description": "string",
+          "userStories": [
+            {
+              "code": "string",
+              "titre": "string",
+              "priority": 0,
+              "id": 0,
+              "description": "string",
+              "features": [
+                {
+                  "code": "string",
+                  "titre": "string",
+                  "priority": 0,
+                  "id": 0,
+                  "description": "string",
+                  "responsable": {
+                    "id": 0,
+                    "username": "string",
+                    "soldeConge": 0,
+                    "authorities": [
+                      {
+                        "id": 0,
+                        "authority": "string",
+                        "authorities": [
+                          {
+                            "id": 0,
+                            "authority": "string"
+                          }
+                        ]
+                      }
+                    ],
+                    "status": true,
+                    "password": "string",
+                    "firstName": "string",
+                    "civility": "string",
+                    "speciality": "string",
+                    "lastName": "string",
+                    "email": "string",
+                    "force_change_password": true
+                  },
+                  "statut": "string"
+                }
+              ],
+              "statut": "string"
+            }
+          ],
           "status": "string"
         }
-      ]
+      ],
+      "sprints": [
+        {
+          "id": 0,
+          "titre": "string",
+          "description": "string",
+          "date_debut": "2024-06-22T20:14:58.316Z",
+          "date_fin": "2024-06-22T20:14:58.316Z",
+          "status": "string",
+          "userStories": [
+            {
+              "code": "string",
+              "titre": "string",
+              "priority": 0,
+              "id": 0,
+              "description": "string",
+              "features": [
+                {
+                  "code": "string",
+                  "titre": "string",
+                  "priority": 0,
+                  "id": 0,
+                  "description": "string",
+                  "responsable": {
+                    "id": 0,
+                    "username": "string",
+                  },
+                  "statut": "string"
+                }
+              ],
+              "statut": "string"
+            }
+          ]
+        }
+      ],
+      "equipe": {
+        "id": 0,
+        "nom": "string",
+        "manager": {
+          "id": 0,
+          "username": "string",
+          "soldeConge": 0,
+        },
+        "chefprojet": {
+          "id": 0,
+          "username": "string",
+
+        },
+        "collaborateurs": [
+          {
+            "id": 0,
+            "username": "string",
+          }
+        ]
+      }
     }
   ];
 
@@ -210,8 +321,6 @@ openListProjectModal(project: any) {
     console.error('ProjectModalComponent is not initialized');
   }
 }
-
-
 
 }
 

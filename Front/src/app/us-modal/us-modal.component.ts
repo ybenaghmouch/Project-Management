@@ -1,20 +1,22 @@
-import { Component, ElementRef, ViewChild, Input, EventEmitter, Output  } from '@angular/core';
+import { Component, ElementRef, ViewChild, Input, EventEmitter, Output, OnInit  } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UsModalService } from './service/us-modal.service';
 import { HttpClientModule } from '@angular/common/http';
+import { NgSelectModule } from '@ng-select/ng-select';
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-us-modal',
   standalone: true,
-  imports: [NgIf, NgFor, FormsModule, ReactiveFormsModule],
+  imports: [NgIf, NgFor, FormsModule, ReactiveFormsModule, NgSelectModule],
   providers: [UsModalService],
   templateUrl: './us-modal.component.html',
   styleUrls: ['./us-modal.component.css']
 })
-export class UsModalComponent {
+export class UsModalComponent implements OnInit{
   form: FormGroup;
+  users: any[] = [];
   priorityRange: number[] = Array.from({ length: 11 }, (_, i) => i);
   @Output() userAdded = new EventEmitter<any>();
 
@@ -30,9 +32,22 @@ export class UsModalComponent {
       titre: ['', Validators.required],
       description: ['', Validators.required],
       statut: ['pending', Validators.required],
-      priority: [0, Validators.required]
+      priority: [0, Validators.required],
+      responsable: [null],
     });
   }
+
+
+  ngOnInit(): void {
+    this.loadUsers();
+  }
+
+  loadUsers() {
+    this.userModalService.getUsers().subscribe((users: any) => {
+      this.users = users;
+    });
+  }
+
 
   openModal() {
     if (this.user) {
@@ -48,6 +63,8 @@ export class UsModalComponent {
     const modalInstance = bootstrap.Modal.getInstance(modalElement);
     this.form.reset();
     modalInstance.hide();
+    this.isListMode = false;
+    this.form.enable();
   }
 
   submitForm() {
