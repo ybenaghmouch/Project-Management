@@ -176,7 +176,7 @@ export class SprintModalComponent implements OnInit {
         date_debut: DateDebut,
         date_fin: DateFin,
         status: formData.status,
-        userStories: formData.userStories.map((id: number) => ({id})),
+        userStories: formData.userStories.map((code: string) => ({code})),
       };
       console.log("Sending Sprint Data:", sprintData);
       console.log("Project Name : ", this.projectname);

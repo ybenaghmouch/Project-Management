@@ -25,7 +25,7 @@ public class User {
     private String Civility;
     private String Speciality;
     private boolean Status;
-    private int soldeConge;
+    private double soldeConge;
     @ManyToMany(cascade = CascadeType.MERGE)
     private List<Role> authorities;
 

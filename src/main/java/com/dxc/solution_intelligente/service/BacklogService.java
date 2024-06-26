@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+
 @AllArgsConstructor
 public class BacklogService implements IBacklogService{
     private final BacklogRepository backlogRepository;

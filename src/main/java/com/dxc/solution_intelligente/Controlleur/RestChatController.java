@@ -1,5 +1,6 @@
 package com.dxc.solution_intelligente.Controlleur;
 
+import com.dxc.solution_intelligente.DAO.ChatRoomRepository;
 import com.dxc.solution_intelligente.DAO.UserRepository;
 import com.dxc.solution_intelligente.DTO.ChatRoom.AddChatRoomRequest;
 import com.dxc.solution_intelligente.DTO.ChatRoom.AddChatRoomResponse;
@@ -10,6 +11,7 @@ import com.dxc.solution_intelligente.DTO.Message.MessageDTO;
 import com.dxc.solution_intelligente.service.ChatRoomService;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
 import com.dxc.solution_intelligente.service.IMessageService;
+import com.dxc.solution_intelligente.service.model.ChatRoom;
 import com.dxc.solution_intelligente.service.model.User;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,15 +23,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-/*
+import java.util.Optional;
+
 @Controller
 @AllArgsConstructor
-@RequestMapping("/api/chat")*/
-public class RestChatController {/*
+@RequestMapping("/api/chat")
+public class RestChatController {
 
     private final UserRepository userRepository;
     private final ChatRoomService chatRoomService;
     private final IMessageService messageService;
+    private final ChatRoomRepository chatRoomRepository;
 
     @PostMapping("/initiate")
     public ResponseEntity<?> initiateChat(@RequestParam("userA") Long userAId, @RequestParam("userB") Long userBId) {
@@ -81,12 +85,12 @@ public class RestChatController {/*
     }
 
     @GetMapping("/messages")
-    public ResponseEntity<List<MessageDTO>> getMessages(@RequestParam("chatRoomId") Long chatRoomId, @RequestParam("exp") Long expId) {
+    public ResponseEntity<?> getMessages(@RequestParam("chatRoomId") Long chatRoomId, @RequestParam("exp") Long expId) {
         try {
             List<MessageDTO> messages = messageService.getMessagesByChatRoomId(chatRoomId);
             return ResponseEntity.ok(messages);
         } catch (BusinessException e) {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }
 
@@ -99,25 +103,16 @@ public class RestChatController {/*
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }
-
-    // WebSocket Mappings
-    @MessageMapping("/chat.sendMessage")
-    @SendTo("/topic/public")
-    public MessageDTO sendMessageWebSocket(@Payload AddMessageRequest addMessageRequest) {
-        AddMessageResponse response = messageService.createMessage(addMessageRequest);
-        MessageDTO messageDTO = new MessageDTO();
-        messageDTO.setId(response.getId());
-        messageDTO.setContent(response.getContent());
-        messageDTO.setExp(response.getExp());
-        messageDTO.setChatRoom(response.getChatRoom());
-        return messageDTO;
+    @GetMapping("/room/{roomId}")
+    public ResponseEntity<?> getChatRoomById(@PathVariable Long roomId) {
+        try {
+            Optional chatRoom = chatRoomRepository.findById(roomId);
+            return ResponseEntity.ok(chatRoom);
+        } catch (BusinessException e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
     }
 
-    @MessageMapping("/chat.addUser")
-    @SendTo("/topic/public")
-    public String addUserWebSocket(@Payload AddChatRoomRequest addChatRoomRequest, SimpMessageHeaderAccessor headerAccessor) {
-        String username = addChatRoomRequest.getUsers().get(0).getUsername();
-        headerAccessor.getSessionAttributes().put("username", username);
-        return username + " joined the chat!";
-    }*/
+
+
 }

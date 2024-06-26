@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+
 @AllArgsConstructor
 public class ProjectService implements IProjectService{
 
@@ -47,12 +47,14 @@ public class ProjectService implements IProjectService{
                 });
 
         AddProjectResponse response = modelMapper.map(projectRepository.save(bo), AddProjectResponse.class);
+
         Equipe equipe =  equipeRepository.findById(response.getEquipe().getId()).orElseThrow(() -> new BusinessException("Equipe not found"));
         response.setEquipe(equipe);
         User manager = userRepository.findById(response.getManager().getId())
                 .orElseThrow(() -> new BusinessException("Manager not found"));
         response.setManager(manager);
         response.setMessage(String.format("Projet : [Nom = %s, Description = %s, Date de debut = %s, Date de fin = %s, Duree = %S, Status = %s, Manager = %s, Backlog = %s, Equipe = %s]", response.getNom(), response.getDescription(), response.getDateDebut(), response.getDateFin(), response.getDuree(), response.getStatus(), response.getManager().getUsername(), response.getBacklogs(), response.getEquipe()));
+
         return response;
     }
 
@@ -61,8 +63,10 @@ public class ProjectService implements IProjectService{
         User manager = userRepository.findById(updateProjectRequest.getManager().getId())
                 .orElseThrow(() -> new BusinessException("Manager not found"));
         updateProjectRequest.setManager(manager);
+
         Equipe equipe =  equipeRepository.findById(updateProjectRequest.getEquipe().getId()).orElseThrow(() -> new BusinessException("Equipe not found"));
         updateProjectRequest.setEquipe(equipe);
+
         Project projectFound = projectRepository.findAll().stream()
                 .filter(bo -> bo.getNom() != null && bo.getNom().equals(name))
                 .findFirst()
@@ -72,7 +76,9 @@ public class ProjectService implements IProjectService{
         // Utiliser ModelMapper pour mapper les propriétés non-nulles
         modelMapper.map(updateProjectRequest, projectFound);
 
+
         // Traiter les backlogs
+
         Project savedProject = projectRepository.save(projectFound);
 
         UpdateProjectResponse updateProjectResponse = modelMapper.map(savedProject, UpdateProjectResponse.class);

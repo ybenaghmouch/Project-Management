@@ -25,5 +25,14 @@ services:
     ports:
       - "8081:80"
 
+  mailslurper:
+    image: marcopas/docker-mailslurper
+    container_name: mailslurper
+    restart: unless-stopped
+    ports:
+      - "2500:2500"
+      - "3030:8080"
+      - "8085:8085"
+
 volumes:
   mysql_data:

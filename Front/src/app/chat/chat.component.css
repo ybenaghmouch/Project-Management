@@ -1,0 +1,26 @@
+#messages {
+  display: flex;
+  flex-direction: column;
+}
+
+.my-message {
+  background-color: purple;
+  color: white;
+  text-align: right;
+  padding: 5px;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  max-width: 70%;
+  align-self: flex-end; /* Align to the right */
+}
+
+.other-message {
+  background-color: gray;
+  color: black;
+  text-align: left;
+  padding: 5px;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  max-width: 70%;
+  align-self: flex-start; /* Align to the left */
+}

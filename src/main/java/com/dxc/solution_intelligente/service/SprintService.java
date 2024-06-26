@@ -3,15 +3,18 @@ package com.dxc.solution_intelligente.service;
 import com.dxc.solution_intelligente.DAO.ProjectRepository;
 import com.dxc.solution_intelligente.DAO.SprintRepository;
 import com.dxc.solution_intelligente.DAO.UserRepository;
+import com.dxc.solution_intelligente.DAO.UserStoryRepository;
 import com.dxc.solution_intelligente.DTO.Sprint.SprintDTO;
 import com.dxc.solution_intelligente.DTO.Sprint.UpdateSprintRequest;
 import com.dxc.solution_intelligente.DTO.Sprint.UpdateSprintResponse;
 import com.dxc.solution_intelligente.DTO.Sprint.AddSprintRequest;
 import com.dxc.solution_intelligente.DTO.Sprint.AddSprintResponse;
+import com.dxc.solution_intelligente.DTO.UserStory.UserStoryDTO;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
 import com.dxc.solution_intelligente.service.model.Project;
 import com.dxc.solution_intelligente.service.model.Sprint;
 
+import com.dxc.solution_intelligente.service.model.UserStory;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -21,12 +24,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+
 @AllArgsConstructor
 public class SprintService implements ISprintService{
     private final SprintRepository sprintRepository;
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
+    private final UserStoryRepository userStoryRepository;
     private final ModelMapper modelMapper;
     @Override
     public List<SprintDTO> getAllSprints() {
@@ -71,21 +75,48 @@ public class SprintService implements ISprintService{
                 .map(sprint -> modelMapper.map(sprint, SprintDTO.class)).collect(Collectors.toList());
     }
 
-    @Override
+
     public AddSprintResponse addSprintToProject(String projectName, AddSprintRequest addSprintRequest) {
+        // Map the AddSprintRequest to a Sprint entity
         Sprint bo = modelMapper.map(addSprintRequest, Sprint.class);
         String titre = bo.getTitre();
+
+        // Check if a sprint with the same title already exists
         sprintRepository.findSprintByTitre(titre).ifPresent(sprint -> {
             throw new BusinessException(String.format("Sprint avec le titre [%s] déjà existe", titre));
         });
+
+        // Retrieve UserStory entities by their codes
+        List<String> userStoryCodes = addSprintRequest.getUserStories().stream()
+                .map(UserStoryDTO::getCode)
+                .collect(Collectors.toList());
+        System.out.println("tester"+userStoryCodes);
+        List<UserStory> userStories = userStoryRepository.findAll().stream()
+                .filter(us -> userStoryCodes.contains(us.getCode()))
+                .collect(Collectors.toList());
+
+        // Assign the retrieved UserStory entities to the Sprint
+        bo.setUserStories(userStories);
+
+        // Save the Sprint entity
         Sprint savedSprint = sprintRepository.save(bo);
-        Project project = projectRepository.findAll().stream().filter(proj-> proj.getNom()!= null && proj.getNom().equals(projectName))
+
+        // Find the Project entity by its name
+        Project project = projectRepository.findAll().stream()
+                .filter(proj -> proj.getNom() != null && proj.getNom().equals(projectName))
                 .findFirst()
-                .orElseThrow(() -> new BusinessException(String.format("Aucun projet existe avec le nom [%s] ", projectName)));
+                .orElseThrow(() -> new BusinessException(String.format("Aucun projet existe avec le nom [%s]", projectName)));
+
+        // Add the saved Sprint to the Project
         project.getSprints().add(savedSprint);
+
+        // Save the updated Project entity
         Project savedProject = projectRepository.save(project);
-        AddSprintResponse response = modelMapper.map(savedProject, AddSprintResponse.class);
+
+        // Map the saved Sprint entity to the AddSprintResponse
+        AddSprintResponse response = modelMapper.map(savedSprint, AddSprintResponse.class);
         response.setMessage(String.format("Sprint ajouté avec succes au projet [%s] : Titre = %s", projectName, response.getTitre()));
+
         return response;
     }
 
