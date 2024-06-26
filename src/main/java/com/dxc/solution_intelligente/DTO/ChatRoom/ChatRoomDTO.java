@@ -10,5 +10,5 @@ import java.util.List;
 public class ChatRoomDTO {
     private Long id;
     private String nom;
-    private List<User> users; // Assuming UserDTO exists
+    private List<User> users;
 }
