@@ -15,7 +15,7 @@ export class SidebarComponent {
     { label: 'Board', icon: 'bi bi-clipboard2-data',link:'/board' },
     { label: 'Backlog', icon: 'bi bi-box-arrow-in-down' ,link:'/backlogs'},
     { label: 'Report', icon: 'bi bi-bar-chart',link:'#' },
-    { label: 'Inbox', icon: 'bi bi-inbox' ,link:'/chat?SenderID=11'},
+    { label: 'Inbox', icon: 'bi bi-inbox' ,link:'/chat/sender/11'},
     { label: 'Settings', icon: 'bi bi-gear' ,link:'#'},
     { label: 'Manage Users', icon: 'bi bi-people' ,link:'/users'},
     { label: 'Manage Teams', icon: 'bi bi-person-plus',link:'/teams' },

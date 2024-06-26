@@ -35,7 +35,7 @@ public class RestChatController {
     private final IMessageService messageService;
     private final ChatRoomRepository chatRoomRepository;
 
-    @PostMapping("/initiate")
+    @GetMapping("/initiate")
     public ResponseEntity<?> initiateChat(@RequestParam("userA") Long userAId, @RequestParam("userB") Long userBId) {
         try {
             // Check if a chat room already exists between User A and User B
@@ -43,7 +43,7 @@ public class RestChatController {
 
             if (chatRoom != null) {
                 // Existing chat room found, return its details
-                return ResponseEntity.ok(chatRoom);
+                return ResponseEntity.ok(chatRoom.getId());
             } else {
                 // No existing chat room found, create a new one
                 User userA = userRepository.findById(userAId)
@@ -64,7 +64,7 @@ public class RestChatController {
                 newChatRoom.setUsers(addChatRoomResponse.getUsers());
 
                 // Return the details of the new chat room
-                return ResponseEntity.ok(newChatRoom);
+                return ResponseEntity.ok(newChatRoom.getId());
             }
         } catch (BusinessException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -83,7 +83,7 @@ public class RestChatController {
             return ResponseEntity.badRequest().body(response);
         }
     }
-
+//TODO:tetsststst
     @GetMapping("/messages")
     public ResponseEntity<?> getMessages(@RequestParam("chatRoomId") Long chatRoomId, @RequestParam("exp") Long expId) {
         try {
