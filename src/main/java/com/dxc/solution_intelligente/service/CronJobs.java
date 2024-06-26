@@ -1,6 +1,8 @@
 package com.dxc.solution_intelligente.service;
 
+import com.dxc.solution_intelligente.DAO.HolidayRepository;
 import com.dxc.solution_intelligente.DAO.UserRepository;
+import com.dxc.solution_intelligente.service.model.Holiday;
 import com.dxc.solution_intelligente.service.model.User;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CronJobs {
     private final UserRepository userRepository;
-
+    private final HolidayRepository holidayRepository;
 
 
     @Scheduled(cron = "0 0 0 24 * ?")
@@ -45,6 +47,17 @@ public class CronJobs {
         });
 
         userRepository.saveAll(users);
+
+        System.out.println("Updated sold holiday");
+        List<Holiday> holidays =  holidayRepository.findAll();
+        holidays.forEach(holiday -> {
+            if(holiday.isAnnual()){
+
+                holiday.addOneYearToDates();
+
+            }
+        });
+
 
 
     }

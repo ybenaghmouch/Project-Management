@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 
 @Entity
@@ -20,4 +21,15 @@ public class Holiday {
     private Date startDate;
     private Date endDate;
     private boolean isAnnual;
+    public void addOneYearToDates() {
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.setTime(this.getStartDate());
+        calendar.add(Calendar.YEAR, 1);
+        this.setStartDate(calendar.getTime());
+
+        calendar.setTime(this.getEndDate());
+        calendar.add(Calendar.YEAR, 1);
+        this.setEndDate(calendar.getTime());
+    }
 }
