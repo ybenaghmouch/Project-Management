@@ -1,6 +1,7 @@
 package com.dxc.solution_intelligente.DTO.UserStory;
 
 import com.dxc.solution_intelligente.service.model.Tache;
+import com.dxc.solution_intelligente.service.model.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,4 +15,5 @@ public class UpdateUserStoryRequest {
     private int Priority;
     private String Statut;
     private List<Tache> Features=null;
+    private User Responsable;
 }
