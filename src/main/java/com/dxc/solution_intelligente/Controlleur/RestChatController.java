@@ -1,5 +1,6 @@
 package com.dxc.solution_intelligente.Controlleur;
 
+import com.dxc.solution_intelligente.DAO.ChatRoomRepository;
 import com.dxc.solution_intelligente.DAO.UserRepository;
 import com.dxc.solution_intelligente.DTO.ChatRoom.AddChatRoomRequest;
 import com.dxc.solution_intelligente.DTO.ChatRoom.AddChatRoomResponse;
@@ -10,6 +11,7 @@ import com.dxc.solution_intelligente.DTO.Message.MessageDTO;
 import com.dxc.solution_intelligente.service.ChatRoomService;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
 import com.dxc.solution_intelligente.service.IMessageService;
+import com.dxc.solution_intelligente.service.model.ChatRoom;
 import com.dxc.solution_intelligente.service.model.User;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @AllArgsConstructor
@@ -30,6 +33,7 @@ public class RestChatController {
     private final UserRepository userRepository;
     private final ChatRoomService chatRoomService;
     private final IMessageService messageService;
+    private final ChatRoomRepository chatRoomRepository;
 
     @PostMapping("/initiate")
     public ResponseEntity<?> initiateChat(@RequestParam("userA") Long userAId, @RequestParam("userB") Long userBId) {
@@ -99,6 +103,16 @@ public class RestChatController {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }
+    @GetMapping("/room/{roomId}")
+    public ResponseEntity<?> getChatRoomById(@PathVariable Long roomId) {
+        try {
+            Optional chatRoom = chatRoomRepository.findById(roomId);
+            return ResponseEntity.ok(chatRoom);
+        } catch (BusinessException e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
+    }
+
 
 
 }

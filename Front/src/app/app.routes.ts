@@ -13,6 +13,7 @@ import { SprintListComponent } from './sprint-list/sprint-list.component';
 import { BoardComponent } from './board/board.component';
 import { CongeComponent } from './conge/conge.component';
 import { HolidaysComponent } from './holidays/holidays.component';
+import { ChatComponent } from './chat/chat.component';
 export const routes: Routes = [
     { path: 'users', component: UserListComponent },
     { path: 'backlogs/:projectname', component: BacklogListComponent },
@@ -27,6 +28,8 @@ export const routes: Routes = [
     { path: 'sprints/:projectname', component: SprintListComponent },
     { path: 'leaves', component: CongeComponent },
     { path: 'holidays', component: HolidaysComponent },
+    { path: 'chat/sender/:senderId', component: ChatComponent },
+    { path: 'chat/chatroom/:chatRoomId/sender/:senderId', component: ChatComponent },
     { path: 'board', component: BoardComponent }
 ];
 

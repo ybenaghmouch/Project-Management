@@ -1,0 +1,31 @@
+<div class="container">
+    <div class="row">
+      <div class="col-md-4">
+        <h2>Chat Rooms</h2>
+        <ul class="list-group">
+          <li *ngFor="let chatRoom of chatRooms" 
+              (click)="selectChatRoom(chatRoom)" 
+              [class.active]="selectedChatRoom?.id === chatRoom.id"
+              class="list-group-item">
+            {{ chatRoom.nom }}
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-8">
+        <h2>Messages</h2>
+        <div *ngIf="selectedChatRoom">
+          <div id="messages" class="border p-2" style="height: 300px; overflow-y: scroll;">
+            <div *ngFor="let message of messages" [ngClass]="{'my-message': message.exp.id === userId, 'other-message': message.exp.id !== userId}">
+              <div *ngIf="message.exp.id !== userId && (selectedChatRoom?.users?.length || 0) > 2">
+                <strong>{{ getMessageSenderName(message) }}</strong>
+              </div>
+              <span>{{ message.content }}</span>
+            </div>
+          </div>
+          <input [(ngModel)]="messageContent" type="text" placeholder="Type a message..." class="form-control" />
+          <button (click)="sendMessage()" class="btn btn-primary mt-2">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
