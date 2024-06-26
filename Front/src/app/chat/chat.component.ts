@@ -23,6 +23,8 @@ interface Message {
   exp: User;
   chatRoom: ChatRoom;
   time: Date;
+  file?: string;
+  fileType?: string;
 }
 
 @Component({
@@ -40,6 +42,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   messages: Message[] = [];
   messageContent: string = '';
   currentSubscription: any;
+  selectedFile: File | null = null;
 
   constructor(private route: ActivatedRoute, private router: Router, private chatService: ChatService) {}
 
@@ -103,19 +106,36 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (!this.selectedChatRoom) {
       return;
     }
-    const message = {
+    const message: any = {
       chatRoom: { id: this.selectedChatRoom.id },
       content: this.messageContent,
       exp: { id: this.userId },
       time: new Date()
     };
 
-    this.chatService.sendMessage(message);
-    this.messageContent = '';
+    if (this.selectedFile) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        message.file = e.target.result;
+        message.fileType = this.selectedFile?.type;
+
+        this.chatService.sendMessage(message);
+        this.messageContent = '';
+        this.selectedFile = null;
+      };
+      reader.readAsDataURL(this.selectedFile);
+    } else {
+      this.chatService.sendMessage(message);
+      this.messageContent = '';
+    }
+  }
+
+  onFileSelected(event: any) {
+    this.selectedFile = event.target.files[0];
   }
 
   getMessageSenderName(message: Message): string {
-    if (!this.selectedChatRoom || this.selectedChatRoom.users.length <= 2) {
+    if (!this.selectedChatRoom || !this.selectedChatRoom.users || this.selectedChatRoom.users.length <= 2) {
       return '';
     }
     return message.exp.id === this.userId 
