@@ -28,12 +28,11 @@ export class UsModalComponent implements OnInit{
 
   constructor(private formBuilder: FormBuilder, private userModalService: UsModalService) {
     this.form = this.formBuilder.group({
-      id: [''],
       titre: ['', Validators.required],
       description: ['', Validators.required],
       statut: ['pending', Validators.required],
       priority: [0, Validators.required],
-      responsable: [null],
+      responsable: ['', Validators.required],
     });
   }
 
@@ -51,7 +50,8 @@ export class UsModalComponent implements OnInit{
 
   openModal() {
     if (this.user) {
-      this.form.patchValue(this.user);
+      const userToPatch = { ...this.user, responsable: this.user.responsable?.id || null };
+      this.form.patchValue(userToPatch);
     }
     const modalElement = this.userModal.nativeElement;
     const modalInstance = new bootstrap.Modal(modalElement);
@@ -70,6 +70,11 @@ export class UsModalComponent implements OnInit{
   submitForm() {
     if (this.form.valid) {
       const formData = this.form.value;
+      if (formData.responsable == null) {
+        delete formData.responsable;
+      } else {
+        formData.responsable = { id: formData.responsable };
+      }
       if (this.user) {
         this.userModalService.putUsers(formData, this.user.code).subscribe(
           (data: any) => {

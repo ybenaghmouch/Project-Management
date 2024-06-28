@@ -84,6 +84,23 @@ public class EquipeService implements IEquipeService{
 
     @Override
     public UpdateEquipeResponse updateEquipe(String name, UpdateEquipeRequest updateEquipeRequest) {
+        User chefProjet = userRepository.findById(updateEquipeRequest.getChefprojet().getId())
+                .orElseThrow(() -> new BusinessException("ChefProjet not found"));
+        User manager = userRepository.findById(updateEquipeRequest.getManager().getId())
+                .orElseThrow(() -> new BusinessException("Manager not found"));
+// Assuming updateEquipeRequest.getCollaborateurs() returns a List<User>
+        List<Long> collaborateurIds = updateEquipeRequest.getCollaborateurs()
+                .stream()
+                .map(User::getId) // Mapping to get User IDs
+                .collect(Collectors.toList()); // Collecting IDs into a List<Long>
+
+        List<User> collaborateurs = userRepository.findAllById(collaborateurIds); // Finding all Users by their IDs
+        if (collaborateurs.isEmpty()) {
+            throw new BusinessException("Collaborator not found");
+        }
+        updateEquipeRequest.setManager(manager);
+        updateEquipeRequest.setChefprojet(chefProjet);
+        updateEquipeRequest.setCollaborateurs(collaborateurs);
         Equipe equipeToPersist = modelMapper.map(updateEquipeRequest, Equipe.class);
         Equipe equipeFound = equipeRepository.findAll().stream().filter(bo -> bo.getNom().equals(name)).findFirst().orElseThrow(
                 () -> new BusinessException(String.format("Equipe avec le name [%s] deja existe!", name))
