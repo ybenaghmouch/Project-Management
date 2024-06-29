@@ -54,6 +54,9 @@ public class TacheService implements ITacheService{
 
     @Override
     public AddTacheResponse addTacheToUserStory(String userStoryCode, AddTacheRequest addTacheRequest) {
+        User responsable1 = userRepository.findById(addTacheRequest.getResponsable().getId())
+                .orElseThrow(() -> new BusinessException("Manager not found"));
+        addTacheRequest.setResponsable(responsable1);
         // Mapper AddTacheRequest à Tache
         Tache tache = modelMapper.map(addTacheRequest, Tache.class);
         String code = tache.getCode();
