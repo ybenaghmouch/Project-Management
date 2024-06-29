@@ -4,6 +4,7 @@ import com.dxc.solution_intelligente.DAO.TacheRepository;
 import com.dxc.solution_intelligente.DAO.UserRepository;
 import com.dxc.solution_intelligente.DAO.UserStoryRepository;
 import com.dxc.solution_intelligente.DTO.Tache.*;
+import com.dxc.solution_intelligente.DTO.User.UserDTO;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
 import com.dxc.solution_intelligente.service.model.Sprint;
 import com.dxc.solution_intelligente.service.model.Tache;
@@ -38,79 +39,142 @@ public class TacheService implements ITacheService{
 
     @Override
     public AddTacheResponse createTache(AddTacheRequest addTacheRequest) {
-        Tache bo = modelMapper.map(addTacheRequest, Tache.class);
-        String code = bo.getCode();
-        System.out.println("password 1= "+ addTacheRequest.toString());
-        //System.out.println("password 2= "+ bo.getPassword());
-        tacheRepository.findBycode(code).ifPresent(a ->{
-                    throw new BusinessException(String.format("Tache avec le meme code [%s] existe", code));
+        String code = addTacheRequest.getCode();
+        tacheRepository.findBycode(code).ifPresent(a -> {
+            throw new BusinessException(String.format("Tache avec le code [%s] existe déjà", code));
+        });
 
-                }
-        );
-        AddTacheResponse response = modelMapper.map(tacheRepository.save(bo), AddTacheResponse.class);
-        //response.setMessage(String.format("Tache : [code = %s, Prenom = %s, code = %s, Email = %s, Civility = %s, Specilite = %s]", response.getcode(), response.getCollaborateurs().toString(), response.getManager().toString(), response.getChefprojet().toString()));
+        Tache tache = new Tache();
+        tache.setCode(addTacheRequest.getCode());
+        tache.setTitre(addTacheRequest.getTitre());
+        tache.setDescription(addTacheRequest.getDescription());
+        tache.setPriority(addTacheRequest.getPriority());
+        tache.setStatut(addTacheRequest.getStatut());
+
+        Tache savedTache = tacheRepository.save(tache);
+
+        AddTacheResponse response = new AddTacheResponse();
+        response.setId(savedTache.getId());
+        response.setCode(savedTache.getCode());
+        response.setTitre(savedTache.getTitre());
+        response.setDescription(savedTache.getDescription());
+        response.setPriority(savedTache.getPriority());
+        response.setStatut(savedTache.getStatut());
+        response.setResponsable(null);
+
+        response.setMessage(String.format("Tache : [Code = %s, Titre = %s, Description = %s, Priority = %d, Statut = %s]",
+                response.getCode(), response.getTitre(), response.getDescription(), response.getPriority(), response.getStatut()));
+
         return response;
     }
 
     @Override
     public AddTacheResponse addTacheToUserStory(String userStoryCode, AddTacheRequest addTacheRequest) {
-        User responsable1 = userRepository.findById(addTacheRequest.getResponsable().getId())
-                .orElseThrow(() -> new BusinessException("Manager not found"));
-        addTacheRequest.setResponsable(responsable1);
-        // Mapper AddTacheRequest à Tache
-        Tache tache = modelMapper.map(addTacheRequest, Tache.class);
-        String code = tache.getCode();
+        User responsable = null;
+        if (addTacheRequest.getResponsable() != null) {
+            responsable = userRepository.findById(addTacheRequest.getResponsable().getId())
+                    .orElseThrow(() -> new BusinessException("Responsable not found"));
+        }
 
-        // Vérifier si une tâche avec le même code existe déjà
-        tacheRepository.findBycode(code).ifPresent(existingTache -> {
-            throw new BusinessException(String.format("Tache avec le code [%s] existe déjà", code));
+        Tache tache = new Tache();
+        tache.setCode(addTacheRequest.getCode());
+        tache.setTitre(addTacheRequest.getTitre());
+        tache.setDescription(addTacheRequest.getDescription());
+        tache.setPriority(addTacheRequest.getPriority());
+        tache.setStatut(addTacheRequest.getStatut());
+        tache.setResponsable(responsable);
+
+        tacheRepository.findBycode(tache.getCode()).ifPresent(existingTache -> {
+            throw new BusinessException(String.format("Tache avec le code [%s] existe déjà", tache.getCode()));
         });
 
-        // Sauvegarder la Tache d'abord
         Tache savedTache = tacheRepository.save(tache);
 
-        // Trouver la User Story par code
         UserStory userStory = userStoryRepository.findBycode(userStoryCode)
                 .orElseThrow(() -> new BusinessException(String.format("Aucune User Story existe avec le code [%s]", userStoryCode)));
 
-        // Ajouter la Tache sauvegardée à la User Story
         userStory.getFeatures().add(savedTache);
         userStoryRepository.save(userStory);
-        savedTache.setResponsable(userStory.getResponsable());
-        // Préparer la réponse
-        AddTacheResponse response = modelMapper.map(savedTache, AddTacheResponse.class);
+
+        AddTacheResponse response = new AddTacheResponse();
+        response.setId(savedTache.getId());
+        response.setCode(savedTache.getCode());
+        response.setTitre(savedTache.getTitre());
+        response.setDescription(savedTache.getDescription());
+        response.setPriority(savedTache.getPriority());
+        response.setStatut(savedTache.getStatut());
+
+        if (responsable != null) {
+            UserDTO responsableDTO = new UserDTO();
+            responsableDTO.setId(responsable.getId());
+            responsableDTO.setUsername(responsable.getUsername());
+            response.setResponsable(responsableDTO);
+        } else {
+            response.setResponsable(null);
+        }
+
         response.setMessage(String.format("Tache ajoutée avec succès à la User Story [%s] : [Code = %s, Titre = %s]", userStoryCode, response.getCode(), response.getTitre()));
-       if(response.getResponsable()!=null ){
-        User responsable = userRepository.findById(response.getResponsable().getId())
-                .orElseThrow(() -> new BusinessException("Manager not found"));
-        response.setResponsable(responsable);}
 
         return response;
     }
 
     @Override
     public String deleteTacheById(Long id) {
-        if (id == null)
+        if (id == null) {
             throw new BusinessException("Enter a correct identity tache");
-        Tache tacheFound = tacheRepository.findAll().stream().filter(tache -> tache.getId()==id).findFirst().orElseThrow(
-                () -> new BusinessException(String.format("No customer with identity %d exist in database", id))
-        );
+        }
+        Tache tacheFound = tacheRepository.findAll().stream()
+                .filter(tache -> tache.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new BusinessException(String.format("No tache with identity %d exists in database", id)));
+
         tacheRepository.delete(tacheFound);
         return String.format("Tache with identity %d is deleted with success", id);
     }
 
     @Override
     public UpdateTacheResponse updateTache(String code, UpdateTacheRequest updateTacheRequest) {
-        Tache tacheToPersist = modelMapper.map(updateTacheRequest, Tache.class);
-        Tache tacheFound = tacheRepository.findAll().stream().filter(bo -> bo.getCode().equals(code)).findFirst().orElseThrow(
-                () -> new BusinessException(String.format("Tache avec le code [%s] deja existe!", code))
-        );
-        tacheToPersist.setId(tacheFound.getId());
-        tacheToPersist.setCode(code);
-        UpdateTacheResponse updateTacheResponse = modelMapper.map(tacheRepository.save(tacheToPersist), UpdateTacheResponse.class);
-        updateTacheResponse.setMessage(String.format("Tache avec code [%s] a ete modifie avec succes !", code));
+        Tache tacheFound = tacheRepository.findAll().stream()
+                .filter(bo -> bo.getCode().equals(code))
+                .findFirst()
+                .orElseThrow(() -> new BusinessException(String.format("Tache avec le code [%s] n'existe pas", code)));
+
+        User responsable = null;
+        if (updateTacheRequest.getResponsable() != null) {
+            responsable = userRepository.findById(updateTacheRequest.getResponsable().getId())
+                    .orElseThrow(() -> new BusinessException("Responsable not found"));
+        }
+
+        tacheFound.setTitre(updateTacheRequest.getTitre());
+        tacheFound.setDescription(updateTacheRequest.getDescription());
+        tacheFound.setPriority(updateTacheRequest.getPriority());
+        tacheFound.setStatut(updateTacheRequest.getStatut());
+        tacheFound.setResponsable(responsable);
+
+        Tache savedTache = tacheRepository.save(tacheFound);
+
+        UpdateTacheResponse updateTacheResponse = new UpdateTacheResponse();
+        updateTacheResponse.setId(savedTache.getId());
+        updateTacheResponse.setCode(savedTache.getCode());
+        updateTacheResponse.setTitre(savedTache.getTitre());
+        updateTacheResponse.setDescription(savedTache.getDescription());
+        updateTacheResponse.setPriority(savedTache.getPriority());
+        updateTacheResponse.setStatut(savedTache.getStatut());
+
+        if (responsable != null) {
+            UserDTO responsableDTO = new UserDTO();
+            responsableDTO.setId(responsable.getId());
+            responsableDTO.setUsername(responsable.getUsername());
+            updateTacheResponse.setResponsable(responsableDTO);
+        } else {
+            updateTacheResponse.setResponsable(null);
+        }
+
+        updateTacheResponse.setMessage(String.format("Tache avec code [%s] a été modifiée avec succès", code));
+
         return updateTacheResponse;
     }
+
 
     @Override
     public List<TacheDTO> findByCodeAndTitreContaining(String searchTerm) {

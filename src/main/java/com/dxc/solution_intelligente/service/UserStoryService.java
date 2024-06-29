@@ -3,6 +3,7 @@ package com.dxc.solution_intelligente.service;
 import com.dxc.solution_intelligente.DAO.BacklogRepository;
 import com.dxc.solution_intelligente.DAO.UserRepository;
 import com.dxc.solution_intelligente.DAO.UserStoryRepository;
+import com.dxc.solution_intelligente.DTO.User.UserDTO;
 import com.dxc.solution_intelligente.DTO.UserStory.*;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
 import com.dxc.solution_intelligente.service.model.Backlog;
@@ -39,108 +40,139 @@ public class UserStoryService implements IUserStoryService {
 
     @Override
     public AddUserStoryResponse createUserStory(AddUserStoryRequest addUserStoryRequest) {
-        UserStory bo = modelMapper.map(addUserStoryRequest, UserStory.class);
-        String code = bo.getCode();
-        System.out.println("password 1= "+ addUserStoryRequest.toString());
-        //System.out.println("password 2= "+ bo.getPassword());
-        userStoryRepository.findBycode(code).ifPresent(a ->{
-                    throw new BusinessException(String.format("UserStory avec le meme code [%s] existe", code));
+        userStoryRepository.findBycode(addUserStoryRequest.getCode()).ifPresent(a -> {
+            throw new BusinessException(String.format("UserStory avec le code [%s] existe déjà", addUserStoryRequest.getCode()));
+        });
 
-                }
-        );
-        AddUserStoryResponse response = modelMapper.map(userStoryRepository.save(bo), AddUserStoryResponse.class);
+        User responsable = null;
+        if (addUserStoryRequest.getResponsable() != null) {
+            responsable = userRepository.findById(addUserStoryRequest.getResponsable().getId())
+                    .orElseThrow(() -> new BusinessException("Responsable not found"));
+        }
 
-        //response.setMessage(String.format("UserStory : [code = %s, Prenom = %s, code = %s, Email = %s, Civility = %s, Specilite = %s]", response.getcode(), response.getCollaborateurs().toString(), response.getManager().toString(), response.getChefprojet().toString()));
+        UserStory userStory = new UserStory();
+        userStory.setCode(addUserStoryRequest.getCode());
+        userStory.setTitre(addUserStoryRequest.getTitre());
+        userStory.setDescription(addUserStoryRequest.getDescription());
+        userStory.setPriority(addUserStoryRequest.getPriority());
+        userStory.setStatut(addUserStoryRequest.getStatut());
+        userStory.setResponsable(responsable);
+        userStory.setFeatures(null);
+
+        UserStory savedUserStory = userStoryRepository.save(userStory);
+
+        AddUserStoryResponse response = new AddUserStoryResponse();
+        response.setId(savedUserStory.getId());
+        response.setCode(savedUserStory.getCode());
+        response.setTitre(savedUserStory.getTitre());
+        response.setDescription(savedUserStory.getDescription());
+        response.setPriority(savedUserStory.getPriority());
+        response.setStatut(savedUserStory.getStatut());
+
+        if (responsable != null) {
+            UserDTO responsableDTO = modelMapper.map(responsable, UserDTO.class);
+            response.setResponsable(responsableDTO);
+        } else {
+            response.setResponsable(null);
+        }
+
+        response.setMessage(String.format("UserStory : [Code = %s, Titre = %s, Description = %s, Priority = %d, Statut = %s]",
+                response.getCode(), response.getTitre(), response.getDescription(), response.getPriority(), response.getStatut()));
+
         return response;
     }
-   /* @Override
-    public AddUserStoryResponse addUserStoryToBacklog(String backlogtitle, AddUserStoryRequest addUserStoryRequest) {
-
-        // Créer la UserStory
-        UserStory bo = modelMapper.map(addUserStoryRequest, UserStory.class);
-        String code = bo.getCode();
-        userStoryRepository.findBycode(code).ifPresent(userStory -> {
-            throw new BusinessException(String.format("UserStory avec le code [%s] existe déjà", code));
-        });
-
-        // Sauvegarder la UserStory d'abord
-        UserStory savedUserStory = userStoryRepository.save(bo);
-
-        // Trouver le backlog par ID
-        Backlog backlog = backlogRepository.findBacklogByTitre(backlogtitle)
-                .orElseThrow(() -> new BusinessException(String.format("Aucun backlog existe avec l'ID [%s] ", backlogtitle)));
-
-        // Ajouter la UserStory sauvegardée au backlog
-        backlog.getUserStories().add(savedUserStory);
-        backlogRepository.save(backlog);
-
-        // Préparer la réponse
-        AddUserStoryResponse response = modelMapper.map(savedUserStory, AddUserStoryResponse.class);
-        *//*if(response.getResponsable()!=null ){
-            User responsable = userRepository.findById(response.getResponsable().getId())
-                    .orElseThrow(() -> new BusinessException("Manager not found"));
-            response.setResponsable(responsable);}*//*
-        User responsable = userRepository.findById(response.getResponsable().getId())
-                .orElseThrow(() -> new BusinessException("Manager not found"));
-        response.setResponsable(responsable);
-        response.setMessage(String.format("UserStory ajoutée avec succès au backlog [%s] : [Code = %s, Description = %s]", backlogtitle, response.getCode(), response.getDescription()));
-
-        return response;
-    }*/
 
     @Override
-    public AddUserStoryResponse addUserStoryToBacklog(String backlogtitle, AddUserStoryRequest addUserStoryRequest) {
-
-        // Map request to UserStory entity
-        UserStory bo = modelMapper.map(addUserStoryRequest, UserStory.class);
-
-        // Check if UserStory code exists
-        String code = bo.getCode();
-        userStoryRepository.findBycode(code).ifPresent(userStory -> {
-            throw new BusinessException(String.format("UserStory avec le code [%s] existe déjà", code));
+    public AddUserStoryResponse addUserStoryToBacklog(String backlogTitre, AddUserStoryRequest addUserStoryRequest) {
+        userStoryRepository.findBycode(addUserStoryRequest.getCode()).ifPresent(a -> {
+            throw new BusinessException(String.format("UserStory avec le code [%s] existe déjà", addUserStoryRequest.getCode()));
         });
 
-        // Save UserStory
-        UserStory savedUserStory = userStoryRepository.save(bo);
+        User responsable = null;
+        if (addUserStoryRequest.getResponsable() != null) {
+            responsable = userRepository.findById(addUserStoryRequest.getResponsable().getId())
+                    .orElseThrow(() -> new BusinessException("Responsable not found"));
+        }
 
-        // Find the backlog by title
-        Backlog backlog = backlogRepository.findBacklogByTitre(backlogtitle)
-                .orElseThrow(() -> new BusinessException(String.format("Aucun backlog existe avec le titre [%s] ", backlogtitle)));
+        UserStory userStory = new UserStory();
+        userStory.setCode(addUserStoryRequest.getCode());
+        userStory.setTitre(addUserStoryRequest.getTitre());
+        userStory.setDescription(addUserStoryRequest.getDescription());
+        userStory.setPriority(addUserStoryRequest.getPriority());
+        userStory.setStatut(addUserStoryRequest.getStatut());
+        userStory.setResponsable(responsable);
+        userStory.setFeatures(null);
 
-        // Add UserStory to backlog and save
+        UserStory savedUserStory = userStoryRepository.save(userStory);
+
+        Backlog backlog = backlogRepository.findBacklogByTitre(backlogTitre)
+                .orElseThrow(() -> new BusinessException(String.format("Aucun backlog existe avec le titre [%s]", backlogTitre)));
+
         backlog.getUserStories().add(savedUserStory);
         backlogRepository.save(backlog);
 
-        // Map saved UserStory to response
-        AddUserStoryResponse response = modelMapper.map(savedUserStory, AddUserStoryResponse.class);
+        AddUserStoryResponse response = new AddUserStoryResponse();
+        response.setId(savedUserStory.getId());
+        response.setCode(savedUserStory.getCode());
+        response.setTitre(savedUserStory.getTitre());
+        response.setDescription(savedUserStory.getDescription());
+        response.setPriority(savedUserStory.getPriority());
+        response.setStatut(savedUserStory.getStatut());
 
-        // Fetch and set responsable to avoid multiple entity instances
-        if(response.getResponsable()!=null ){
-            User responsable = userRepository.findById(response.getResponsable().getId())
-                    .orElseThrow(() -> new BusinessException("Manager not found"));
-            response.setResponsable(responsable);}
+        if (responsable != null) {
+            UserDTO responsableDTO = modelMapper.map(responsable, UserDTO.class);
+            response.setResponsable(responsableDTO);
+        } else {
+            response.setResponsable(null);
+        }
 
-        // Prepare success message
-        response.setMessage(String.format("UserStory ajoutée avec succès au backlog [%s] : [Code = %s, Description = %s]", backlogtitle, response.getCode(), response.getDescription()));
+        response.setMessage(String.format("UserStory ajoutée avec succès au backlog [%s] : [Code = %s, Description = %s]",
+                backlogTitre, response.getCode(), response.getDescription()));
 
         return response;
     }
 
     @Override
     public UpdateUserStoryResponse updateUserStory(String code, UpdateUserStoryRequest updateUserStoryRequest) {
-        User responsable = userRepository.findById(updateUserStoryRequest.getResponsable().getId())
-                .orElseThrow(() -> new BusinessException("Manager not found"));
-        updateUserStoryRequest.setResponsable(responsable);
-        UserStory userStoryToPersist = modelMapper.map(updateUserStoryRequest, UserStory.class);
-        UserStory userStoryFound = userStoryRepository.findAll().stream().filter(bo -> bo.getCode().equals(code)).findFirst().orElseThrow(
-                () -> new BusinessException(String.format("UserStory avec le code [%s] deja existe!", code))
-        );
-        userStoryToPersist.setId(userStoryFound.getId());
-        userStoryToPersist.setCode(code);
-        UpdateUserStoryResponse updateUserStoryResponse = modelMapper.map(userStoryRepository.save(userStoryToPersist), UpdateUserStoryResponse.class);
-        updateUserStoryResponse.setMessage(String.format("UserStory avec code [%s] a ete modifie avec succes !", code));
+        UserStory userStoryFound = userStoryRepository.findAll().stream()
+                .filter(bo -> bo.getCode().equals(code))
+                .findFirst()
+                .orElseThrow(() -> new BusinessException(String.format("UserStory avec le code [%s] n'existe pas", code)));
+
+        User responsable = null;
+        if (updateUserStoryRequest.getResponsable() != null) {
+            responsable = userRepository.findById(updateUserStoryRequest.getResponsable().getId())
+                    .orElseThrow(() -> new BusinessException("Responsable not found"));
+        }
+
+        userStoryFound.setTitre(updateUserStoryRequest.getTitre());
+        userStoryFound.setDescription(updateUserStoryRequest.getDescription());
+        userStoryFound.setPriority(updateUserStoryRequest.getPriority());
+        userStoryFound.setStatut(updateUserStoryRequest.getStatut());
+        userStoryFound.setResponsable(responsable);
+
+        UserStory savedUserStory = userStoryRepository.save(userStoryFound);
+
+        UpdateUserStoryResponse updateUserStoryResponse = new UpdateUserStoryResponse();
+        updateUserStoryResponse.setId(savedUserStory.getId());
+        updateUserStoryResponse.setCode(savedUserStory.getCode());
+        updateUserStoryResponse.setTitre(savedUserStory.getTitre());
+        updateUserStoryResponse.setDescription(savedUserStory.getDescription());
+        updateUserStoryResponse.setPriority(savedUserStory.getPriority());
+        updateUserStoryResponse.setStatut(savedUserStory.getStatut());
+
+        if (responsable != null) {
+            UserDTO responsableDTO = modelMapper.map(responsable, UserDTO.class);
+            updateUserStoryResponse.setResponsable(responsableDTO);
+        } else {
+            updateUserStoryResponse.setResponsable(null);
+        }
+
+        updateUserStoryResponse.setMessage(String.format("UserStory avec code [%s] a été modifiée avec succès", code));
+
         return updateUserStoryResponse;
     }
+
 
     @Override
     public List<UserStoryDTO> findByCodeAndTitreContaining(String searchTerm) {

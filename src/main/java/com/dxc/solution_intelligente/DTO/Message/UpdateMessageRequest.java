@@ -1,5 +1,7 @@
 package com.dxc.solution_intelligente.DTO.Message;
 
+import com.dxc.solution_intelligente.DTO.ChatRoom.ChatRoomDTO;
+import com.dxc.solution_intelligente.DTO.User.UserDTO;
 import com.dxc.solution_intelligente.service.model.ChatRoom;
 import com.dxc.solution_intelligente.service.model.User;
 import lombok.Data;
@@ -10,9 +12,9 @@ import java.util.Date;
 @NoArgsConstructor
 public class UpdateMessageRequest {
     private Long id;
-    private User exp;
+    private UserDTO exp;
     private Date time;
-    private ChatRoom chatRoom;
+    private ChatRoomDTO chatRoom;
     private String content;
     private String message;
 }

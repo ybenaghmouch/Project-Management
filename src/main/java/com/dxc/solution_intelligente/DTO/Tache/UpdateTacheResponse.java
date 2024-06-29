@@ -1,5 +1,6 @@
 package com.dxc.solution_intelligente.DTO.Tache;
 
+import com.dxc.solution_intelligente.DTO.User.UserDTO;
 import com.dxc.solution_intelligente.service.model.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ public class UpdateTacheResponse {
     private String Titre;
     private String Description;
     private int Priority;
-    private User Responsable;
+    private UserDTO Responsable;
     private String Statut;
     private String message;
 }

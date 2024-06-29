@@ -3,136 +3,129 @@ package com.dxc.solution_intelligente.service;
 import com.dxc.solution_intelligente.DAO.EquipeRepository;
 import com.dxc.solution_intelligente.DAO.UserRepository;
 import com.dxc.solution_intelligente.DTO.Equipe.*;
-import com.dxc.solution_intelligente.DTO.Project.ProjectDTO;
+import com.dxc.solution_intelligente.DTO.User.UserDTO;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
 import com.dxc.solution_intelligente.service.model.Equipe;
-import com.dxc.solution_intelligente.service.model.Sprint;
 import com.dxc.solution_intelligente.service.model.User;
 import lombok.AllArgsConstructor;
-import org.apache.catalina.Manager;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-@Service
 
+@Service
 @AllArgsConstructor
-public class EquipeService implements IEquipeService{
+public class EquipeService implements IEquipeService {
     private final EquipeRepository equipeRepository;
     private final ModelMapper modelMapper;
-
-
     private final UserRepository userRepository;
-
-
-
 
     @Override
     public List<EquipeDTO> getAllEquipes() {
-        return equipeRepository.findAll().stream().
-                map(equipe -> modelMapper.map(equipe, EquipeDTO.class)).
-                collect(Collectors.toList());
+        return equipeRepository.findAll().stream()
+                .map(equipe -> modelMapper.map(equipe, EquipeDTO.class))
+                .collect(Collectors.toList());
     }
 
-   /* @Override
+    @Override
     public AddEquipeResponse createEquipe(AddEquipeRequest addEquipeRequest) {
-        Equipe bo = modelMapper.map(addEquipeRequest, Equipe.class);
-        String name = bo.getNom();
-        System.out.println("password 1= "+ addEquipeRequest.toString());
-        //System.out.println("password 2= "+ bo.getPassword());
-        equipeRepository.findByNom(name).ifPresent(a ->{
-                    throw new BusinessException(String.format("Equipe avec le meme name [%s] existe", name));
+        equipeRepository.findByNom(addEquipeRequest.getNom()).ifPresent(a -> {
+            throw new BusinessException(String.format("Equipe avec le même nom [%s] existe déjà", addEquipeRequest.getNom()));
+        });
 
-                }
-        );
-        AddEquipeResponse response = modelMapper.map(equipeRepository.save(bo), AddEquipeResponse.class);
-        System.out.println("gggg"+equipeRepository.save(bo) );
-        response.setMessage(String.format("Equipe : [Nom = %s]", response.getNom() ));
+        List<UserDTO> collaborateursDTO = new ArrayList<>();
+        List<User> collaborateurs = new ArrayList<>();
+        for (UserDTO collaborateurDTO : addEquipeRequest.getCollaborateurs()) {
+            User collaborateur = userRepository.findById(collaborateurDTO.getId())
+                    .orElseThrow(() -> new BusinessException("Collaborateur not found"));
+            collaborateurs.add(collaborateur);
+            collaborateursDTO.add(modelMapper.map(collaborateur, UserDTO.class));
+        }
+        addEquipeRequest.setCollaborateurs(collaborateursDTO);
 
-        User chefProjet = userRepository.findById(response.getChefprojet().getId())
+        User chefProjet = userRepository.findById(addEquipeRequest.getChefprojet().getId())
                 .orElseThrow(() -> new BusinessException("ChefProjet not found"));
-        User manager = userRepository.findById(response.getManager().getId())
+        User manager = userRepository.findById(addEquipeRequest.getManager().getId())
                 .orElseThrow(() -> new BusinessException("Manager not found"));
-        response.setManager(manager);
-        response.setChefprojet(chefProjet);
+
+        addEquipeRequest.setManager(modelMapper.map(manager, UserDTO.class));
+        addEquipeRequest.setChefprojet(modelMapper.map(chefProjet, UserDTO.class));
+
+        Equipe equipe = new Equipe();
+        System.out.println(addEquipeRequest.getChefprojet().getId());
+        equipe.setChefprojet(chefProjet);
+        equipe.setManager(manager);
+        equipe.setNom(addEquipeRequest.getNom());
+        equipe.setCollaborateurs(collaborateurs);
+        Equipe savedEquipe = equipeRepository.save(equipe);
+        AddEquipeResponse response = modelMapper.map(savedEquipe, AddEquipeResponse.class);
+        response.setMessage(String.format("Equipe : [Nom = %s]", response.getNom()));
+
         return response;
-    }*/
-   @Override
-   public AddEquipeResponse createEquipe(AddEquipeRequest addEquipeRequest) {
-       Equipe equipe = modelMapper.map(addEquipeRequest, Equipe.class);
-       equipeRepository.findByNom(equipe.getNom()).ifPresent(a -> {
-           throw new BusinessException(String.format("Equipe avec le même nom [%s] existe déjà", equipe.getNom()));
-       });
-
-       // Sauvegarde une seule fois et utilise l'objet retourné pour la suite
-       Equipe savedEquipe = equipeRepository.save(equipe);
-       AddEquipeResponse response = modelMapper.map(savedEquipe, AddEquipeResponse.class);
-       response.setMessage(String.format("Equipe : [Nom = %s]", response.getNom()));
-
-       User chefProjet = userRepository.findById(response.getChefprojet().getId())
-               .orElseThrow(() -> new BusinessException("ChefProjet not found"));
-       User manager = userRepository.findById(response.getManager().getId())
-               .orElseThrow(() -> new BusinessException("Manager not found"));
-       response.setManager(manager);
-       response.setChefprojet(chefProjet);
-
-       return response;
-   }
-
+    }
 
     @Override
     public UpdateEquipeResponse updateEquipe(String name, UpdateEquipeRequest updateEquipeRequest) {
+        Equipe equipeFound = equipeRepository.findAll().stream()
+                .filter(bo -> bo.getNom().equals(name))
+                .findFirst()
+                .orElseThrow(() -> new BusinessException(String.format("Equipe avec le name [%s] n'existe pas!", name)));
+
         User chefProjet = userRepository.findById(updateEquipeRequest.getChefprojet().getId())
                 .orElseThrow(() -> new BusinessException("ChefProjet not found"));
         User manager = userRepository.findById(updateEquipeRequest.getManager().getId())
                 .orElseThrow(() -> new BusinessException("Manager not found"));
-// Assuming updateEquipeRequest.getCollaborateurs() returns a List<User>
-        List<Long> collaborateurIds = updateEquipeRequest.getCollaborateurs()
-                .stream()
-                .map(User::getId) // Mapping to get User IDs
-                .collect(Collectors.toList()); // Collecting IDs into a List<Long>
 
-        List<User> collaborateurs = userRepository.findAllById(collaborateurIds); // Finding all Users by their IDs
-        if (collaborateurs.isEmpty()) {
-            throw new BusinessException("Collaborator not found");
+        List<UserDTO> collaborateursDTO = new ArrayList<>();
+        List<User> collaborateurs = new ArrayList<>();
+        for (UserDTO collaborateurDTO : updateEquipeRequest.getCollaborateurs()) {
+            User collaborateur = userRepository.findById(collaborateurDTO.getId())
+                    .orElseThrow(() -> new BusinessException("Collaborateur not found"));
+            collaborateurs.add(collaborateur);
+            collaborateursDTO.add(modelMapper.map(collaborateur, UserDTO.class));
         }
-        updateEquipeRequest.setManager(manager);
-        updateEquipeRequest.setChefprojet(chefProjet);
-        updateEquipeRequest.setCollaborateurs(collaborateurs);
-        Equipe equipeToPersist = modelMapper.map(updateEquipeRequest, Equipe.class);
-        Equipe equipeFound = equipeRepository.findAll().stream().filter(bo -> bo.getNom().equals(name)).findFirst().orElseThrow(
-                () -> new BusinessException(String.format("Equipe avec le name [%s] deja existe!", name))
-        );
-        equipeToPersist.setId(equipeFound.getId());
-        equipeToPersist.setNom(name);
-        UpdateEquipeResponse updateEquipeResponse = modelMapper.map(equipeRepository.save(equipeToPersist), UpdateEquipeResponse.class);
-        updateEquipeResponse.setMessage(String.format("Equipe avec name [%s] a ete modifie avec succes !", name));
+        updateEquipeRequest.setCollaborateurs(collaborateursDTO);
+
+        updateEquipeRequest.setManager(modelMapper.map(manager, UserDTO.class));
+        updateEquipeRequest.setChefprojet(modelMapper.map(chefProjet, UserDTO.class));
+
+        Equipe equipe = new Equipe();
+        equipe.setId(equipeFound.getId());
+        equipe.setChefprojet(chefProjet);
+        equipe.setManager(manager);
+        equipe.setNom(updateEquipeRequest.getNom());
+        equipe.setCollaborateurs(collaborateurs);
+
+        Equipe savedEquipe = equipeRepository.save(equipe);
+        UpdateEquipeResponse updateEquipeResponse = modelMapper.map(savedEquipe, UpdateEquipeResponse.class);
+        updateEquipeResponse.setMessage(String.format("Equipe avec name [%s] a été modifiée avec succès !", name));
+
         return updateEquipeResponse;
     }
 
     @Override
     public List<EquipeDTO> findByNomContaining(String searchTerm) {
-        return equipeRepository.findByNomContainingIgnoreCase(searchTerm.toLowerCase()).stream().
-                map(equipe -> modelMapper.map(equipe, EquipeDTO.class)).
-                collect(Collectors.toList());
+        return equipeRepository.findByNomContainingIgnoreCase(searchTerm.toLowerCase()).stream()
+                .map(equipe -> modelMapper.map(equipe, EquipeDTO.class))
+                .collect(Collectors.toList());
     }
+
     @Override
     public EquipeDTO findByNom(String searchTerm) {
-        return
-        modelMapper.map(equipeRepository.findByNom(searchTerm.toLowerCase()), EquipeDTO.class);
+        return modelMapper.map(equipeRepository.findByNom(searchTerm.toLowerCase()), EquipeDTO.class);
     }
 
     @Override
     public String deleteEquipeById(Long id) {
         if (id == null)
             throw new BusinessException("Enter a correct identity Equipe");
-        Equipe equipeFound = equipeRepository.findAll().stream().filter(equipe -> equipe.getId()==id).findFirst().orElseThrow(
-                ()-> new BusinessException(String.format("Aucune equipe existe avec l identite %d", id))
-        );
+        Equipe equipeFound = equipeRepository.findAll().stream()
+                .filter(equipe -> equipe.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new BusinessException(String.format("Aucune équipe n'existe avec l'identité %d", id)));
         equipeRepository.delete(equipeFound);
         return String.format("Team with identity %d is deleted with success", id);
     }
-
 }

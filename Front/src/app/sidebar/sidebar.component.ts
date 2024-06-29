@@ -22,7 +22,7 @@ export class SidebarComponent {
     { label: 'Manage Leaves', icon: 'bi bi-airplane' ,link:'/leaves'},
     { label: 'Manage Holidays', icon: 'bi bi-calendar' ,link:'/holidays'},
     { label: 'Report', icon: 'bi bi-bar-chart',link:'#' },
-    { label: 'Inbox', icon: 'bi bi-inbox' ,link:'/chat/sender/11'},
+    { label: 'Inbox', icon: 'bi bi-inbox' ,link:'/chat/sender/1'},
     { label: 'Settings', icon: 'bi bi-gear' ,link:'#'}
 
   ];

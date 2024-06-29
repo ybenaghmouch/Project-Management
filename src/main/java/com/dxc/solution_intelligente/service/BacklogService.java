@@ -8,6 +8,7 @@ import com.dxc.solution_intelligente.service.Exception.BusinessException;
 import com.dxc.solution_intelligente.service.model.Backlog;
 import com.dxc.solution_intelligente.service.model.Permission;
 import com.dxc.solution_intelligente.service.model.Project;
+import com.dxc.solution_intelligente.service.model.UserStory;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -44,46 +45,56 @@ public class BacklogService implements IBacklogService{
     }
 
     public AddBacklogResponse addBacklogToProject(String projectName, AddBacklogRequest addBacklogRequest) {
-        // Créer le backlog
+        // Create the backlog
         Backlog bo = modelMapper.map(addBacklogRequest, Backlog.class);
         String titre = bo.getTitre();
         backlogRepository.findBacklogByTitre(titre).ifPresent(backlog -> {
             throw new BusinessException(String.format("Backlog avec le titre [%s] déjà existe", titre));
         });
 
-        // Sauvegarder le backlog d'abord
+        // Save the backlog first
         Backlog savedBacklog = backlogRepository.save(bo);
 
-        // Trouver le projet par nom
+        // Find the project by name
         Project project = projectRepository.findAll().stream()
                 .filter(proj -> proj.getNom() != null && proj.getNom().equals(projectName))
                 .findFirst()
                 .orElseThrow(() -> new BusinessException(String.format("Aucun projet existe avec le nom [%s] ", projectName)));
 
-        // Ajouter le backlog sauvegardé au projet
+        // Add the saved backlog to the project
         project.getBacklogs().add(savedBacklog);
-        Project savedProject = projectRepository.save(project);
+        projectRepository.save(project);
 
-        // Préparer la réponse
+        // Prepare the response
         AddBacklogResponse response = modelMapper.map(savedBacklog, AddBacklogResponse.class);
         response.setMessage(String.format("Backlog ajouté avec succès au projet [%s] : [Titre = %s, Description = %s, Status = %s]", projectName, response.getTitre(), response.getDescription(), response.getStatus()));
 
         return response;
     }
 
-
     @Override
     public UpdateBacklogResponse updateBacklog(String titre, UpdateBacklogRequest updateBacklogRequest) {
+        Backlog backlogFound = backlogRepository.findAll().stream()
+                .filter(bo -> bo.getTitre() != null && bo.getTitre().equals(titre))
+                .findFirst()
+                .orElseThrow(() -> new BusinessException(String.format("Aucun backlog existe avec le titre [%s] ", titre)));
+
         Backlog backlogToPersist = modelMapper.map(updateBacklogRequest, Backlog.class);
-        Backlog backlogFound = backlogRepository.findAll().stream().filter(bo-> bo.getTitre() != null && bo.getTitre().equals(titre)).findFirst().orElseThrow(
-                ()-> new BusinessException(String.format("Aucun backlog existe avec le titre [%s] ", titre))
-        );
         backlogToPersist.setId(backlogFound.getId());
-        backlogFound.setTitre(titre);
-        UpdateBacklogResponse updateBacklogResponse = modelMapper.map(backlogRepository.save(backlogToPersist), UpdateBacklogResponse.class);
-        updateBacklogResponse.setMessage(String.format("Backlog avec le titre [%s] a ete modifie avec succes", titre));
+        backlogToPersist.setTitre(titre);
+
+        // Handle existing user stories
+        List<UserStory> existingUserStories = backlogFound.getUserStories();
+        backlogToPersist.setUserStories(existingUserStories);
+
+        Backlog updatedBacklog = backlogRepository.save(backlogToPersist);
+
+        UpdateBacklogResponse updateBacklogResponse = modelMapper.map(updatedBacklog, UpdateBacklogResponse.class);
+        updateBacklogResponse.setMessage(String.format("Backlog avec le titre [%s] a été modifié avec succès", titre));
+
         return updateBacklogResponse;
     }
+
 
     @Override
     public List<BacklogDTO> findByTitre(String titre) {

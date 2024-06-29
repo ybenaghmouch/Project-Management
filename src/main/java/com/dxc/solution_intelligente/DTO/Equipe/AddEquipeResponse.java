@@ -1,5 +1,6 @@
 package com.dxc.solution_intelligente.DTO.Equipe;
 
+import com.dxc.solution_intelligente.DTO.User.UserDTO;
 import com.dxc.solution_intelligente.service.model.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,10 +12,10 @@ public class AddEquipeResponse {
     private Long id;
     private String Nom;
 
-    private User Chefprojet;
+    private UserDTO Chefprojet;
 
-    private List<User> Collaborateurs;
+    private List<UserDTO> Collaborateurs;
 
-    private User Manager;
+    private UserDTO Manager;
     private String message;
 }

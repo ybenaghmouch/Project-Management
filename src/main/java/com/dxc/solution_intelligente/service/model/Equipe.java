@@ -14,11 +14,11 @@ public class Equipe {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String nom;
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne//(cascade = CascadeType.MERGE)
     private User Chefprojet;
-    @ManyToMany(cascade = CascadeType.MERGE)
+    @ManyToMany//(cascade = CascadeType.MERGE)
     private List<User> Collaborateurs;
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne//(cascade = CascadeType.MERGE)
     private User Manager;
 
 
