@@ -9,7 +9,6 @@
         <th scope="col">Motif</th>
         <th scope="col">Demandeur</th>
         <th scope="col">Duration</th>
-
         <th scope="col">Backup</th>
         <th scope="col">Status</th>
         <th scope="col">Actions</th>
@@ -20,7 +19,6 @@
         <td>{{ conge.motif }}</td>
         <td>{{ conge.demandeur?.civility }} {{ conge.demandeur?.firstName }} {{ conge.demandeur?.lastName }}</td>
         <td>{{ conge.duration }}</td>
-
         <td>{{ conge.backup?.civility }} {{ conge.backup?.firstName }} {{ conge.backup?.lastName }}</td>
         <td>{{ conge.status }}</td>
         <td>
@@ -35,7 +33,7 @@
   <!-- Modal -->
   <ng-template #congeModal let-modal>
     <div class="modal-header">
-      <h5 class="modal-title">{{ isEditMode ? 'Edit Conge' : 'Add Conge' }}</h5>
+      <h5 class="modal-title">{{ isEditMode ? 'Edit Leave' : 'Add Leave' }}</h5>
       <button type="button" class="btn-close" aria-label="Close" (click)="closeModal(modal)"></button>
     </div>
     <div class="modal-body">
@@ -43,10 +41,14 @@
         <div class="row">
           <div class="col-md-6 mb-3">
             <label for="motif" class="form-label">Reason</label>
-            <input type="text" class="form-control" id="motif" formControlName="motif" placeholder="Conge Reason">
+            <input type="text" class="form-control" id="motif" formControlName="motif" placeholder="Leave Reason">
           </div>
-          
-            
+
+          <div class="col-md-6 mb-3">
+            <label for="fromDate" class="form-label">From</label>
+            <input type="date" class="form-control" id="fromDate" formControlName="fromDate">
+          </div>
+
         </div>
         <div class="row">
           <div class="col-md-6 mb-3">
@@ -54,26 +56,25 @@
             <input type="date" class="form-control" id="endDate" formControlName="endDate">
           </div>
           <div class="col-md-6 mb-3">
-            <label for="fromDate" class="form-label">From</label>
-            <input type="date" class="form-control" id="fromDate" formControlName="fromDate">
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6 mb-3">
             <label for="duration" class="form-label">Duration</label>
             <input type="number" class="form-control" id="duration" formControlName="duration" placeholder="Duration in days" readonly>
           </div>
+        </div>
+        <div class="row">
           <div class="col-md-6 mb-3">
             <label for="demandeur" class="form-label">Demandeur</label>
             <ng-select class="form-control" [items]="users" bindLabel="username" bindValue="id" formControlName="demandeur" [searchable]="true">
             </ng-select>
           </div>
-        </div>
-        <div class="row">
           <div class="col-md-6 mb-3">
             <label for="backup" class="form-label">Backup</label>
             <ng-select class="form-control" [items]="users" bindLabel="username" bindValue="id" formControlName="backup" [searchable]="true">
             </ng-select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <input type="text" hidden id="status" formControlName="status" value="pending">
           </div>
           <div class="col-md-6 modal-footer">
             <button type="button" class="btn btn-secondary" (click)="closeModal(modal)">Cancel</button>
@@ -83,5 +84,4 @@
       </form>
     </div>
   </ng-template>
-
 </div>

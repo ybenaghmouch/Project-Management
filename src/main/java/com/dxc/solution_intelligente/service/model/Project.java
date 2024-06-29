@@ -27,5 +27,7 @@ public class Project {
     private List<Backlog> backlogs;
     @OneToMany(cascade = CascadeType.MERGE)
     private List<Sprint> sprints;
+    @ManyToOne
+    private Equipe equipe;
 
 }

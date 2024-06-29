@@ -37,7 +37,7 @@ export class SprintModalComponent implements OnInit {
   @Output() sprintAdded = new EventEmitter<any>();
   @ViewChild('sprintModal', { static: false }) sprintModal!: ElementRef;
   @Input() isEditMode: boolean = false;
-  @Input() projectname: string = '';
+  @Input() projectname!: string;
   @Input() sprint: any;
 
   constructor(private cdr: ChangeDetectorRef, private utilsService: UtilsService, private formatter: NgbDateParserFormatter, private formBuilder: FormBuilder, private sprintModalService: SprintModalService, private userService: SprintModalService, private http: HttpClient, private datePipe: DatePipe) {

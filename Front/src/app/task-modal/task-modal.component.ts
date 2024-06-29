@@ -29,7 +29,6 @@ export class TaskModalComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, private userModalService: TaskModalService) {
     this.form = this.formBuilder.group({
-      id: [''],
       titre: ['', Validators.required],
       description: ['', Validators.required],
       statut: ['pending', Validators.required],
@@ -63,6 +62,8 @@ export class TaskModalComponent implements OnInit {
     const modalInstance = bootstrap.Modal.getInstance(modalElement);
     this.form.reset();
     modalInstance.hide();
+    this.isListMode = false;
+    this.form.enable();
   }
 
   submitForm() {

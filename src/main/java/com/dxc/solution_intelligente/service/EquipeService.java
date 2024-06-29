@@ -36,7 +36,7 @@ public class EquipeService implements IEquipeService{
                 collect(Collectors.toList());
     }
 
-    @Override
+   /* @Override
     public AddEquipeResponse createEquipe(AddEquipeRequest addEquipeRequest) {
         Equipe bo = modelMapper.map(addEquipeRequest, Equipe.class);
         String name = bo.getNom();
@@ -58,10 +58,49 @@ public class EquipeService implements IEquipeService{
         response.setManager(manager);
         response.setChefprojet(chefProjet);
         return response;
-    }
+    }*/
+   @Override
+   public AddEquipeResponse createEquipe(AddEquipeRequest addEquipeRequest) {
+       Equipe equipe = modelMapper.map(addEquipeRequest, Equipe.class);
+       equipeRepository.findByNom(equipe.getNom()).ifPresent(a -> {
+           throw new BusinessException(String.format("Equipe avec le même nom [%s] existe déjà", equipe.getNom()));
+       });
+
+       // Sauvegarde une seule fois et utilise l'objet retourné pour la suite
+       Equipe savedEquipe = equipeRepository.save(equipe);
+       AddEquipeResponse response = modelMapper.map(savedEquipe, AddEquipeResponse.class);
+       response.setMessage(String.format("Equipe : [Nom = %s]", response.getNom()));
+
+       User chefProjet = userRepository.findById(response.getChefprojet().getId())
+               .orElseThrow(() -> new BusinessException("ChefProjet not found"));
+       User manager = userRepository.findById(response.getManager().getId())
+               .orElseThrow(() -> new BusinessException("Manager not found"));
+       response.setManager(manager);
+       response.setChefprojet(chefProjet);
+
+       return response;
+   }
+
 
     @Override
     public UpdateEquipeResponse updateEquipe(String name, UpdateEquipeRequest updateEquipeRequest) {
+        User chefProjet = userRepository.findById(updateEquipeRequest.getChefprojet().getId())
+                .orElseThrow(() -> new BusinessException("ChefProjet not found"));
+        User manager = userRepository.findById(updateEquipeRequest.getManager().getId())
+                .orElseThrow(() -> new BusinessException("Manager not found"));
+// Assuming updateEquipeRequest.getCollaborateurs() returns a List<User>
+        List<Long> collaborateurIds = updateEquipeRequest.getCollaborateurs()
+                .stream()
+                .map(User::getId) // Mapping to get User IDs
+                .collect(Collectors.toList()); // Collecting IDs into a List<Long>
+
+        List<User> collaborateurs = userRepository.findAllById(collaborateurIds); // Finding all Users by their IDs
+        if (collaborateurs.isEmpty()) {
+            throw new BusinessException("Collaborator not found");
+        }
+        updateEquipeRequest.setManager(manager);
+        updateEquipeRequest.setChefprojet(chefProjet);
+        updateEquipeRequest.setCollaborateurs(collaborateurs);
         Equipe equipeToPersist = modelMapper.map(updateEquipeRequest, Equipe.class);
         Equipe equipeFound = equipeRepository.findAll().stream().filter(bo -> bo.getNom().equals(name)).findFirst().orElseThrow(
                 () -> new BusinessException(String.format("Equipe avec le name [%s] deja existe!", name))

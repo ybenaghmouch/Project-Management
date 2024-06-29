@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 [hidden]="isListMode" class="modal-title" id="userModalLabel">{{ isEditMode ? 'Edit Backlog' : 'Create Backlog' }}</h5>
+                <h5 [hidden]="isListMode" class="modal-title" id="userModalLabel">{{ isEditMode ? 'Edit User Story' : 'Create User Story' }}</h5>
                 <h5 [hidden]="!isListMode" class="modal-title" id="userModalLabel">List User Story</h5>
                 <button type="button" class="btn-close" (click)="closeModal()"></button>
             </div>
@@ -10,11 +10,9 @@
                 <form [formGroup]="form" (ngSubmit)="submitForm()">
                     <div class="row mb-3">
                         <div class="col">
-                            <label for="titre" class="form-label">Titre</label>
+                            <label for="titre" class="form-label">Title</label>
                             <input [readonly]="isEditMode" type="text" class="form-control" id="titre" formControlName="titre" placeholder="Input text">
                         </div>
-                    </div>
-                    <div class="row mb-3">
                         <div class="col">
                             <label for="description" class="form-label">Description</label>
                             <textarea class="form-control" id="description" formControlName="description" placeholder="Input text" rows="3"></textarea>
@@ -29,13 +27,24 @@
                                 <option value="done">Done</option>
                             </select>
                         </div>
+                        <div class="col">
+                            <label for="priority" class="form-label">Priority</label>
+                            <select class="form-select" id="priority" formControlName="priority">
+                                <option *ngFor="let i of priorityRange" [value]="i">{{ i }}</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="priority" class="form-label">Priority</label>
-                        <select class="form-select" id="priority" formControlName="priority">
-                          <option *ngFor="let i of priorityRange" [value]="i">{{ i }}</option>
-                        </select>
-                      </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="responsable" class="form-label">Responsable</label>
+                            <ng-select class="form-control" [items]="users"
+                                       bindLabel="username"
+                                       bindValue="id"
+                                       formControlName="responsable"
+                                       [searchable]="true">
+                            </ng-select>
+                        </div>
+                    </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
                         <button [hidden]="isListMode" type="submit" class="btn btn-primary">{{ isEditMode ? 'Save' : 'Add' }}</button>
@@ -44,4 +53,4 @@
             </div>
         </div>
     </div>
-  </div>
+</div>

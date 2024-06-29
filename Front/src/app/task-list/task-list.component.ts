@@ -99,6 +99,7 @@ export class TaskListComponent implements OnInit {
     }
   }
 
+
   openEditUserModal(user: any) {
     if (this.userModal) {
       this.userModal.isEditMode = true;

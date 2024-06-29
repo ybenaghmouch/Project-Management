@@ -1,6 +1,7 @@
 package com.dxc.solution_intelligente.service;
 
 import com.dxc.solution_intelligente.DAO.BacklogRepository;
+import com.dxc.solution_intelligente.DAO.EquipeRepository;
 import com.dxc.solution_intelligente.DAO.ProjectRepository;
 
 import com.dxc.solution_intelligente.DAO.UserRepository;
@@ -26,6 +27,7 @@ public class ProjectService implements IProjectService{
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
     private final BacklogRepository backlogRepository;
+    private final EquipeRepository equipeRepository;
     @Autowired
     private final ModelMapper modelMapper;
 
@@ -46,11 +48,13 @@ public class ProjectService implements IProjectService{
 
         AddProjectResponse response = modelMapper.map(projectRepository.save(bo), AddProjectResponse.class);
 
+        Equipe equipe =  equipeRepository.findById(response.getEquipe().getId()).orElseThrow(() -> new BusinessException("Equipe not found"));
+        response.setEquipe(equipe);
         User manager = userRepository.findById(response.getManager().getId())
                 .orElseThrow(() -> new BusinessException("Manager not found"));
         response.setManager(manager);
+        response.setMessage(String.format("Projet : [Nom = %s, Description = %s, Date de debut = %s, Date de fin = %s, Duree = %S, Status = %s, Manager = %s, Backlog = %s, Equipe = %s]", response.getNom(), response.getDescription(), response.getDateDebut(), response.getDateFin(), response.getDuree(), response.getStatus(), response.getManager().getUsername(), response.getBacklogs(), response.getEquipe()));
 
-        response.setMessage(String.format("Projet : [Nom = %s, Description = %s, Date de debut = %s, Date de fin = %s, Duree = %S, Status = %s, Manager = %s, Backlog = %s]", response.getNom(), response.getDescription(), response.getDateDebut(), response.getDateFin(), response.getDuree(), response.getStatus(), response.getManager().getUsername(), response.getBacklogs()));
         return response;
     }
 
@@ -59,6 +63,9 @@ public class ProjectService implements IProjectService{
         User manager = userRepository.findById(updateProjectRequest.getManager().getId())
                 .orElseThrow(() -> new BusinessException("Manager not found"));
         updateProjectRequest.setManager(manager);
+
+        Equipe equipe =  equipeRepository.findById(updateProjectRequest.getEquipe().getId()).orElseThrow(() -> new BusinessException("Equipe not found"));
+        updateProjectRequest.setEquipe(equipe);
 
         Project projectFound = projectRepository.findAll().stream()
                 .filter(bo -> bo.getNom() != null && bo.getNom().equals(name))
@@ -70,17 +77,16 @@ public class ProjectService implements IProjectService{
         modelMapper.map(updateProjectRequest, projectFound);
 
 
-
+        // Traiter les backlogs
 
         Project savedProject = projectRepository.save(projectFound);
+
         UpdateProjectResponse updateProjectResponse = modelMapper.map(savedProject, UpdateProjectResponse.class);
         updateProjectResponse.setMessage(String.format("Projet avec le nom [%s] a été modifié avec succès", name));
 
         return updateProjectResponse;
     }
 
-
-  
     /*@Override   Correct
     public List<ProjectDTO> findProjectByManager(String username) {
         List<Project> projects = projectRepository.findAll();

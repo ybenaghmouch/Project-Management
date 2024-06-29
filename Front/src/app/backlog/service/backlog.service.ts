@@ -33,9 +33,6 @@ interface Backlog {
 })
 export class BacklogService {
 
-
-
-
   constructor(private http: HttpClient) {}
 
   getBacklog(id: string): Observable<Backlog[]> {

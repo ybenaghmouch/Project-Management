@@ -19,5 +19,8 @@ export class ProjectModalService {
   getUsers(type: string = "user"): Observable<any[]> {
     return this.http.get<any[]>(`/api/user`);
   }
+  getTeams(type: string = "team"): Observable<any[]> {
+    return this.http.get<any[]>(`/api/team`);
+  }
 
 }

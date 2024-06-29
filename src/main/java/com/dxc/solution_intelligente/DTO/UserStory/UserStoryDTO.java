@@ -1,6 +1,7 @@
 package com.dxc.solution_intelligente.DTO.UserStory;
 
 import com.dxc.solution_intelligente.service.model.Tache;
+import com.dxc.solution_intelligente.service.model.User;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,4 +17,5 @@ public class UserStoryDTO {
     private int Priority;
     private String Statut;
     private List<Tache> Features;
+    private User Responsable;
 }

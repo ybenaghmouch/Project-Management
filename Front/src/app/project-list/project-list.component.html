@@ -10,20 +10,20 @@
       <thead>
         <tr>
           <th scope="col">NAME</th>
-          <th scope="col">DESCRIPTION</th>
           <th scope="col">START DATE</th>
           <th scope="col">STATUS</th>
-          <th scope="col">MANAGER</th>
+          <th scope="col">PROJECT LEADER</th>
+          <th scope="col">TEAM</th>
           <th scope="col">ACTIONS</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let project of projects">
           <td>{{ project.nom }}</td>
-          <td>{{ project.description }}</td>
           <td>{{ transformDate(project.dateDebut) }}</td>
           <td>{{ project.status }}</td>
           <td>{{ project.manager.civility }} {{ project.manager.firstName }} {{ project.manager.lastName }}</td>
+          <td>{{ project.equipe.nom }} </td>
           <td class="overflow-hidden">
             <button class="btn btn-outline-primary btn-sm edit-btn me-2" (click)="openEditProjectModal(project)">Edit</button>
             <button class="btn btn-outline-primary btn-sm edit-btn me-2" (click)="openListProjectModal(project)">List</button>

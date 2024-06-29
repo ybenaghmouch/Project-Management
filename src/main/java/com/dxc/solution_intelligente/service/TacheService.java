@@ -76,7 +76,7 @@ public class TacheService implements ITacheService{
         // Ajouter la Tache sauvegardée à la User Story
         userStory.getFeatures().add(savedTache);
         userStoryRepository.save(userStory);
-
+        savedTache.setResponsable(userStory.getResponsable());
         // Préparer la réponse
         AddTacheResponse response = modelMapper.map(savedTache, AddTacheResponse.class);
         response.setMessage(String.format("Tache ajoutée avec succès à la User Story [%s] : [Code = %s, Titre = %s]", userStoryCode, response.getCode(), response.getTitre()));
