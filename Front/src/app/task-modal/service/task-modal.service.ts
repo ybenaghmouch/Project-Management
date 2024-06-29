@@ -10,7 +10,7 @@ export class TaskModalService {
   constructor(private http: HttpClient) { }
 
   postUsers(formData: any,backlogname: string): Observable<any> {
-    return this.http.post<any>(`/api/tache/userstories/${backlogname}/taches`,formData); 
+    return this.http.post<any>(`/api/tache/userstories/${backlogname}/taches`,formData);
   }
   putUsers(formData: any,username: string): Observable<any> {
     return this.http.put<any>(`/api/tache/${username}`,formData);

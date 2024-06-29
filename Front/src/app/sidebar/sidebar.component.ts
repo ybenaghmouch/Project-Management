@@ -14,16 +14,17 @@ export class SidebarComponent {
   menuItems = [
     { label: 'Board', icon: 'bi bi-clipboard2-data',link:'/board' },
     { label: 'Backlog', icon: 'bi bi-box-arrow-in-down' ,link:'/backlogs'},
-    { label: 'Report', icon: 'bi bi-bar-chart',link:'#' },
-    { label: 'Inbox', icon: 'bi bi-inbox' ,link:'/chat/sender/11'},
-    { label: 'Settings', icon: 'bi bi-gear' ,link:'#'},
+    { label: 'Sprints', icon: 'bi bi-table' ,link:'/sprints'},
+    { label: 'Manage Roles', icon: 'bi bi-people-fill' ,link:'/roles'},
     { label: 'Manage Users', icon: 'bi bi-people' ,link:'/users'},
     { label: 'Manage Teams', icon: 'bi bi-person-plus',link:'/teams' },
     { label: 'Manage Projects', icon: 'bi bi-briefcase' ,link:'/projects'},
     { label: 'Manage Leaves', icon: 'bi bi-airplane' ,link:'/leaves'},
-    { label: 'Manage Roles', icon: 'bi bi-people-fill' ,link:'/roles'},
     { label: 'Manage Holidays', icon: 'bi bi-calendar' ,link:'/holidays'},
-    { label: 'Sprints', icon: 'bi bi-people-fill' ,link:'/sprints'}
+    { label: 'Report', icon: 'bi bi-bar-chart',link:'#' },
+    { label: 'Inbox', icon: 'bi bi-inbox' ,link:'/chat/sender/11'},
+    { label: 'Settings', icon: 'bi bi-gear' ,link:'#'}
+
   ];
   selectedItem: number = -1;
 
