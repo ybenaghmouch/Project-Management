@@ -1,5 +1,6 @@
 package com.dxc.solution_intelligente.DTO.Backlog;
 
+import com.dxc.solution_intelligente.DTO.UserStory.UserStoryDTO;
 import com.dxc.solution_intelligente.service.model.UserStory;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,5 +14,5 @@ public class UpdateBacklogResponse {
     private String titre;
     private String description;
     private String Status;
-    private List<UserStory> userStories;
+    private List<UserStoryDTO> userStories;
 }

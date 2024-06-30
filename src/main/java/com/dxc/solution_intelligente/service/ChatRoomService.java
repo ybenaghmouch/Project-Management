@@ -3,6 +3,7 @@ package com.dxc.solution_intelligente.service;
 import com.dxc.solution_intelligente.DAO.ChatRoomRepository;
 import com.dxc.solution_intelligente.DAO.UserRepository;
 import com.dxc.solution_intelligente.DTO.ChatRoom.*;
+import com.dxc.solution_intelligente.DTO.User.UserDTO;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
 import com.dxc.solution_intelligente.service.model.ChatRoom;
 import com.dxc.solution_intelligente.service.model.User;
@@ -37,7 +38,7 @@ public class ChatRoomService implements IChatRoomService {
         // Fetch users by their IDs and set them to the chat room
         List<User> users = userRepository.findAllById(
                 addChatRoomRequest.getUsers().stream()
-                        .map(User::getId)
+                        .map(UserDTO::getId)
                         .collect(Collectors.toList())
         );
 
@@ -60,7 +61,7 @@ public class ChatRoomService implements IChatRoomService {
         // Fetch users by their IDs and set them to the chat room
         List<User> users = userRepository.findAllById(
                 updateChatRoomRequest.getUsers().stream()
-                        .map(User::getId)
+                        .map(UserDTO::getId)
                         .collect(Collectors.toList())
         );
 
@@ -88,6 +89,12 @@ public class ChatRoomService implements IChatRoomService {
                 .filter(cr -> cr.getUsers().stream().map(User::getId).collect(Collectors.toList()).containsAll(List.of(userAId, userBId)))
                 .findFirst();
         return chatRoom.map(cr -> modelMapper.map(cr, ChatRoomDTO.class)).orElse(null);
+    }
+
+    public ChatRoomDTO findChatRoomById(Long roomId) {
+
+
+        return modelMapper.map(chatRoomRepository.findById(roomId), ChatRoomDTO.class);
     }
 
 }

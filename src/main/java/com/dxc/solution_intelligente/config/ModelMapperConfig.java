@@ -1,11 +1,14 @@
 package com.dxc.solution_intelligente.config;
 
+import com.dxc.solution_intelligente.DTO.Equipe.AddEquipeRequest;
 import com.dxc.solution_intelligente.common.CommonTools;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
+import com.dxc.solution_intelligente.service.model.Equipe;
 import lombok.AllArgsConstructor;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,10 +32,12 @@ public class ModelMapperConfig {
                 .setFieldMatchingEnabled(true)
                 .setSkipNullEnabled(true)
 
-
+                //.setAmbiguityIgnored(true)
                 .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE)
                 .setMatchingStrategy(MatchingStrategies.STRICT)
                 .setSkipNullEnabled(true);
+
+
 
         // Convertisseurs existants pour les dates
         Converter<Date, String> dateToStringConverter = new AbstractConverter<>() {

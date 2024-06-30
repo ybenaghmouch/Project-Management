@@ -4,23 +4,64 @@
 }
 
 .my-message {
-  background-color: purple;
+  background-color: #6a1b9a;
   color: white;
   text-align: right;
-  padding: 5px;
-  border-radius: 5px;
-  margin-bottom: 5px;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
   max-width: 70%;
   align-self: flex-end; /* Align to the right */
 }
 
 .other-message {
-  background-color: gray;
+  background-color: #d1c4e9;
   color: black;
   text-align: left;
-  padding: 5px;
-  border-radius: 5px;
-  margin-bottom: 5px;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
   max-width: 70%;
   align-self: flex-start; /* Align to the left */
+}
+
+.btn-purple {
+  background-color: #6a1b9a;
+  border-color: #6a1b9a;
+  color: white;
+}
+
+.btn-purple:hover {
+  background-color: #4a0072;
+  border-color: #4a0072;
+}
+
+.list-group-item.active {
+  background-color: #6a1b9a !important;
+  border-color: #6a1b9a !important;
+  color: white !important;
+}
+
+.input-group .form-control {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.input-group .btn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.list-group-item {
+  cursor: pointer;
+}
+
+.container-fluid {
+  background-color: #f8f9fa;
+  height: 100vh;
+}
+
+input[type="text"]::placeholder {
+  color: #6c757d;
+  opacity: 1;
 }

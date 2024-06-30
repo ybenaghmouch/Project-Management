@@ -1,5 +1,7 @@
 package com.dxc.solution_intelligente.DTO.UserStory;
 
+import com.dxc.solution_intelligente.DTO.Tache.TacheDTO;
+import com.dxc.solution_intelligente.DTO.User.UserDTO;
 import com.dxc.solution_intelligente.service.model.Tache;
 import com.dxc.solution_intelligente.service.model.User;
 import jakarta.persistence.OneToMany;
@@ -16,6 +18,6 @@ public class UserStoryDTO {
     private String Description;
     private int Priority;
     private String Statut;
-    private List<Tache> Features;
-    private User Responsable;
+    private List<TacheDTO> Features;
+    private UserDTO Responsable;
 }

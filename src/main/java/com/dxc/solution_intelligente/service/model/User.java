@@ -1,5 +1,6 @@
 package com.dxc.solution_intelligente.service.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,7 +29,9 @@ public class User {
     private double soldeConge;
     @ManyToMany(cascade = CascadeType.MERGE)
     private List<Role> authorities;
-
+    @ManyToMany(mappedBy = "users")
+    //@JsonBackReference
+    private List<ChatRoom> chatRooms;
 
 
 }

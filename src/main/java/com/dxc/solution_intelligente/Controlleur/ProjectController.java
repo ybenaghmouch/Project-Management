@@ -82,7 +82,7 @@ public class ProjectController {
     }*/
 
     @GetMapping("/backlogs/{nom}")
-    public List<Backlog> searchEquipeByNom(@PathVariable String nom) {
+    public List<BacklogDTO> searchEquipeByNom(@PathVariable String nom) {
         return projectService.findByexactName(nom).getBacklogs();
     }
 

@@ -40,8 +40,11 @@ public class ChatController {
 
     @MessageMapping("/chat.sendMessage")
     public void sendMessageWebSocket(@Payload AddMessageRequest addMessageRequest) {
-        AddMessageResponse response = messageService.createMessage(addMessageRequest);
+        System.out.println("test1");
+       // AddMessageResponse response = messageService.createMessage(addMessageRequest);
+        System.out.println("test");
         messagingTemplate.convertAndSend("/topic/chatroom/" + addMessageRequest.getChatRoom().getId().toString(), addMessageRequest);
+        AddMessageResponse response = messageService.createMessage(addMessageRequest);
        /* MessageDTO messageDTO = new MessageDTO();
         messageDTO.setId(response.getId());
         messageDTO.setContent(response.getContent());

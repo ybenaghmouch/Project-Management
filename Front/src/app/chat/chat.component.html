@@ -1,31 +1,45 @@
-<div class="container">
-    <div class="row">
+<div class="container-fluid">
+  <div class="row">
       <div class="col-md-4">
-        <h2>Chat Rooms</h2>
-        <ul class="list-group">
-          <li *ngFor="let chatRoom of chatRooms" 
-              (click)="selectChatRoom(chatRoom)" 
-              [class.active]="selectedChatRoom?.id === chatRoom.id"
-              class="list-group-item">
-            {{ chatRoom.nom }}
-          </li>
-        </ul>
+          <div class="p-3">
+              <h2 class="mb-3">Inbox</h2>
+              <div class="input-group mb-3">
+                  <input type="text" class="form-control" placeholder="Search message" aria-label="Search message">
+                  <button class="btn btn-outline-secondary" type="button">
+                      <i class="bi bi-search"></i>
+                  </button>
+              </div>
+              <ul class="list-group">
+                  <li *ngFor="let chatRoom of chatRooms" 
+                      (click)="selectChatRoom(chatRoom)" 
+                      [class.active]="selectedChatRoom?.id === chatRoom.id"
+                      class="list-group-item list-group-item-action d-flex justify-content-between align-items-start">
+                      <div class="ms-2 me-auto">
+                          <div class="fw-bold">{{ chatRoom.nom }}</div>
+                          <small>3 minutes ago</small>
+                      </div>
+                      <span class="badge bg-primary rounded-pill">0</span>
+                  </li>
+              </ul>
+          </div>
       </div>
       <div class="col-md-8">
-        <h2>Messages</h2>
-        <div *ngIf="selectedChatRoom">
-          <div id="messages" class="border p-2" style="height: 300px; overflow-y: scroll;">
-            <div *ngFor="let message of messages" [ngClass]="{'my-message': message.exp.id === userId, 'other-message': message.exp.id !== userId}">
-              <div *ngIf="message.exp.id !== userId && (selectedChatRoom?.users?.length || 0) > 2">
-                <strong>{{ getMessageSenderName(message) }}</strong>
+          <div class="p-3">
+              <div *ngIf="selectedChatRoom">
+                  <div id="messages" class="border p-2" style="height: 400px; overflow-y: scroll;">
+                      <div *ngFor="let message of messages" [ngClass]="{'my-message': message.exp.id === userId, 'other-message': message.exp.id !== userId}">
+                          <div *ngIf="message.exp.id !== userId && (selectedChatRoom?.users?.length || 0) > 2">
+                              <strong>{{ getMessageSenderName(message) }}</strong>
+                          </div>
+                          <span>{{ message.content }}</span>
+                      </div>
+                  </div>
+                  <div class="input-group mt-3">
+                      <input [(ngModel)]="messageContent" type="text" placeholder="Type a message..." class="form-control" />
+                      <button (click)="sendMessage()" class="btn btn-purple">Send</button>
+                  </div>
               </div>
-              <span>{{ message.content }}</span>
-            </div>
           </div>
-          <input [(ngModel)]="messageContent" type="text" placeholder="Type a message..." class="form-control" />
-          <button (click)="sendMessage()" class="btn btn-primary mt-2">Send</button>
-        </div>
       </div>
-    </div>
   </div>
-  
+</div>

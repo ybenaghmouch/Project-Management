@@ -8,12 +8,14 @@ import com.dxc.solution_intelligente.DTO.ChatRoom.ChatRoomDTO;
 import com.dxc.solution_intelligente.DTO.Message.AddMessageRequest;
 import com.dxc.solution_intelligente.DTO.Message.AddMessageResponse;
 import com.dxc.solution_intelligente.DTO.Message.MessageDTO;
+import com.dxc.solution_intelligente.DTO.User.UserDTO;
 import com.dxc.solution_intelligente.service.ChatRoomService;
 import com.dxc.solution_intelligente.service.Exception.BusinessException;
 import com.dxc.solution_intelligente.service.IMessageService;
 import com.dxc.solution_intelligente.service.model.ChatRoom;
 import com.dxc.solution_intelligente.service.model.User;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -29,7 +31,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @RequestMapping("/api/chat")
 public class RestChatController {
-
+    private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final ChatRoomService chatRoomService;
     private final IMessageService messageService;
@@ -53,7 +55,7 @@ public class RestChatController {
 
                 AddChatRoomRequest addChatRoomRequest = new AddChatRoomRequest();
                 addChatRoomRequest.setNom("Chat between User " + userAId + " and User " + userBId);
-                addChatRoomRequest.setUsers(List.of(userA, userB));
+                addChatRoomRequest.setUsers(List.of(modelMapper.map(userA, UserDTO.class), modelMapper.map(userB, UserDTO.class)));
 
                 AddChatRoomResponse addChatRoomResponse = chatRoomService.createChatRoom(addChatRoomRequest);
 
@@ -83,7 +85,7 @@ public class RestChatController {
             return ResponseEntity.badRequest().body(response);
         }
     }
-//TODO:tetsststst
+
     @GetMapping("/messages")
     public ResponseEntity<?> getMessages(@RequestParam("chatRoomId") Long chatRoomId, @RequestParam("exp") Long expId) {
         try {
@@ -103,10 +105,12 @@ public class RestChatController {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }
+
+    //TODO:switch to DTO
     @GetMapping("/room/{roomId}")
     public ResponseEntity<?> getChatRoomById(@PathVariable Long roomId) {
         try {
-            Optional chatRoom = chatRoomRepository.findById(roomId);
+            ChatRoomDTO chatRoom = chatRoomService.findChatRoomById(roomId);
             return ResponseEntity.ok(chatRoom);
         } catch (BusinessException e) {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());

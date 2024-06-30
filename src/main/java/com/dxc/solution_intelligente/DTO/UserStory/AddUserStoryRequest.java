@@ -1,5 +1,7 @@
 package com.dxc.solution_intelligente.DTO.UserStory;
 
+import com.dxc.solution_intelligente.DTO.Tache.TacheDTO;
+import com.dxc.solution_intelligente.DTO.User.UserDTO;
 import com.dxc.solution_intelligente.service.model.Tache;
 import com.dxc.solution_intelligente.service.model.User;
 import lombok.Data;
@@ -14,8 +16,8 @@ public class AddUserStoryRequest {
     private String Description;
     private int Priority;
     private String Statut;
-    private List<Tache> Features=null;
-    private User Responsable;
+    private List<TacheDTO> Features=null;
+    private UserDTO Responsable;
     public AddUserStoryRequest() {
         String code = UUID.randomUUID().toString();
         String[] parts = code.split("-");

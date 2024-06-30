@@ -40,85 +40,144 @@ public class SprintService implements ISprintService{
 
     @Override
     public AddSprintResponse createSprint(AddSprintRequest addSprintRequest) {
-        Sprint bo = modelMapper.map(addSprintRequest, Sprint.class);
-        String titre = bo.getTitre();
-        sprintRepository.findSprintByTitre(titre).ifPresent(sprint -> {
-            throw new BusinessException(String.format("Sprint avec le titre [%s] deja exite", titre));
-        });
-        AddSprintResponse response = modelMapper.map(sprintRepository.save(bo), AddSprintResponse.class);
-        /*User manager = userRepository.findById(response.getManager().getId())
-                .orElseThrow(() -> new BusinessException("Manager not found"));
-        response.setManager(manager);*/
-        response.setMessage(String.format("Sprint : [Titre = %s, Description = %s, Status = %s, Date de debut = %s, Date de fin = %s]", response.getTitre(), response.getDescription(), response.getStatus(), response.getDate_debut(), response.getDate_fin()));
-        return response;
-    }
-
-
-    
-
-    @Override
-    public UpdateSprintResponse updateSprint(String titre, UpdateSprintRequest updateSprintRequest) {
-        Sprint sprintToPersist = modelMapper.map(updateSprintRequest, Sprint.class);
-        Sprint sprintFound = sprintRepository.findAll().stream().filter(bo-> bo.getTitre() != null && bo.getTitre().equals(titre)).findFirst().orElseThrow(
-                ()-> new BusinessException(String.format("Aucun sprint existe avec le titre [%s] ", titre))
-        );
-        sprintToPersist.setId(sprintFound.getId());
-        sprintFound.setTitre(titre);
-        UpdateSprintResponse updateSprintResponse = modelMapper.map(sprintRepository.save(sprintToPersist), UpdateSprintResponse.class);
-        updateSprintResponse.setMessage(String.format("Sprint avec le titre [%s] a ete modifie avec succes", titre));
-        return updateSprintResponse;
-    }
-
-    @Override
-    public List<SprintDTO> findByTitre(String titre) {
-        return sprintRepository.findByTitreContainingIgnoreCase(titre.toLowerCase()).stream()
-                .map(sprint -> modelMapper.map(sprint, SprintDTO.class)).collect(Collectors.toList());
-    }
-
-
-    public AddSprintResponse addSprintToProject(String projectName, AddSprintRequest addSprintRequest) {
-        // Map the AddSprintRequest to a Sprint entity
-        Sprint bo = modelMapper.map(addSprintRequest, Sprint.class);
-        String titre = bo.getTitre();
-
-        // Check if a sprint with the same title already exists
+        String titre = addSprintRequest.getTitre();
         sprintRepository.findSprintByTitre(titre).ifPresent(sprint -> {
             throw new BusinessException(String.format("Sprint avec le titre [%s] déjà existe", titre));
         });
 
-        // Retrieve UserStory entities by their codes
-        List<String> userStoryCodes = addSprintRequest.getUserStories().stream()
-                .map(UserStoryDTO::getCode)
-                .collect(Collectors.toList());
-        System.out.println("tester"+userStoryCodes);
-        List<UserStory> userStories = userStoryRepository.findAll().stream()
-                .filter(us -> userStoryCodes.contains(us.getCode()))
-                .collect(Collectors.toList());
+        Sprint sprint = new Sprint();
+        sprint.setTitre(addSprintRequest.getTitre());
+        sprint.setDescription(addSprintRequest.getDescription());
+        sprint.setDate_debut(addSprintRequest.getDate_debut());
+        sprint.setDate_fin(addSprintRequest.getDate_fin());
+        sprint.setStatus(addSprintRequest.getStatus());
+        sprint.setUserStories(null);
 
-        // Assign the retrieved UserStory entities to the Sprint
-        bo.setUserStories(userStories);
+        Sprint savedSprint = sprintRepository.save(sprint);
 
-        // Save the Sprint entity
-        Sprint savedSprint = sprintRepository.save(bo);
+        AddSprintResponse response = new AddSprintResponse();
+      //  response.setId(savedSprint.getId());
+        response.setTitre(savedSprint.getTitre());
+        response.setDescription(savedSprint.getDescription());
+        response.setDate_debut(savedSprint.getDate_debut());
+        response.setDate_fin(savedSprint.getDate_fin());
+        response.setStatus(savedSprint.getStatus());
+        response.setUserStories(null);
 
-        // Find the Project entity by its name
+        response.setMessage(String.format("Sprint : [Titre = %s, Description = %s, Status = %s, Date de debut = %s, Date de fin = %s]",
+                response.getTitre(), response.getDescription(), response.getStatus(), response.getDate_debut(), response.getDate_fin()));
+
+        return response;
+    }
+
+    @Override
+    public AddSprintResponse addSprintToProject(String projectName, AddSprintRequest addSprintRequest) {
+        String titre = addSprintRequest.getTitre();
+        sprintRepository.findSprintByTitre(titre).ifPresent(sprint -> {
+            throw new BusinessException(String.format("Sprint avec le titre [%s] déjà existe", titre));
+        });
+
+        List<UserStory> userStories = userStoryRepository.findAllById(
+                addSprintRequest.getUserStories().stream()
+                        .map(UserStoryDTO::getId)
+                        .collect(Collectors.toList())
+        );
+
+        Sprint sprint = new Sprint();
+        sprint.setTitre(addSprintRequest.getTitre());
+        sprint.setDescription(addSprintRequest.getDescription());
+        sprint.setDate_debut(addSprintRequest.getDate_debut());
+        sprint.setDate_fin(addSprintRequest.getDate_fin());
+        sprint.setStatus(addSprintRequest.getStatus());
+        sprint.setUserStories(userStories);
+
+        Sprint savedSprint = sprintRepository.save(sprint);
+
         Project project = projectRepository.findAll().stream()
                 .filter(proj -> proj.getNom() != null && proj.getNom().equals(projectName))
                 .findFirst()
                 .orElseThrow(() -> new BusinessException(String.format("Aucun projet existe avec le nom [%s]", projectName)));
 
-        // Add the saved Sprint to the Project
         project.getSprints().add(savedSprint);
+        projectRepository.save(project);
 
-        // Save the updated Project entity
-        Project savedProject = projectRepository.save(project);
+        AddSprintResponse response = new AddSprintResponse();
+      //  response.setId(savedSprint.getId());
+        response.setTitre(savedSprint.getTitre());
+        response.setDescription(savedSprint.getDescription());
+        response.setDate_debut(savedSprint.getDate_debut());
+        response.setDate_fin(savedSprint.getDate_fin());
+        response.setStatus(savedSprint.getStatus());
 
-        // Map the saved Sprint entity to the AddSprintResponse
-        AddSprintResponse response = modelMapper.map(savedSprint, AddSprintResponse.class);
-        response.setMessage(String.format("Sprint ajouté avec succes au projet [%s] : Titre = %s", projectName, response.getTitre()));
+        List<UserStoryDTO> userStoryDTOs = userStories.stream()
+                .map(us -> {
+                    UserStoryDTO dto = new UserStoryDTO();
+                    dto.setId(us.getId());
+                    dto.setCode(us.getCode());
+                    dto.setTitre(us.getTitre());
+                    dto.setDescription(us.getDescription());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        response.setUserStories(userStoryDTOs);
+
+        response.setMessage(String.format("Sprint ajouté avec succès au projet [%s] : [Titre = %s, Description = %s, Status = %s, Date de debut = %s, Date de fin = %s]",
+                projectName, response.getTitre(), response.getDescription(), response.getStatus(), response.getDate_debut(), response.getDate_fin()));
 
         return response;
     }
+
+    @Override
+    public UpdateSprintResponse updateSprint(String titre, UpdateSprintRequest updateSprintRequest) {
+        Sprint sprintFound = sprintRepository.findAll().stream()
+                .filter(bo -> bo.getTitre() != null && bo.getTitre().equals(titre))
+                .findFirst()
+                .orElseThrow(() -> new BusinessException(String.format("Aucun sprint existe avec le titre [%s] ", titre)));
+
+        sprintFound.setDescription(updateSprintRequest.getDescription());
+        sprintFound.setDate_debut(updateSprintRequest.getDate_debut());
+        sprintFound.setDate_fin(updateSprintRequest.getDate_fin());
+        sprintFound.setStatus(updateSprintRequest.getStatus());
+
+        List<UserStory> userStories = sprintFound.getUserStories();
+        if (updateSprintRequest.getUserStories() != null) {
+            userStories = userStoryRepository.findAllById(
+                    updateSprintRequest.getUserStories().stream()
+                            .map(UserStoryDTO::getId)
+                            .collect(Collectors.toList())
+            );
+        }
+        sprintFound.setUserStories(userStories);
+
+        Sprint savedSprint = sprintRepository.save(sprintFound);
+
+        UpdateSprintResponse updateSprintResponse = new UpdateSprintResponse();
+      //  updateSprintResponse.setId(savedSprint.getId());
+        updateSprintResponse.setTitre(savedSprint.getTitre());
+        updateSprintResponse.setDescription(savedSprint.getDescription());
+        updateSprintResponse.setDate_debut(savedSprint.getDate_debut());
+        updateSprintResponse.setDate_fin(savedSprint.getDate_fin());
+        updateSprintResponse.setStatus(savedSprint.getStatus());
+
+        List<UserStoryDTO> userStoryDTOs = userStories.stream()
+                .map(us -> {
+                    UserStoryDTO dto = new UserStoryDTO();
+                    dto.setId(us.getId());
+                    dto.setCode(us.getCode());
+                    dto.setTitre(us.getTitre());
+                    dto.setDescription(us.getDescription());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        updateSprintResponse.setUserStories(userStoryDTOs);
+
+        updateSprintResponse.setMessage(String.format("Sprint avec le titre [%s] a été modifié avec succès", titre));
+
+        return updateSprintResponse;
+    }
+
 
     @Override
     public String deleteSprintById(Long id) {
@@ -130,7 +189,11 @@ public class SprintService implements ISprintService{
         sprintRepository.delete(sprintFound);
         return String.format("Sprint with identity %d is deleted with success", id);
     }
-
+    @Override
+    public List<SprintDTO> findByTitre(String titre) {
+        return sprintRepository.findByTitreContainingIgnoreCase(titre.toLowerCase()).stream()
+                .map(sprint -> modelMapper.map(sprint, SprintDTO.class)).collect(Collectors.toList());
+    }
     @Override
     public SprintDTO searchByTitre(String titre) {
         return modelMapper.map(sprintRepository.findSprintByTitre(titre.toLowerCase()), SprintDTO.class);
