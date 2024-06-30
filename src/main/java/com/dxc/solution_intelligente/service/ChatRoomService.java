@@ -91,4 +91,10 @@ public class ChatRoomService implements IChatRoomService {
         return chatRoom.map(cr -> modelMapper.map(cr, ChatRoomDTO.class)).orElse(null);
     }
 
+    public ChatRoomDTO findChatRoomById(Long roomId) {
+
+
+        return modelMapper.map(chatRoomRepository.findById(roomId), ChatRoomDTO.class);
+    }
+
 }

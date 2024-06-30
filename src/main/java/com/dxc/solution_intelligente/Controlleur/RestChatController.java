@@ -85,7 +85,7 @@ public class RestChatController {
             return ResponseEntity.badRequest().body(response);
         }
     }
-//TODO:tetsststst
+
     @GetMapping("/messages")
     public ResponseEntity<?> getMessages(@RequestParam("chatRoomId") Long chatRoomId, @RequestParam("exp") Long expId) {
         try {
@@ -105,10 +105,12 @@ public class RestChatController {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }
+
+    //TODO:switch to DTO
     @GetMapping("/room/{roomId}")
     public ResponseEntity<?> getChatRoomById(@PathVariable Long roomId) {
         try {
-            Optional chatRoom = chatRoomRepository.findById(roomId);
+            ChatRoomDTO chatRoom = chatRoomService.findChatRoomById(roomId);
             return ResponseEntity.ok(chatRoom);
         } catch (BusinessException e) {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
