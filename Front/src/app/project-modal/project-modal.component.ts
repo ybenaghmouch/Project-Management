@@ -14,6 +14,8 @@ import { NgbCalendar, NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-b
 import { JsonPipe } from '@angular/common';
 import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef } from '@angular/core';
+import { UtilsService } from '../utils';
+
 
 
 declare var bootstrap: any;
@@ -28,7 +30,7 @@ declare var bootstrap: any;
     NgbModalModule,
     NgbPaginationModule,
     NgSelectModule, TagInputModule, NgbDatepickerModule, NgbAlertModule, JsonPipe],
-  providers: [ProjectModalService, DatePipe],
+  providers: [ProjectModalService, DatePipe,UtilsService],
   templateUrl: './project-modal.component.html',
   styleUrl: './project-modal.component.css'
 })
@@ -44,7 +46,7 @@ export class ProjectModalComponent implements OnInit {
   @Input() project: any;
 
 
-  constructor(private cdr: ChangeDetectorRef, private formatter: NgbDateParserFormatter, private formBuilder: FormBuilder, private projectModalService: ProjectModalService, private userService: ProjectModalService, private http: HttpClient, private datePipe: DatePipe) {
+  constructor(private cdr: ChangeDetectorRef,private utilsService: UtilsService, private formatter: NgbDateParserFormatter, private formBuilder: FormBuilder, private projectModalService: ProjectModalService, private userService: ProjectModalService, private http: HttpClient, private datePipe: DatePipe) {
     this.form = this.formBuilder.group({
       nom: ['', Validators.required],
       description: ['', Validators.required],
@@ -82,31 +84,22 @@ export class ProjectModalComponent implements OnInit {
     }
   }
 
-  updateDuration() {
-    const startDate = this.form.get('dateDebut')?.value;
-    const endDate = this.form.get('dateFin')?.value;
+ updateDuration() {
+    const startDate = this.form.get('fromDate')?.value;
+    const endDate = this.form.get('endDate')?.value;
     if (startDate && endDate) {
-      const duration = this.calculateDuration(startDate, endDate);
-      this.form.patchValue({ duration: duration });
+      this.utilsService.calculateDuration(startDate, endDate).subscribe(
+        duration => {
+          this.form.patchValue({ duration: duration });
+        },
+        error => {
+          console.error('Error calculating duration:', error);
+        }
+      );
     }
   }
 
-  calculateDuration(startDate: string, endDate: string): number {
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    let duration = 0;
-    let current = new Date(start);
 
-    while (current <= end) {
-      const day = current.getDay();
-      if (day !== 0 && day !== 6) { // Exclude Sunday (0) and Saturday (6)
-        duration++;
-      }
-      current.setDate(current.getDate() + 1);
-    }
-
-    return duration; // Ensure non-negative duration
-  }
   loadUsers() {
     this.userService.getUsers().subscribe(users => {
       this.users = users;
